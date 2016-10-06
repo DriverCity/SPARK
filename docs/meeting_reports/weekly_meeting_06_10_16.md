@@ -35,15 +35,15 @@ http://opentamperechallenge.fi/kilpailutyot/index.php#2
 We discussed the payment process :
 - Basically, for us payment like a black box : we just need to have a yes/no answer when user pays
 - There are a lot of API available for payment, no re-implementation necessary
+- Consider possibility for alternative paying methods.
 - It's possible mock-up for payment process
 - Payment should be simple
 
 ### Project goals in customer's point of view
-...
+- Main purpose of the project is to make parking valididy checking easier for parking attendants, especially in winter time.
 
 ### Ending criteria
-...
+- Project is considered successfull, if customer's goal is achieved.
 
 ### Quiting criteria
-
-We provide an application with lot of bugs and no-one want to use it
+- In the mid-presentation (early November), we must be able to show a beacon broadcasting something and mock-ups for both driver app and attendant gear. 
