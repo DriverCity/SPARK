@@ -20,7 +20,7 @@ If some **required functionality** is missing, please give comments about it. We
 * TOKEN - A mean of authentication between multiple parties without shared memory. In our context, TOKEN is used for validating parking permit advertised by BEACON, making sure that permits cannot be forged.
 
 ## DRIVER: Configuration
-1. DRIVER configures his CAR’s register number to the DRIVER APP and bonds the BEACON with the DRIVER APP. DRIVER APP may have multiple sets of register numbers and BEACON bonds, since DRIVER may have multiple CARS. Configuration needs to be only once per CAR-BEACON pair.
+1. DRIVER configures his CAR’s register number to the DRIVER APP and bonds the BEACON with the DRIVER APP. DRIVER APP may have multiple sets of register numbers and BEACON bonds, since DRIVER may have multiple CARS. Likewise, BEACONS may be bonded with multiple DRIVER APPs, since mulptiple people may be using the same car. DRIVER APP configuration needs to be only once per CAR-BEACON pair.
 
 ## DRIVER: Parking lot availability map
 1. DRIVER opens the DRIVER APP and goes to the map view with the DRIVER APP’s menu
