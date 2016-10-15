@@ -91,7 +91,7 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
     * Allotted time
     * Amount of time exceeded.
 2. ATTENDANT checks that the register number of the CAR matches the register number that the GEAR offers, and if they match, the ATTENDANT fines the CAR
-3) ATTENDANT continues patrolling.
+3. ATTENDANT continues patrolling.
 
 ## ATTENDANT: Paid outside parking with SPARK 2b
 1. GEAR informs the ATTENDANT that CAR has not exceeded the allotted time
