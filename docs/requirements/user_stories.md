@@ -4,6 +4,12 @@ This document contains all the **functional requirements** in the form of user s
 
 If some **required functionality** is missing, please give comments about it. We can discuss about adding them, though we think that the scope of the stories described below is enough for the scope of the project course and what will be implemented during that. If necessary, we may conceptualise (i.e. define the stories) even further than what is presented in this document, even though we would not implement all that.
 
+## Priorisation
+As mentioned, this document contains only the user stories related to **the required functionality**. The stories may refer to sections that are not required by the customer, but would be necessary for the product to be actually functional and usable in practice. Those sections can be found in the document **additional_functionalities.md**, namely:
+* DRIVER: Paid outside parking without SPARK
+* ATTENDANT: Paid outside parking without SPARK 1b
+* ATTENDANT: Parking disc outside parking without SPARK 1b
+
 ## Glossary
 * ATTENDANT - Parking attendant patrolling parking areas.
 * BEACON - BLE-BEACON gadget positioned in cars whose drivers use SPARK. Responds with METADATA about the parking situation of CAR.
@@ -62,20 +68,6 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
 4. BEACON begins broadcasting the point of time when parking was initiated
 5. DRIVER closes the DRIVER APP and leaves the CAR.
 
-## DRIVER: Paid outside parking without SPARK
-1. DRIVER drives his CAR to a paid outside parking lot and parks the CAR
-2. DRIVER exists the CAR and goes to the SMART METER
-3. DRIVER purchases a ticket from the SMART METER and METADATA about the purchase is sent to CLOUD. This METADATA would include at least
-    * Parking area identifier
-    * Parking time
-4. DRIVER receives a parking ticket from the SMART METER
-5. DRIVER walks back to his CAR, puts the parking ticket on the dashboard and leaves the CAR.
-
-## DRIVER: Parking disc parking without SPARK
-1. DRIVER drives his CAR to an outside parking disc parking lot and parks the CAR
-2. DRIVER sets the parking disc on the windshield
-3. DRIVER leaves the CAR.
-
 ## ATTENDANT: Paid outside parking
 1. ATTENDANT arrives to the parking area
 2. ATTENDANT taps “Get parking area information” on the GEAR and GEAR gets METADATA about all the registered-as-parked CARs in the area. A registered-as-parked CAR in this context means a registration of a payment related to a CAR for a certain amount of time. This does not mean that CAR should still be physically in the parking lot, but at least its parking time has not yet exceeded. The METADATA would include at least
@@ -91,12 +83,6 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
 1. ATTENDANT looks at GEAR.
     * IF CAR’s staying time has exceeded the allotted time, then the user story continues in **ATTENDANT: Paid outside parking with SPARK 2a**
     * IF NOT, then the user story continues in **ATTENDANT: Paid outside parking with SPARK 2b**.
-
-## ATTENDANT: Paid outside parking without SPARK 1b
-1. GEAR informs the ATTENDANT that the scanning found no SPARK using CARs
-2. ATTENDANT checks if there’s a valid parking permit on the windshield of the CAR
-    * IF THERE is, then ATTENDANT continues patrolling.
-    * IF NOT, then ATTENDANT fines the CAR and continues patrolling.
 
 ## ATTENDANT: Paid outside parking with SPARK 2a
 1. GEAR informs the ATTENDANT about CAR’s staying time having exceeded the allotted time and offers the ATTENDANT METADATA about the CAR. This METADATA would include at least
@@ -125,12 +111,6 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
 1. ATTENDANT looks at GEAR.
     * IF CAR’s staying time has exceeded the allotted time, then the user story continues in **ATTENDANT: Parking disc outside parking with SPARK 2a**
     * IF NOT, then the user story continues in **ATTENDANT: Parking disc outside parking with SPARK 2b**.
-
-## ATTENDANT: Parking disc outside parking without SPARK 1b
-1. GEAR informs the ATTENDANT that the scanning found no SPARK using CARs
-2. ATTENDANT checks if there’s a valid parking disc on the windshield of the CAR
-    * IF THERE is, then ATTENDANT continues patrolling.
-    * IF NOT, then ATTENDANT fines the CAR and continues patrolling.
 
 ## ATTENDANT: Parking disc outside parking with SPARK 2a
 1. GEAR informs the ATTENDANT about CAR’s staying time having exceeded the allotted time and offers the ATTENDANT METADATA about the CAR. This METADATA would include at least
