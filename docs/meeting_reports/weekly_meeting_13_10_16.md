@@ -14,8 +14,11 @@ Attending: Bill Silverajan, Soumya Das, Hanning Zhau, Aurélien Wolz, Perttu Paa
 ## Decisions about requirements:
 * Paid outside parking and the attandant story are the first priority
 * The benefit for the driver has to be thought about in more detail. Can also be a future scenario
-* The customer approved the requirements, but we should add more usability requirments (driver app should be easy to use,
-Attendant app can be more sophistocated) and the benefit for the driver
+* The customer approved the requirements, but we should add more usability requirments (driver app should be easy to use, Attendant app can be more sophistocated) and the benefit for the driver
+
+## Risk factors
+* Different holiday, work flow will be affected
+* It's important to define risk factors and critical components
 
 ## Other things disussed:
 * how to prevent forgeries, Kerberos?
