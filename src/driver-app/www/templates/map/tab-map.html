@@ -1,0 +1,19 @@
+<ion-view view-title="Map">
+  <ion-content>
+    <!-- Be patient message -->
+    <div class="item item-body item-center" ng-show="located != true">
+      <p>
+        The app search your position<br>
+        <i class="icon ion-map placeholder-icon icon-position"></i>
+      </p>
+    </div>
+
+    <!-- Loading footer -->
+    <div class="bar bar-footer bar-balanced" ng-show="located != true">
+      <div class="title">Loading ...</div>
+    </div>
+
+    <!-- Map division -->
+    <div id="map" data-tap-disabled="true"></div>
+  </ion-content>
+</ion-view>
