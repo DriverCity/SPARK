@@ -50,22 +50,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('tab.bluetooth', {
-    url: '/bluetooth',
+  .state('tab.parking', {
+    url: '/parking',
     views: {
-      'tab-bluetooth': {
-        templateUrl: 'templates/bluetooth/tab-bluetooth.html',
-        controller: 'BluetoothCtrl'
+      'tab-parking': {
+        templateUrl: 'templates/parking/tab-parking.html',
+        controller: 'ParkingCtrl'
       }
     }
   })
 
-  .state('tab.information', {
-    url: '/information',
+  .state('tab.settings', {
+    url: '/settings',
     views: {
-      'tab-information': {
-        templateUrl: 'templates/information/tab-information.html',
-        controller: 'InformationCtrl'
+      'tab-settings': {
+        templateUrl: 'templates/settings/tab-settings.html',
+        controller: 'SettingsCtrl'
       }
     }
   })

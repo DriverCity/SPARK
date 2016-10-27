@@ -1,0 +1,1 @@
+app.controller('ParkingCtrl', function($scope) {});
