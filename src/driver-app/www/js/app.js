@@ -1,10 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
@@ -25,20 +18,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
+  /****************************
+   * TAB CONFIGURATION
+   ***************************/
 
-  // setup an abstract state for the tabs directive
+  $stateProvider
     .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
   })
 
-  // Each tab has its own nav history stack:
+  /****************************
+   * MAP
+   ***************************/
 
   .state('tab.map', {
     url: '/map',
@@ -50,6 +43,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+  /****************************
+   * PARKING
+   ***************************/
+
   .state('tab.parking', {
     url: '/parking',
     views: {
@@ -59,6 +56,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
+
+    .state('tab.disk', {
+      url: '/disk',
+      views: {
+        'tab-parking': {
+          templateUrl: 'templates/parking/tab-disk.html',
+          controller: 'DiskCtrl'
+        }
+      }
+    })
+
+  /****************************
+   * SETTINGS
+   ***************************/
 
   .state('tab.settings', {
     url: '/settings',
@@ -70,7 +81,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/map');
+  /****************************
+   * DEFAULT ROUTE
+   ***************************/
+
+  $urlRouterProvider.otherwise('/tab/parking');
 
 });

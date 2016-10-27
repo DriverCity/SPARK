@@ -1,4 +1,4 @@
-app.controller('SettingsCtrl', function($scope) {
+app.controller('DiskCtrl', function($scope, $state) {
 
   /****************************
    * UTILS

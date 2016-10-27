@@ -71,4 +71,13 @@ app.controller('MapCtrl', function(Firebase, $scope, $state, $cordovaGeolocation
   }, function(error){
     alert("Unexpected error, could not get location ...");
   });
+
+  /****************************
+   * UTILS
+   ***************************/
+
+  $scope.changeState = function(location) {
+    $state.go(location);
+  };
+  
 });
