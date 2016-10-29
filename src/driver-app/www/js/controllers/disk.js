@@ -1,4 +1,10 @@
+/**********************************
+ * [CONTROLLER] DISK
+ *********************************/
+
 app.controller('DiskCtrl', function($scope, $state) {
+
+  $scope.date = new Date();
 
   /****************************
    * UTILS

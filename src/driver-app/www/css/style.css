@@ -1,4 +1,12 @@
 /****************************
+ * COMMON
+ ***************************/
+
+.centered {
+  text-align: center;
+}
+
+/****************************
  * MAP
  ***************************/
 
@@ -32,7 +40,7 @@
   display: table !important;
   width: 100% !important;
   height: 100% !important;
-  margin-top: -50px; /* the height of the centered content */
+  margin-top: -50px;
   text-align: center;
 }
 
@@ -58,3 +66,20 @@
 .italic {
   font-style: italic;
 }
+
+/****************************
+ * DISK
+ ***************************/
+
+.big-icon {
+  margin-top: 50px;
+  font-size: 55px;
+  padding: 10px;
+}
+  .big-icon i {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .big-icon p {
+    font-size: 20px;
+  }
