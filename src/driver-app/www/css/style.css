@@ -1,0 +1,85 @@
+/****************************
+ * COMMON
+ ***************************/
+
+.centered {
+  text-align: center;
+}
+
+/****************************
+ * MAP
+ ***************************/
+
+.item-center {
+  text-align:center;
+}
+
+.icon-position {
+  font-size: 32px;
+  color:#7f7f7f;
+}
+
+.scroll {
+  height: 100%;
+}
+ 
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.vehicle {
+  width: 70%;
+}
+
+/****************************
+ * PARKING
+ ***************************/
+
+.vertical .scroll-content {
+  display: table !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin-top: -50px;
+  text-align: center;
+}
+
+.vertical .scroll {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.space {
+  display: block;
+  height: 100px;
+}
+
+.img-parking {
+  width: 120px;
+  height: 120px;
+}
+
+.logo {
+  width: 85%;
+  max-width: 400px;
+}
+.italic {
+  font-style: italic;
+}
+
+/****************************
+ * DISK
+ ***************************/
+
+.big-icon {
+  margin-top: 50px;
+  font-size: 55px;
+  padding: 10px;
+}
+  .big-icon i {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .big-icon p {
+    font-size: 20px;
+  }
