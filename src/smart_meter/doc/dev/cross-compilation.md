@@ -1,13 +1,13 @@
 # Cross-compiling for Raspberry Pi on Linux
 
-This document tells how to cross-compile C++ application for Raspberry Pi on Linux.
+This document tells how to cross-compile C++ application for Raspberry Pi on Linux desktop.
 
 ## First time setup
-Following steps need to be only once before first cross-compilation.
+Following steps need to be executed only once before first cross-compilation.
 
 1. install required packages:
    ```
-   sudo apt-get install git cmake rsync lib32ncurses5
+   sudo apt-get install git scp cmake rsync lib32ncurses5
    ```
 
 2. Get cross-compiler for Raspberry Pi:
@@ -58,16 +58,16 @@ Let's test compilation with simple Hello World application.
 
 As a result, there should be a new directory in your source directory called 'bin'. 
 This directory contains executable 'HelloWorld'. 
-This executable is cross-compiled for Raspberry Pi, and cannot be run on Linux.
+This executable is cross-compiled for Raspberry Pi, and cannot be run on your Linux desktop.
 
 
 ## Upload and run program on Raspberry Pi over SSH
-This section describes how to upload and run program on Raspberry Pi over local area network (LAN)
+This section describes how to upload and run your program on Raspberry Pi over local area network (LAN)
 
 1. Power up Raspberry Pi and connect it to your router with Ethernet cable.
 
 2. Check Raspberry's LAN ip address from the DHCP client list in your router's control web page (usually written to the router).
-Let's assume that address is 192.168.0.101.
+Let's assume that the ip-address is 192.168.0.101.
 
 3. Compress your application
 
@@ -83,7 +83,7 @@ Let's assume that address is 192.168.0.101.
   ```
   On first time accessing Raspberry Pi, you may first need to add target ip to known hosts:
   ```
-  ssh-keygen -f "/home/<user name>/.ssh/known_hosts" -R 192.168.0.101
+  ssh-keygen -f "$HOME/.ssh/known_hosts" -R 192.168.0.101
   ```
   You also may be asked confirmation while running scp. Default password for pi is 'raspberry'.
   
