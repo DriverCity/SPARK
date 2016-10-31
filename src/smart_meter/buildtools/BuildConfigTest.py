@@ -181,30 +181,19 @@ class BuildConfigTest(unittest.TestCase):
       argc = 5
       argv = ["program_name", "testcomponents", "variant_linux", "-c", "Bar"]	
       conf = BuildConfig(argc, argv)
-      self.assertEquals(1, conf.firstComponent)
+      self.assertEquals(0, conf.firstComponent)
       self.assertFalse(conf.compileAllComponents)
       self.assertFalse(conf.runTests)
       self.assertTrue(conf.buildComponent)
       self.assertFalse(conf.cleanBeforeBuild)
       self.assertFalse(conf.cleanAll)
       self.assertEquals(conf.variant, "variant_linux")
-      self.assertEquals(len(conf.components), 3)
+      self.assertEquals(len(conf.components), 1)
 
-      self.assertEquals("Foo", conf.components[0].name)
-      self.assertEquals("Bar", conf.components[1].name)
-      self.assertEquals("Baz", conf.components[2].name)
-
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertEquals("Bar", conf.components[0].name)
+      self.assertEquals("Bar/src", conf.components[0].srcDir)
+      self.assertEquals("Bar/tests", conf.components[0].testSrcDir)
+      self.assertEquals("./builds/Bar/tests/tests", conf.components[0].runTestsCmd)
 
 
    def test_ContinueCleanBuild(self):

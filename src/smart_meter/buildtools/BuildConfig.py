@@ -5,8 +5,8 @@ class BuildConfig(object):
    """Constructor. Reads configuration from commandline arguments."""
    def __init__(self, argc, argv):
       self.firstComponent = 0		# Index of first compiled component in component list.
-      self.compileAllComponents = True  # Should all following components be compiled?
-      self.runTests = False		# Should tests be run during build?
+      self.compileAllComponents = True  # Should all following components be compiled
+      self.runTests = False 		# Should tests be run during build?
       self.buildComponent = True	# Should component it self be built.
       self.cleanBeforeBuild = False	# Should component be cleaned before building?
       self.cleanAll = False		# Should whole project be cleaned before build?
@@ -88,5 +88,9 @@ class BuildConfig(object):
 
       if '--continue-after' in argv:
          self.firstComponent += 1
+      elif '--continue' not in argv:
+         self.components = [self.components[self.firstComponent]]
+         self.firstComponent = 0
+         
 
 
