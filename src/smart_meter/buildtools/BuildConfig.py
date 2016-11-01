@@ -57,6 +57,10 @@ class BuildConfig(object):
       if 'test' in argv and ('build' not in argv and 'all' not in argv):
          self.buildComponent = False
       
+      # Only clean
+      if ('clean' in argv and not('build' in argv or 'test' in argv or 'all' in argv)):
+         self.buildComponent = False
+
       # Compile all components?
       if '-c' in argv and not ('--continue' in argv or '--continue-after' in argv):
          self.compileAllComponents = False

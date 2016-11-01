@@ -7,4 +7,4 @@ CC = "CC"
 CXX = "CXX"
 
 os.environ[CFLAGS] = "-Wall -Werror"
-os.environ[CXXFLAGS] = os.environ[CFLAGS] + " -std=c++14"
+os.environ[CXXFLAGS] = os.environ[CFLAGS] + " -std=c++11"

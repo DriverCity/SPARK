@@ -1,7 +1,6 @@
 
 import os
-
-BUILD_DIR = "builds"
+import shutil
 
 """List of components to be built."""
 componentList = []
@@ -19,13 +18,34 @@ class Component(object):
 
 
    """Build component"""
-   def build(self, clean=False):
+   def build(self, clean=False, build=True):
       result = 0
+      # Clean
+      comp_build_dir = os.environ["BUILD_DIR"] + "/" + self.name
+      comp_src_dir = os.environ["SOURCE_DIR"] + "/" + self.srcDir
       if clean:
-         os.system("rm -rf " + BUILD_DIR + "/" + self.name)
-      result = os.system("cmake " + self.srcDir)
+         if os.path.exists(comp_build_dir):
+            shutil.rmtree(comp_build_dir)
+
+      # Create build dir and change to source dir
+      if not os.path.exists(comp_build_dir):
+         os.mkdir(comp_build_dir)
+      pwd = os.getcwd()
+      os.chdir(comp_src_dir)
+      print (comp_src_dir)
+
+      #clean only?
+      if not build:
+         os.chdir(pwd)
+         return True
+
+      # Build
+      result = os.system("cmake -H. -B" + comp_build_dir)
       if (result == 0):
+         os.chdir(comp_build_dir)
          result = os.system("make")
+
+      os.chdir(pwd)
       return result == 0
 
 
