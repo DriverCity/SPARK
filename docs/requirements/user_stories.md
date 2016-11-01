@@ -22,7 +22,7 @@ As mentioned, this document contains only the user stories related to **the requ
 * MAP - A functionality in DRIVER APP and GEAR. A Google Maps -map with a heat map overlay that presents the user the predicted availabilities of parking lots.
 * METADATA - Used vaguely to stand for “all metadata necessary at this point”. Specified in detail whenever purposeful.
 * SMART METER - A parking meter which accepts payments both traditionally (i.e. the person parking goes at the meter, pays physically with cash and the meter prints a parking permit for the parker) and using SPARK. When requested, sends METADATA about the parking context to DRIVER APP. Sends METADATA about payments to CLOUD.
-* SPARK - This very application (of many applications). A system consisting of SMART METERS, BEACONS, DRIVER APPS, GEARS and CLOUD.
+* SPARK - This very system (of many applications). A system consisting of SMART METERS, BEACONS, DRIVER APPS, GEARS and CLOUD.
 
 ## DRIVER: Configuration
 1. DRIVER configures his CAR’s register number to the DRIVER APP and bonds the BEACON with the DRIVER APP. DRIVER APP may have multiple sets of register numbers and BEACON bonds, since DRIVER may have multiple CARS. Likewise, BEACONS may be bonded with multiple DRIVER APPs, since multiple people may be using the same car. DRIVER APP configuration needs to be done only once per CAR-BEACON pair.
@@ -47,12 +47,12 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
     * Parking price per hour
     * The price that the DRIVER has to pay for staying for the configured amount of time.
 5. DRIVER APP presents this information to the DRIVER and DRIVER confirms the payment by tapping “Confirm payment”
-6. SMART METER sends METADATA about the parking situation to CLOUD. This event is called “parking registration to CLOUD”. The METADATA would include at least
+6. SMART METER sends METADATA about the parking situation to CLOUD. This event is called “parking registration to CLOUD”. Connection to CLOUD is secured. The parking event gets put into a message queue on CLOUD, thus providing the SMART METER a near immediate response. The METADATA would include at least
     * Parking area identifier
     * Parking time
     * CAR’s register number.
-7. DRIVER APP instructs the DRIVER that the payment has been completed.
-8. DRIVER closes the DRIVER APP and leaves the parking area.
+9. DRIVER APP instructs the DRIVER that the payment has been completed.
+10. DRIVER closes the DRIVER APP and leaves the parking area.
 
 ## DRIVER: Parking disc outside parking with SPARK
 1. DRIVER drives his CAR to an outside parking disc parking lot and parks the CAR. BEACON is broadcasting CAR's register number.
@@ -63,17 +63,19 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
 5. DRIVER closes the DRIVER APP and leaves the CAR.
 
 ## ATTENDANT: Paid outside parking
-1. ATTENDANT arrives to the parking area
-2. ATTENDANT taps “Get parking area information” on the GEAR and GEAR gets METADATA about all the registered-as-parked CARs in the area from CLOUD. A registered-as-parked CAR in this context means a registration of a payment related to a CAR for a certain amount of time. This does not mean that CAR should still be physically in the parking lot, but at least its parking time has not yet exceeded. The METADATA would include at least
-    * Register numbers of CARs
-    * Points of time when parking registration to CLOUD was done
-    * Allotted time (i.e. time-spans that were actually paid).
-3. ATTENDANT walks by CAR and taps “Scan” button on GEAR
-    * IF GEAR receives a broadcasted register number from the BEACON inside the CAR, then the user story continues in **ATTENDANT: Paid outside parking with SPARK 1a**
-    * IF NOT, then the user story continues in **ATTENDANT: Paid outside parking without SPARK 1b**.
+1. ATTENDANT arrives to the parking area and chooses the current parking area name from a list of parking area names
+2. ATTENDANT navigates to the register number list view on GEAR. Register number list view shows each register number that GEAR can hear being broadcasted by BEACONs in the chosen area. The register numbers are sorted in an alphabetical order. Each heard register number is checked with CLOUD, making CLOUD provide METADATA about each CAR. The METADATA would include at least
+    * Point of time when parking registration to CLOUD was done
+    * Allotted time (i.e. time-span that was actually paid for).
+3. GEAR visualises the list to the ATTENDANT in such a way, that
+    * Valid parkings are highlighted with green color
+    * Invalid parkings (i.e. allotted time has been surpassed) are highlighted with red color.
+4. ATTENDANT patrols through the area. For each CAR, ATTENDANT compares the register number on CAR's license plate to the register numbers in the register number list view, although, ATTENDANT may at the same time check if there is a traditional parking permit on the windshield of CAR.
+    * IF a traditional parking permit exists or CAR's register number is not found on the list, then the user story continues in **ATTENDANT: Paid outside parking without SPARK 1b**.
+    * IF NOT, then the user story continues in **ATTENDANT: Paid outside parking with SPARK 1a**
     
 ## ATTENDANT: Paid outside parking with SPARK 1a
-1. ATTENDANT looks at GEAR and confirms that the register number provided by the BEACON matches the actual register number on the CAR.
+1. ATTENDANT looks at GEAR
     * IF CAR’s staying time has exceeded the allotted time, then the user story continues in **ATTENDANT: Paid outside parking with SPARK 2a**
     * IF NOT, then the user story continues in **ATTENDANT: Paid outside parking with SPARK 2b**.
 
@@ -84,24 +86,27 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
     * Allotted time
     * Amount of time exceeded.
 2. ATTENDANT fines the CAR
-3. ATTENDANT continues patrolling.
+3. ATTENDANT has an option to remove the CAR's register number from the register number list view
+4. ATTENDANT continues patrolling.
 
 ## ATTENDANT: Paid outside parking with SPARK 2b
 1. GEAR informs the ATTENDANT that CAR has not exceeded the allotted time
-2. ATTENDANT continues patrolling.
+2. ATTENDANT has an option to remove the CAR's register number from the register number list view
+3. ATTENDANT continues patrolling.
 
 ## ATTENDANT: Parking disc outside parking
-1. ATTENDANT arrives to the parking area
-2. ATTENDANT taps “Get parking area information” on the GEAR and GEAR gets METADATA about the parking area from CLOUD. This METADATA would include at least
-    * Parking area identifier
-    * Maximum allowed parking time.
-3. GEAR informs ATTENDANT that the current parking area is a parking disc area
-4. ATTENDANT walks by CAR and taps “Scan” button on GEAR and GEAR sends to CLOUD information about “Scan”-button having been pressed in that parking disc area
-    * IF GEAR receives the broadcasted register number from the BEACON inside the CAR, then the user story continues in **ATTENDANT: Parking disc outside parking with SPARK 1a**
-    * IF NOT, then the user story continues in **ATTENDANT: Parking disc outside parking without SPARK 1b**.
-
+1. ATTENDANT arrives to the parking area and configures the maximum allowed parking time to the GEAR
+2. ATTENDANT navigates to the register number list view on GEAR. Register number list view shows each register number of parking disc parked CARs that GEAR can hear being broadcasted by BEACONs. The register numbers are sorted in an alphabetical order. Each heard register number is checked with CLOUD, making CLOUD provide METADATA about each CAR. The METADATA would include at least
+    * Point of time when parking registration to CLOUD was done. 
+3. GEAR visualises the list to the ATTENDANT in such a way, that
+    * Valid parkings are highlighted with green color
+    * Invalid parkings (i.e. allotted time has been surpassed) are highlighted with red color.
+4. ATTENDANT patrols through the area. For each CAR, ATTENDANT compares the register number on CAR's license plate to the register numbers in the register number list view, although, ATTENDANT may at the same time check if there is a traditional parking disc on the windshield of CAR.
+    * IF a traditional parking disc exists or CAR's register number is not found on the list, then the user story continues in **ATTENDANT: Parking disc outside parking without SPARK 1b**.
+    * IF NOT, then the user story continues in **ATTENDANT: Parking disc outside parking with SPARK 1a**.
+   
 ## ATTENDANT: Parking disc outside parking with SPARK 1a
-1. ATTENDANT looks at GEAR and confirms that the register number provided by the BEACON matches the actual register number on the CAR.
+1. ATTENDANT looks at GEAR
     * IF CAR’s staying time has exceeded the allotted time, then the user story continues in **ATTENDANT: Parking disc outside parking with SPARK 2a**
     * IF NOT, then the user story continues in **ATTENDANT: Parking disc outside parking with SPARK 2b**.
 
@@ -109,8 +114,11 @@ ATTENDANT has access to the same MAP with the GEAR as was described in **DRIVER:
 1. GEAR informs the ATTENDANT about CAR’s staying time having exceeded the allotted time and offers the ATTENDANT METADATA about the CAR. This METADATA would include at least
     * Allotted time
     * Amount of time exceeded.
-2. ATTENDANT fines the CAR and continues patrolling.
+2. ATTENDANT fines the CAR
+3. ATTENDANT has an option to remove the CAR's register number from the register number list view
+4. ATTENDANT continues patrolling.
 
 ## ATTENDANT: Parking disc outside parking with SPARK 2b
 1. GEAR informs the ATTENDANT that CAR has not exceeded the allotted time
-2. ATTENDANT continues patrolling.
+2. ATTENDANT has an option to remove the CAR's register number from the register number list view
+3. ATTENDANT continues patrolling.
