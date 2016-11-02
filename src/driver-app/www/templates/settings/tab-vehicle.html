@@ -1,0 +1,49 @@
+<ion-view view-title="Vehicle">
+  <ion-content>
+    <!-- Vehicle -->
+    <div class="item item-divider">
+      Vehicle
+    </div>
+
+    <div class="list">
+      <!-- Makes -->
+      <label class="item item-input item-select" ng-class="makes.length > 0 ? 'empty' : 'disabled'">
+        <div class="input-label">
+          Make
+        </div>
+        <select class="transparent" ng-model="maker" ng-change="inputMakeChange(maker, '{{maker}}')">
+          <option ng-disabled="makes.length > 0 ? false : true" ng-repeat="make in makes" ng-value="make.make_id">{{make.make_display}}</option>
+        </select>
+      </label>
+
+      <!-- Makes -->
+      <label class="item item-input item-select" ng-class="models.length > 0 ? 'empty' : 'disabled'">
+        <div class="input-label">
+          Model
+        </div>
+        <select class="transparent" ng-model="model" ng-change="inputModelChange(maker, model, '{{model}}')">
+          <option ng-disabled="models.length > 0 ? false : true" ng-repeat="model in models">{{model.model_name}}</option>
+        </select>
+      </label>
+
+      <!-- Trim -->
+      <label class="item item-input item-select" ng-class="trims.length > 0 ? 'empty' : 'disabled'">
+        <div class="input-label">
+          Trim
+        </div>
+        <select class="transparent" ng-model="trim" ng-change="inputTrimChange(trim, '{{trim}}')">
+          <option ng-disabled="trims.length > 0 ? false : true" ng-repeat="trim in trims" value="{{trim.model_id}}">{{trim.model_trim}} ({{trim.model_year}})</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="row centered padding">
+      <div class="col">
+        <button class="button button-balanced" ng-disabled="trim == null ? true : false" ng-click="validationData(maker, model, trim)">
+          Submit
+        </button>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>
