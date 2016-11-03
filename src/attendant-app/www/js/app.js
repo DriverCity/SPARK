@@ -52,6 +52,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+    .state('tab.disk', {
+      url: '/disk',
+      views: {
+        'tab-situation': {
+          templateUrl: 'templates/situation/tab-disk.html',
+          controller: 'SituationCtrl'
+        }
+      }
+    })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/situation');
 
