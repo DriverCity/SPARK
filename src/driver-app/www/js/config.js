@@ -1,4 +1,4 @@
-var app = angular.module('starter.controllers', ['ionic','firebase','ngCordova']);
+var app = angular.module('starter.controllers', ['ionic','firebase','ngCordova','LocalStorageModule']);
 
 /**********************************
  * [DIRECTIVE] TEXTAREA
@@ -17,6 +17,28 @@ app.directive('textarea', function() {
       };
       scope.$watch(attr.ngModel, function() {
         update();
+      });
+    }
+  };
+});
+
+/**********************************
+ * [DIRECTIVE] SELECT ISSUES KEYBOARD
+ *********************************/
+
+app.directive('select', function() {
+  return {
+    restrict: 'E',
+    link: function(scope, element, attrs) {
+      element.on('touchstart focus', function(e) {
+        if (window.cordova && window.cordova.plugins.Keyboard) {
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+        }
+      });
+      element.bind('blur', function(e) {
+        if (window.cordova && window.cordova.plugins.Keyboard) {
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        }
       });
     }
   };

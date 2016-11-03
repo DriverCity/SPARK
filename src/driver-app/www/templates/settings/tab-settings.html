@@ -5,47 +5,32 @@
       Vehicle
     </div>
 
-    <div class="item item-body item-center">
-      <img src="img/tesla.jpg" class="vehicle">
-      <p>Tesla Model S</p>
+    <!-- Icons -->
+    <div class="row centered icon-settings">
+      <div class="col">
+        <i class="ion-model-s"></i>
+      </div>
+      <div class="col">
+        <i class="ion-help"></i>
+      </div>
     </div>
 
-    <!-- Information -->
-    <div class="item item-divider">
-      Information
+    <!-- Info message -->
+    <div class="row centered padding">
+      <div class="col">
+        <p>You haven't written infos about your car</p>
+      </div>
     </div>
 
-    
-    <li class="item item-toggle">
-      GPS
-      <label class="toggle toggle-calm">
-        <input type="checkbox">
-        <div class="track">
-          <div class="handle"></div>
-        </div>
-      </label>
-    </li>
-
-    <li class="item item-toggle">
-      Voluntary participation
-      <label class="toggle toggle-calm">
-        <input type="checkbox">
-        <div class="track">
-          <div class="handle"></div>
-        </div>
-      </label>
-    </li>
-    
-    <!-- Settings -->
-    <div class="item item-divider">
-      Settings
+    <!-- Buttons -->
+    <div class="row centered padding">
+      <div class="col">
+        <button class="button button-balanced" ng-click="openVehicle()">
+          Add my car
+        </button>
+      </div>
     </div>
 
-    <div class="item range">
-      <i class="icon ion-volume-low"></i>
-      <input type="range" name="volume">
-      <i class="icon ion-volume-high"></i>
-    </div>
-
+    Current = {{currentData}}
   </ion-content>
 </ion-view>
