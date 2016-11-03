@@ -85,16 +85,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-    .state('tab.vehicle', {
-      url: '/vehicle',
-      views: {
-        'tab-settings': {
-          templateUrl: 'templates/settings/tab-vehicle.html',
-          controller: 'VehicleCtrl'
-        }
-      }
-    })
-
   /****************************
    * DEFAULT ROUTE
    ***************************/
