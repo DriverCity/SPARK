@@ -12,6 +12,7 @@ BUILD_DIR = os.environ["BUILD_DIR"]
 DEPLOY_ROOT = os.environ["DEPLOY_ROOT"]
 DEPLOY_DIR = os.environ["DEPLOY_DIR"]
 SOURCE_DIR = os.environ["SOURCE_DIR"]
+BUILD_NAME = os.environ["BUILD_NAME"]
 
 
 def main(argc, argv):
@@ -71,8 +72,11 @@ def runBuildSteps(config):
    for i in range(config.firstComponent, len(config.components)):
       comp = config.components[i]
 
+      print("================================================================================")
+      print("Starting component " + comp.name)
+
       # Run test step (only in linux debug build)
-      if (config.runTests and os.environ["BUILD_NAME"] == "linux_debug"):
+      if (config.runTests and BUILD_NAME == "linux_debug"):
          if not comp.runTests(config.cleanBeforeBuild):
             return 1
 
@@ -81,12 +85,19 @@ def runBuildSteps(config):
          if not comp.build(config.cleanBeforeBuild):
             return 1
 
+      print("Component " + comp.name + " finished")
+      print("================================================================================")
+      print("\n")
+
    return 0
 
 
 
 """Copy binary files to deploy directory."""
 def deploy(config):
+   print("================================================================================")
+   print("Deploying...")
+
    # Create deploy directory structure
    if not os.path.exists(DEPLOY_ROOT):
       os.makedirs(DEPLOY_ROOT)
@@ -97,13 +108,25 @@ def deploy(config):
 
    # Copy binaries.
    for comp in config.components:
-      for binary in comp.binaries:
-         SOURCE = BUILD_DIR + "/" + comp.name + "/" + binary
-         TARGET = DEPLOY_DIR + "/bin/" + binary
-         print("Deploying "+ binary)
-         os.system("cp " + SOURCE + " " + TARGET)
+      SOURCE = BUILD_DIR + "/" + comp.name + "/bin/*"
+      TARGET = DEPLOY_DIR + "/bin/"
+      print ("Copying binaries for " + comp.name)
+      os.system("cp " + SOURCE + " " + TARGET)
+
+
+   # Create zip for raspberry builds
+   if (BUILD_NAME != "linux_debug"):
+      createArchive()
 
    return 0
+
+
+def createArchive():
+   print("Creating archive " + BUILD_NAME + ".zip")
+   pwd = os.getcwd()
+   os.chdir(DEPLOY_DIR)
+   os.system("zip -r --symlinks " + BUILD_NAME + ".zip .")
+   os.chdir(pwd)
 
 
 if __name__ == "__main__":

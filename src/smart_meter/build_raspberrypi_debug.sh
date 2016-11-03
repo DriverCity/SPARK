@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 export BUILD_TYPE="DEBUG"
 export BUILD_ROOT=$PWD/builds

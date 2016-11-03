@@ -1,9 +1,9 @@
-#/bin/sh
+#/bin/bash
 
 export BUILD_TYPE="RELEASE"
 export BUILD_ROOT=$PWD/builds
 export DEPLOY_ROOT=$PWD/deploy
-export BUILD_NAME="raspberrypi_debug"
+export BUILD_NAME="raspberrypi_release"
 export BUILD_VARIANT="variant_raspberrypi"
 export BUILD_COMPONENTS="raspberrypi_components"
 export SOURCE_DIR="$PWD/src"
