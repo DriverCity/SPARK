@@ -14,7 +14,7 @@ class VariantsTest(unittest.TestCase):
       self.assertEquals(CC, 'CC')
       self.assertEquals(CXX, 'CXX')
       self.assertEquals(os.environ[CFLAGS], '-Wall -Werror')
-      self.assertEquals(os.environ[CXXFLAGS], '-Wall -Werror -std=c++14')
+      self.assertEquals(os.environ[CXXFLAGS], '-Wall -Werror -std=c++11')
       self.assertIsNone(os.environ.get(CC))
       self.assertIsNone(os.environ.get(CXX), '')
 
@@ -26,9 +26,9 @@ class VariantsTest(unittest.TestCase):
       self.assertEquals(CC, 'CC')
       self.assertEquals(CXX, 'CXX')
       self.assertEquals(os.environ[CFLAGS], '-Wall -Werror')
-      self.assertEquals(os.environ[CXXFLAGS], '-Wall -Werror -std=c++14')
-      self.assertEquals(os.environ[CC], 'g++')
-      self.assertEquals(os.environ[CXX], 'g++')
+      self.assertEquals(os.environ[CXXFLAGS], '-Wall -Werror -std=c++11')
+      self.assertEquals(os.environ[CC], '/usr/bin/gcc')
+      self.assertEquals(os.environ[CXX], '/usr/bin/g++')
 
    def test_raspberrypi_variant(self):
       exec('from variant_raspberrypi import *')
@@ -37,8 +37,8 @@ class VariantsTest(unittest.TestCase):
       self.assertEquals(CC, 'CC')
       self.assertEquals(CXX, 'CXX')
       self.assertEquals(os.environ[CFLAGS], '-Wall -Werror')
-      self.assertEquals(os.environ[CXXFLAGS], '-Wall -Werror -std=c++14')
-      self.assertEquals(os.environ[CC], os.environ['HOME'] + '/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++')
+      self.assertEquals(os.environ[CXXFLAGS], '-Wall -Werror -std=c++11')
+      self.assertEquals(os.environ[CC], os.environ['HOME'] + '/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc')
       self.assertEquals(os.environ[CXX], os.environ['HOME'] + '/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++')
 
 

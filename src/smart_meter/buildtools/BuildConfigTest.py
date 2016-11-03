@@ -24,17 +24,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
 
    """Test clean-all without building."""
@@ -70,17 +62,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
 
    """Test clean-all and tests."""
@@ -101,17 +85,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
    
    """Test clean-all, build and tests."""
@@ -132,17 +108,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
 
    """Test clean-all, build and tests with explicit commands."""
@@ -163,17 +131,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
 
    """Test buiding single component."""
@@ -191,8 +151,6 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals(len(conf.components), 1)
 
       self.assertEquals("Bar", conf.components[0].name)
-      self.assertEquals("Bar/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/tests", conf.components[0].testSrcDir)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[0].runTestsCmd)
 
 
@@ -213,17 +171,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
 
    def test_ContinueAfterCleanTest(self):
@@ -243,17 +193,9 @@ class BuildConfigTest(unittest.TestCase):
       self.assertEquals("Bar", conf.components[1].name)
       self.assertEquals("Baz", conf.components[2].name)
 
-      self.assertEquals("Foo/src", conf.components[0].srcDir)
-      self.assertEquals("Bar/src", conf.components[1].srcDir)
-      self.assertEquals("Baz/src", conf.components[2].srcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
-      self.assertEquals("Bar/tests", conf.components[1].testSrcDir)
-      self.assertIsNone(conf.components[2].testSrcDir)
-
-      self.assertIsNone(conf.components[0].testSrcDir)
+      self.assertIsNone(conf.components[0].runTestsCmd)
       self.assertEquals("./builds/Bar/tests/tests", conf.components[1].runTestsCmd)
-      self.assertIsNone(conf.components[2].testSrcDir)
+      self.assertIsNone(conf.components[2].runTestsCmd)
 
 
    def test_TooFewArguments(self):
