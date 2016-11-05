@@ -52,7 +52,7 @@ Optional argumets are explained in table below.
 Argument | Description
 --- | --- 
 clean-all | Delete all previously built and deployed files. 
--c | Specify a single component to be built / tested. Convenient option when you have made changes to one component only. 
+-c | Specify a single component to be built / tested. Convenient option when you have made changes to one component only. The component name should become immediately after this option.
 --continue | After building the component specified with -c option, continue building all the following components.
 --continue-after | Skip the component specified with -c option and build all components following it.
 clean | Clean component.
@@ -88,3 +88,69 @@ After running a build script, 'builds' and 'deploy' directories appear to the sm
 The builds directory contains object files, makefiles and all the other intermediate build results for each component. 
 The deploy directory contains all libraries, executables and configuration files required to actually run the program.
 In raspberry pi variants there is also a ready made zip-file you can upload, extract and run on Raspberry Pi.
+
+## Making your own components
+
+### Source tree
+
+All components should be located in smart_meter/src directory. Each component must have its own sub-directory. In component's subdirectory, there will be up to three subdirectories:
+
+- **include:** This subdirectory should contain all the public headers for the component. These headers will be automatically copied to the build directory, and are visible to other components. These headers form the component's public interface. If the component does not have any public interfaces, this sub-directory does not need to exist.
+
+- **src**: This subdirectory should contain component's source files and those header files that are not visible to other components. This subdirectory also contains CMakeLists.txt for building the component. The CMakeLists.txt should be written according to [this template.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/CMakeLists_src_template.txt) You may just copy the template and modify the necessary parts.
+
+- **tests**: This subdirectory should contain source files for unit tests for the component. It also contains the CMakeLists.txt required to build the tests. The CMakeLists.txt file must be written according to [this template.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/CMakeLists_tests_template.txt) If your test cases need some test files, put them to data-subdirectory under tests-directory. Using GTest as unit test framework is highly recommended. Try to implement your code in a way that it will be testable independent from other components. Also aim for high coverage when writing tests. Consider using [TDD](https://en.wikipedia.org/wiki/Test-driven_development), since it tends to help reaching these goals. If your component does not have any tests (!!) this subdirectory does not need to exist.
+
+Summary: Your component source tree should look like this:
+```
+ smart_meter
+   |-src
+      |-other_components
+      |-your_component
+         |-include
+         |  |-public_heders.h
+         |
+         |-src
+         |  |-CMakeLists.txt
+         |  |-private_headers.h
+         |  |-sources.cpp
+         |
+         |-tests
+            |-CMakeLists.txt
+            |-test_sources.cpp
+            |-data
+               |-testfiles.txt
+```
+
+### Adding component to the build system
+Just putting your source files to right place will not be enough to make buildtools notice it. There is one more thing left to do. You need to add your component to component lists of related build variants. This is not a hard task. Component listings for all build variants are located in buildtools/components directory. There are currently three component listings:
+
+- **linux_components.py:** Add your component here, if it is specific to the Linux build (mock-ups).
+
+- **raspberrypi_components.py:** Add your component here, if it is specific to Raspberry Pi (low level hw control).
+
+- **common_components.py:** Add your component here, if your component is platform independent, you want to include it to all builds.
+
+It would sound reasonable to put all platform-independent components to common components. There is one restriction however: Components need to be listed in order of dependency. Components will be built in order they appear on the list. Common components are built first and then the components specific to the used build variant. If your common component depends on a system dependent component (actual and mock-up implementation), you will need to list it in both linux_components and raspberrypi_components.
+
+Adding a component to a list is simple, and identical in all component lists. You just need to add one line of Python to the chosen file(s):
+```python
+components.componentList.append(component.Component(name='your_component_name', 
+                                                    runTestsCmd='./your_test_project_name'))
+```
+The name parameter should be the same as the project name in the CMakeLists.txt in your src-directory. It should also be the same as the name of your component's root directory. The runTestsCmd parameter tells buildtools the command to run your tests with. If you only have one executable test suite (like in the template), the command will match the project name (plus './' at the start). The name parameter is mandatory. Set runTestCmd parameter to None if your component has no tests (!!).
+
+After this, you can now build and deploy your component and run your tests with build scripts:
+
+```
+./build_linux_debug.sh -c your_component_name all
+```
+
+### Referencing other components
+It may be necessary to use services from other components to implement your component. Accessing other components is very easy. In CMakeLists templates, there are easy instructions on how to link your component to other components.
+
+Public headers from all components are automatically published to builds/variant_name/include directory. This directory is included to your component in CMakeLists templates. All you need to do to include a header from another component in your source code is to write:
+
+```c++
+#include "other_component_name/desired_header.h"
+```
