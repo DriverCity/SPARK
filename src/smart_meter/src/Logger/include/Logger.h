@@ -8,26 +8,31 @@
 #include <memory>
 #include <sstream>
 
-// Convenience macro. Prints a debug message with file name and line number.
-#define LOG_DEBUG(msg) \
+
+// Common part of implementation for macros below
+#define LOG_IMPLEMENTATION(identifier, msg)\
 {\
     std::ostringstream oss; \
-    oss << spark::Logger::DEBUG_MSG \
+    oss << identifier \
         << std::string(__FILE__).substr(std::string(__FILE__).find_last_of("/")+1) \
         << " " << __LINE__ << ": " << msg; \
     spark::Logger::write(oss.str());\
+}
+
+
+// Convenience macro. Prints a debug message with file name and line number.
+#define LOG_DEBUG(msg) \
+{\
+    LOG_IMPLEMENTATION(spark::Logger::DEBUG_MSG, msg) \
 }
 
 
 // Convenience macro. Prints an error message with file name and line number.
 #define LOG_ERROR(msg) \
 {\
-    std::ostringstream oss; \
-    oss << spark::Logger::ERROR_MSG \
-        << std::string(__FILE__).substr(std::string(__FILE__).find_last_of("/")+1) \
-        << " " << __LINE__ << ": " << msg; \
-    spark::Logger::write(oss.str());\
+    LOG_IMPLEMENTATION(spark::Logger::ERROR_MSG, msg) \
 }
+
 
 
 namespace spark
@@ -95,4 +100,4 @@ private:
     static std::ostream* printStream_;
 };
 
-}
+} // spark

@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <sstream>
 #include <fstream>
-#include "../include/Logger.h"
+#include "Logger.h"
 
 
 // Print single line.

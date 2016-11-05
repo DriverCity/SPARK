@@ -4,6 +4,10 @@ IGNORED_FILES = [".pyc", "~"]
 
 def createQtProject(files, projFileName):
    proFile = open(projFileName, 'w')
+
+   proFile.write("INCLUDEPATH += \\ \n"
+                 "builds/linux_debug/include \\ \n\n")
+
    proFile.write("SOURCES += \\ \n")
 
    for f in files:
