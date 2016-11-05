@@ -4,3 +4,5 @@
 *~
 builds/*
 deploy/*
+qt.pro
+qt.pro.user
