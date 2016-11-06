@@ -1,6 +1,6 @@
 
-# Other than empty, comment or key-value pairs.
+# Contains conflicting keys.
 
 paramFoo:foo
-this is not a comment or a key-value pair.
+paramFoo:nope
 paramBar:bar

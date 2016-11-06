@@ -20,7 +20,7 @@ include_directories($ENV{BUILD_DIR}/include)
 set(SRCS main.cpp)
 
 # Link other components
-set(LINKED_LIBS Logger)
+set(LINKED_LIBS Logger GlobalConfiguration)
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)

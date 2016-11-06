@@ -10,11 +10,13 @@ include_directories($ENV{BUILD_DIR}/include)
 
 set(TEST_SRCS
   ${SRC}/ConfigurationReader.cpp
+  ${SRC}/GlobalConfiguration.cpp
 )
 
 # List test sources here
 set(SRCS
   ConfigurationReaderTest.cpp
+  GlobalConfigurationTest.cpp
 )
 
 # Link other components

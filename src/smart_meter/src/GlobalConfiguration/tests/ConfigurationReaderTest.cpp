@@ -182,6 +182,6 @@ TEST_F (ConfigurationReaderTest, ReadInvalidFile)
     // Check error message
     spark::Logger::close();
     EXPECT_TRUE( containsMsg(m_oss.str(), "Error: ConfigurationReader.cpp ",
-                             ": Invalid configuration: incorrect number of fields on a row.") );
+                             ": Invalid configuration: conflicting configuration parameters: paramFoo"));
 
 }

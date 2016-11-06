@@ -72,7 +72,7 @@ void ConfigurationReader::readRow(ConfigurationReader::ConfigMap &conf,
     std::getline(rowStream, value);
 
     if (conf.find(key) != conf.end()){
-        LOG_ERROR("Conflicting configuration parameters: " << key);
+        LOG_ERROR("Invalid configuration: conflicting configuration parameters: " << key);
         conf = ConfigMap();
     }
     else {

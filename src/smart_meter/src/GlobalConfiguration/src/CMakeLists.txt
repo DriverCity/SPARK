@@ -13,6 +13,7 @@ include_directories($ENV{BUILD_DIR}/include)
 # List all source files here.
 set(SRCS
    ConfigurationReader.cpp
+   GlobalConfiguration.cpp
 )
 
 # Link other components

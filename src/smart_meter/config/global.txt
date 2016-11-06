@@ -1,0 +1,4 @@
+# This file contains golobal configuration visible for all components.
+
+greetings:Hello World
+
