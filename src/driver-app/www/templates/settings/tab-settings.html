@@ -1,8 +1,15 @@
 <ion-view view-title="Settings">
+  <!-- Nav buttons -->
+  <ion-nav-buttons side="secondary">
+    <button class="button" ng-click="openVehicle()">
+      Add car
+    </button>
+  </ion-nav-buttons>
+
   <ion-content>
-    <!-- Vehicle -->
+    <!-- Information -->
     <div class="item item-divider">
-      Vehicle
+      Information
     </div>
 
     <!-- Icons -->
@@ -11,26 +18,31 @@
         <i class="ion-model-s"></i>
       </div>
       <div class="col">
-        <i class="ion-help"></i>
+        <i class="ion-help" ng-show="localVehicles == null"></i>
+        <i class="ion-checkmark balanced" ng-show="localVehicles != null"></i>
       </div>
     </div>
 
     <!-- Info message -->
     <div class="row centered padding">
       <div class="col">
-        <p>You haven't written infos about your car</p>
+        <p ng-show="localVehicles == null">You haven't written infos about your car</p>
+        <p ng-show="localVehicles != null">You have written infos about your car(s)</p>
       </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="row centered padding">
-      <div class="col">
-        <button class="button button-balanced" ng-click="openVehicle()">
-          Add my car
-        </button>
-      </div>
+    <!-- Vehicles -->
+    <div class="item item-divider">
+      Vehicles
     </div>
 
-    Current = {{currentData}}
+    <ion-list>
+      <ion-item class="item" ng-repeat="vehicle in localVehicles">
+      {{ vehicle.beacon }} - {{ vehicle.make }} {{ vehicle.model }}
+      <ion-option-button class="button-assertive">
+        &nbsp;<i class="icon ion-trash-a"></i>
+      </ion-option-button>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

@@ -12,7 +12,7 @@
       Vehicle
     </div>
 
-    <div class="list">
+    <div class="list no-padding no-margin ">
       <!-- Makes -->
       <label class="item item-input item-select" ng-class="makes.length > 0 ? 'empty' : 'disabled'">
         <div class="input-label">
@@ -44,9 +44,34 @@
       </label>
     </div>
 
+    <!-- Beacon -->
+    <div class="item item-divider">
+      BLE Pheripherals
+
+      <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+        {{ scanText }}
+      </span>
+
+      <p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p>
+    </div>
+
+    <div class="container align-center">
+      <!-- Devices -->
+      <div id="peripheral-list" ng-show="!scanning">
+        <div class="list">
+          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in blePeripherals">
+            <i class="fa fa-bluetooth"></i>
+            {{device.name}}
+            <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit button -->
     <div class="row centered padding">
       <div class="col">
-        <button class="button button-balanced" ng-disabled="trim == null ? true : false" ng-click="validationData(maker, model, trim)">
+        <button class="button button-balanced" ng-disabled="trim == null || beacon == undefined ? true : false" ng-click="validationData(maker, model, trim, beacon)">
           Submit
         </button>
       </div>
