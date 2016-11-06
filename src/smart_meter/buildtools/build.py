@@ -113,6 +113,8 @@ def deploy(config):
       print ("Copying binaries for " + comp.name)
       os.system("cp " + SOURCE + " " + TARGET)
 
+   # Copy configuration files.
+   os.system("cp -r config " + DEPLOY_DIR + "/config")
 
    # Create zip for raspberry builds
    if (BUILD_NAME != "linux_debug"):
