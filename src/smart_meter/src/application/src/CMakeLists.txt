@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.4)
 
 # Component name (should match source directory name)
 project(application)
+add_definitions(-DCOMPONENT_NAME=\\"${PROJECT_NAME}\\")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "0")

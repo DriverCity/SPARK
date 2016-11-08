@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.4)
 
 # Name is not important. Give any unique name you like.
 project(mylibtest)
+add_definitions(-DCOMPONENT_NAME=\\"${PROJECT_NAME}\\")
 
 # Get access to component-under-test's headers.
 include_directories(../include)

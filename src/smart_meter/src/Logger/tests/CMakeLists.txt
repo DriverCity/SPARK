@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.4)
 
 project(LoggerTest)
+add_definitions(-DCOMPONENT_NAME=\\"${PROJECT_NAME}\\")
 
 include_directories(../include)
 

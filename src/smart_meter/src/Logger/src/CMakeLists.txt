@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.4)
 
 project(Logger)
+add_definitions(-DCOMPONENT_NAME=\\"${PROJECT_NAME}\\")
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "0")

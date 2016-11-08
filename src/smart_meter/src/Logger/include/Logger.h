@@ -14,6 +14,7 @@
 {\
     std::ostringstream oss; \
     oss << identifier \
+        << "[" << COMPONENT_NAME << "] "\
         << std::string(__FILE__).substr(std::string(__FILE__).find_last_of("/")+1) \
         << " " << __LINE__ << ": " << msg; \
     spark::Logger::write(oss.str());\

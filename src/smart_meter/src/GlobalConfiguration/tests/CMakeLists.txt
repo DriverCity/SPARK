@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 2.4)
 
 project(GlobalConfigurationTest)
+add_definitions(-DCOMPONENT_NAME=\\"${PROJECT_NAME}\\")
 
 set(SRC ../src)
 
 include_directories(../include)
-include_directories(${SRC})
 include_directories($ENV{BUILD_DIR}/include)
 
 set(TEST_SRCS

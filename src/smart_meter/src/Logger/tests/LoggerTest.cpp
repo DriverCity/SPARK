@@ -59,7 +59,7 @@ TEST (LoggerTest, LogDebugTest)
     spark::Logger::close();
 
     std::ostringstream expected;
-    expected << "Debug: LoggerTest.cpp " << REFERENCE+1 << ": Hello World!\n";
+    expected << "Debug: [LoggerTest] LoggerTest.cpp " << REFERENCE+1 << ": Hello World!\n";
     EXPECT_EQ(expected.str(), oss.str());
 }
 
@@ -75,7 +75,7 @@ TEST (LoggerTest, LogErrorTest)
     spark::Logger::close();
 
     std::ostringstream expected;
-    expected << "Error: LoggerTest.cpp " << REFERENCE+1 << ": Hello World!\n";
+    expected << "Error: [LoggerTest] LoggerTest.cpp " << REFERENCE+1 << ": Hello World!\n";
     EXPECT_EQ(expected.str(), oss.str());
 }
 
@@ -91,6 +91,6 @@ TEST (LoggerTest, LogDebugStream)
     spark::Logger::close();
 
     std::ostringstream expected;
-    expected << "Debug: LoggerTest.cpp " << REFERENCE+1 << ": Hello World!\n";
+    expected << "Debug: [LoggerTest] LoggerTest.cpp " << REFERENCE+1 << ": Hello World!\n";
     EXPECT_EQ(expected.str(), oss.str());
 }

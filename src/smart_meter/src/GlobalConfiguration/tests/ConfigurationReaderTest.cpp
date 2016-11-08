@@ -74,7 +74,7 @@ TEST_F (ConfigurationReaderTest, TooManyFieldsOnRow)
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(0), conf.size());
     // Check error message
     spark::Logger::close();
-    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: ConfigurationReader.cpp ",
+    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: [GlobalConfigurationTest] ConfigurationReader.cpp ",
                              ": Invalid configuration: incorrect number of fields on a row.") );
 }
 
@@ -87,7 +87,7 @@ TEST_F (ConfigurationReaderTest, TooFewFieldsOnRow)
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(0), conf.size());
     // Check error message
     spark::Logger::close();
-    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: ConfigurationReader.cpp ",
+    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: [GlobalConfigurationTest] ConfigurationReader.cpp ",
                              ": Invalid configuration: incorrect number of fields on a row.") );
 }
 
@@ -126,7 +126,7 @@ TEST_F (ConfigurationReaderTest, ReadInvalidStream)
 
     // Check error message
     spark::Logger::close();
-    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: ConfigurationReader.cpp ",
+    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: [GlobalConfigurationTest] ConfigurationReader.cpp ",
                              ": Invalid configuration: incorrect number of fields on a row.") );
 }
 
@@ -169,7 +169,7 @@ TEST_F (ConfigurationReaderTest, FileDoesNotOpen)
 
     // Check error message
     spark::Logger::close();
-    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: ConfigurationReader.cpp ",
+    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: [GlobalConfigurationTest] ConfigurationReader.cpp ",
                              ": Could not open configuration file: DoesNotExist.txt") );
 }
 
@@ -181,7 +181,7 @@ TEST_F (ConfigurationReaderTest, ReadInvalidFile)
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(0), conf.size());
     // Check error message
     spark::Logger::close();
-    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: ConfigurationReader.cpp ",
+    EXPECT_TRUE( containsMsg(m_oss.str(), "Error: [GlobalConfigurationTest] ConfigurationReader.cpp ",
                              ": Invalid configuration: conflicting configuration parameters: paramFoo"));
 
 }
