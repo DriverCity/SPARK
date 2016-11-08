@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/ConfigurationReader.h"
+#include "ConfigurationReader.h"
 #include "Logger/Logger.h"
 #include <sstream>
 

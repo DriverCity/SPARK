@@ -2,20 +2,21 @@ import os
 
 IGNORED_FILES = [".pyc", "~"]
 
-def createQtProject(files, projFileName):
+def createQtProject(files, includes, projFileName):
    proFile = open(projFileName, 'w')
 
-   proFile.write("INCLUDEPATH += \\ \n"
-                 "builds/linux_debug/include \\ \n\n")
+   proFile.write("INCLUDEPATH += \\ \n")
+   for i in includes:
+      proFile.write(i + "\\ \n")
+   proFile.write("\n")
 
    proFile.write("SOURCES += \\ \n")
-
    for f in files:
       proFile.write(f + " \\ \n")
 
 
 
-def findFiles(directory):
+def findFiles(directory, includes):
    files = []
    entries = os.listdir(directory)
    subdirs = []
@@ -33,15 +34,22 @@ def findFiles(directory):
             files.append(fullPath)
       
       else:
-         files += findFiles(fullPath)
+         if fullPath.endswith("include"):
+            includes.append(fullPath)
+         files += findFiles(fullPath, includes)
    
    return files
 
 
 if __name__ == "__main__":
-   files = [".gitignore", "build_linux_debug.sh", "build_raspberrypi_debug.sh",
-            "build_raspberrypi_release.sh", "QtCreatorProject.sh"]
-   files += findFiles( os.path.join(os.getcwd(), "src") )
-   files += findFiles( os.path.join(os.getcwd(), "buildtools") )
-   createQtProject(files, os.path.join(os.getcwd(), "qt.pro") )
+   files = []
+
+   includes = ["builds/linux_debug/include",
+               "builds/raspberrypi_debug/include",
+               "builds/raspberrypi_release/include"]
+
+   files += findFiles( os.path.join(os.getcwd(), "src"), includes )
+   files += findFiles( os.path.join(os.getcwd(), "buildtools"), includes )
+   files += findFiles( os.path.join(os.getcwd(), "config"), includes)
+   createQtProject(files, includes, os.path.join(os.getcwd(), "qt.pro") )
 

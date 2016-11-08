@@ -1,5 +1,5 @@
 
-#include "../include/GlobalConfiguration.h"
+#include "GlobalConfiguration.h"
 #include "ConfigurationReader.h"
 #include "Logger/Logger.h"
 

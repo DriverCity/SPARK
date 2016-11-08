@@ -1,6 +1,6 @@
 
 #include <gtest/gtest.h>
-#include "../include/GlobalConfiguration.h"
+#include "GlobalConfiguration.h"
 #include "Logger/Logger.h"
 #include <sstream>
 
