@@ -7,7 +7,7 @@ Following steps need to be executed only once before first cross-compilation.
 
 1. install required packages:
    ```
-   sudo apt-get install git scp cmake rsync lib32ncurses5
+   sudo apt-get install git cmake rsync lib32ncurses5
    ```
 
 2. Get cross-compiler for Raspberry Pi:
