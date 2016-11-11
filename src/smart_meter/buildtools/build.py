@@ -1,11 +1,13 @@
 import sys
 sys.path.append("buildtools/variants")
 sys.path.append("buildtools/components")
+sys.path.append("buildtools/deliverables")
 
 import os
 import shutil
 from BuildConfig import BuildConfig
 import components
+import deliverables
 
 BUILD_ROOT = os.environ["BUILD_ROOT"]
 BUILD_DIR = os.environ["BUILD_DIR"]
@@ -45,6 +47,7 @@ def getConfig(argc, argv):
    except Exception, e:
       print("Build configuration error!")
       print(e.message)
+   
    return config
 
 
@@ -113,13 +116,15 @@ def deploy(config):
       print ("Copying binaries for " + comp.name)
       os.system("cp " + SOURCE + " " + TARGET)
 
-   # Copy configuration files.
-   os.system("cp -r config " + DEPLOY_DIR + "/config")
+   # Copy files included to archive.
+   copyDeliverables(deliverables.includedToPkg)
 
    # Create zip for raspberry builds
    if (BUILD_NAME != "linux_debug"):
       createArchive()
 
+   # Copy files excluded from archive.
+   copyDeliverables(deliverables.excludedFromPkg)
    return 0
 
 
@@ -129,6 +134,11 @@ def createArchive():
    os.chdir(DEPLOY_DIR)
    os.system("zip -r --symlinks " + BUILD_NAME + ".zip .")
    os.chdir(pwd)
+
+
+def copyDeliverables(delivList):
+   for d in delivList:
+      d.deploy()
 
 
 if __name__ == "__main__":
