@@ -154,3 +154,47 @@ Public headers from all components are automatically published to builds/variant
 ```c++
 #include "other_component_name/desired_header.h"
 ```
+
+
+## Deploying on target device
+
+This section describes how to upload and run the code on target devices.
+
+### Raspberry Pi 3
+
+1. To upload software to Raspberry Pi, you need to connect it to your computer either through router or directly using Ethernet cable. With old computers,
+you may need an Ethernet cross-over cable for direct connection.
+
+2. Get Raspberry Pi's IP address
+
+  - **With router:** Check Raspberry Pi's IP address from your router.
+  
+  - **Direct connection:** Try pinging address **169.254.186.133** . If there is no connection, you need to connect display and keyboard to the Pi and get
+    the eth0 IP address with **ifconfig** command. Note that establishing connection after connecting cable takes few moments.
+
+3. Upload software to Pi. After building software, there will be **upload_raspberrypi_debug.sh** or **upload_raspberrypi_release.sh** in the deploy directory.
+   If you are using direct connection and **169.254.186.133** was correct IP address, you may run the script without parameters. Else give the correct IP
+   address as the first parameter. The script will send zip-file containing the software and installation scripts to Pi in /home/pi directory.
+   
+4. Log on Pi using SSH client of your choise (e.g. PuTTY) using the correct IP address. Default login name is **pi** and default password is **raspberry**.
+
+5. Install the software. Change to pi's home directory and run commands:
+
+  ```sh
+  chmod a+x install_debug.sh
+  ./install_debug.sh
+  # or _release.sh for release version.
+  ```
+  
+6. Run the software
+
+  ```sh
+  ./start_debug.sh
+  # or ./start_release.sh
+  ```
+  
+  
+### Intel edison
+
+Build variant for Intel Edison is not guaranteed to be developed during the early stage of development. The upload process however is the same as with Pi,
+except that you have to connect Edison through router.
