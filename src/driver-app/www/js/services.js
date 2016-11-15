@@ -15,6 +15,15 @@ angular.module('starter.services', [])
   return firebase.initializeApp(config);
 })
 
+.factory('blePerpheralsService', function() {
+
+  return {
+    onError: function(reason) {
+      alert("ERROR: " + JSON.stringify(reason));
+    }
+  }
+})
+
 /***************************************************************************************
  * SERVICE VEHICLE
  **************************************************************************************/

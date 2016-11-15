@@ -12,6 +12,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    if(!window.ble) {
+      if(navigator.notification) {
+        navigator.notification.alert(
+          'The Bluetooth Low Energy (BLE) Central Plugin [com.megster.cordova.ble] is missing.',  // message
+          alertDismissed,         // callback
+          'Plugin Not Found',     // title
+          'Ok'                    // buttonName
+        );
+      }
+    }
   });
 })
 
