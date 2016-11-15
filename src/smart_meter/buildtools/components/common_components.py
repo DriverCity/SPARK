@@ -20,5 +20,8 @@ components.componentList.append(components.Component(name="ParkingDatabase",
 components.componentList.append(components.Component(name="CloudService",
                                                      runTestsCmd=None))
 
+components.componentList.append(components.Component(name="PriceProvider",
+                                                     runTestsCmd="./PriceProviderTest"))
+
 components.componentList.append(components.Component(name="application",
                                                      runTestsCmd=None))
