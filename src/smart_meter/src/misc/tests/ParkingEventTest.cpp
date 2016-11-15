@@ -11,6 +11,18 @@ TEST (ParkingEventTest, TokenTest)
 }
 
 
+TEST (ParkingEventTest, EventDefaultConstructor)
+{
+    spark::ParkingEvent event;
+
+    EXPECT_EQ("", event.registerNumber());
+    EXPECT_EQ("", event.startingTime());
+    EXPECT_EQ(0, event.duration());
+    EXPECT_EQ("", event.token().verifier());
+    EXPECT_EQ("", event.token().uid());
+}
+
+
 TEST (ParkingEventTest, EventTest)
 {
     spark::PaymentToken token("verifier", "uid123456");

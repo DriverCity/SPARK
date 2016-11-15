@@ -22,6 +22,15 @@ std::string PaymentToken::uid() const
 }
 
 
+ParkingEvent::ParkingEvent():
+    m_regNum(""),
+    m_startingTime(""),
+    m_duration(0),
+    m_token(PaymentToken("", ""))
+{
+}
+
+
 ParkingEvent::ParkingEvent(const std::string &registerNumber,
                            const std::string &startingTime,
                            int duration,

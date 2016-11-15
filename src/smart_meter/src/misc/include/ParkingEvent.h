@@ -52,6 +52,11 @@ class ParkingEvent
 public:
 
     /**
+     * @brief Default constructor. Required for storing events to stl-containers.
+     */
+    ParkingEvent();
+
+    /**
      * @brief Constructor.
      * @param registerNumber Car's register number.
      * @param startingTime Timestamp for parking start time. Timestamp format should be 'TODO'.
