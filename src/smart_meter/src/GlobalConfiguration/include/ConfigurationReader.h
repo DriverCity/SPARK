@@ -3,6 +3,9 @@
  * @brief Defines class for reading global configuraton from file.
  */
 
+#ifndef CONFIGURATIONREADER_H
+#define CONFIGURATIONREADER_H
+
 #include <string>
 #include <map>
 
@@ -53,3 +56,5 @@ public:
 };
 
 } // spark
+
+#endif // CONFIGURATIONREADER_H

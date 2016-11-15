@@ -8,6 +8,9 @@ import components
 components.componentList.append(components.Component(name="Logger",
                                                      runTestsCmd="./LoggerTest"))
 
+components.componentList.append(components.Component(name="misc",
+                                                     runTestsCmd="./misctest"))
+
 components.componentList.append(components.Component(name="GlobalConfiguration",
                                                      runTestsCmd="./GlobalConfigurationTest"))
 

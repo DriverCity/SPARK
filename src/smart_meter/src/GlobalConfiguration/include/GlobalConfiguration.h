@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief Define singleton class for accessing global configuration parameters.
+ */
+
+#ifndef GLOBALCONFIGURATION_H
+#define GLOBALCONFIGURATION_H
+
 #include <string>
 #include <memory>
 #include <map>
@@ -57,3 +65,5 @@ private:
 };
 
 } // spark
+
+#endif // GLOBALCONFIGURATION_H

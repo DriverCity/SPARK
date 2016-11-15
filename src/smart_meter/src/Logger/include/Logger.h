@@ -3,6 +3,9 @@
  * @brief Defines spark logging utilities.
  */
 
+#ifndef LOGGER_H
+#define LOGGER_H
+
 #include <string>
 #include <iostream>
 #include <memory>
@@ -102,3 +105,5 @@ private:
 };
 
 } // spark
+
+#endif // LOGGER_H
