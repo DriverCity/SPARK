@@ -1,51 +1,48 @@
 <ion-view view-title="Settings">
+  <!-- Nav buttons -->
+  <ion-nav-buttons side="secondary">
+    <button class="button" ng-click="openVehicle()">
+      Add car
+    </button>
+  </ion-nav-buttons>
+
   <ion-content>
-    <!-- Vehicle -->
-    <div class="item item-divider">
-      Vehicle
-    </div>
-
-    <div class="item item-body item-center">
-      <img src="img/tesla.jpg" class="vehicle">
-      <p>Tesla Model S</p>
-    </div>
-
     <!-- Information -->
     <div class="item item-divider">
       Information
     </div>
 
-    
-    <li class="item item-toggle">
-      GPS
-      <label class="toggle toggle-calm">
-        <input type="checkbox">
-        <div class="track">
-          <div class="handle"></div>
-        </div>
-      </label>
-    </li>
+    <!-- Icons -->
+    <div class="row centered icon-settings">
+      <div class="col">
+        <i class="ion-model-s"></i>
+      </div>
+      <div class="col">
+        <i class="ion-help" ng-show="localVehicles == null"></i>
+        <i class="ion-checkmark balanced" ng-show="localVehicles != null"></i>
+      </div>
+    </div>
 
-    <li class="item item-toggle">
-      Voluntary participation
-      <label class="toggle toggle-calm">
-        <input type="checkbox">
-        <div class="track">
-          <div class="handle"></div>
-        </div>
-      </label>
-    </li>
-    
-    <!-- Settings -->
+    <!-- Info message -->
+    <div class="row centered padding">
+      <div class="col">
+        <p ng-show="localVehicles == null">You haven't written infos about your car</p>
+        <p ng-show="localVehicles != null">You have written infos about your car(s)</p>
+      </div>
+    </div>
+
+    <!-- Vehicles -->
     <div class="item item-divider">
-      Settings
+      Vehicles
     </div>
 
-    <div class="item range">
-      <i class="icon ion-volume-low"></i>
-      <input type="range" name="volume">
-      <i class="icon ion-volume-high"></i>
-    </div>
-
+    <ion-list>
+      <ion-item class="item" ng-repeat="vehicle in localVehicles">
+      {{ vehicle.beacon }} - {{ vehicle.make }} {{ vehicle.model }}
+      <ion-option-button class="button-assertive">
+        &nbsp;<i class="icon ion-trash-a"></i>
+      </ion-option-button>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

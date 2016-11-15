@@ -6,6 +6,21 @@
   text-align: center;
 }
 
+.transparent {
+  background-color:transparent !important;
+}
+
+.disabled {
+  background-color: #ffe4e4;
+}
+
+.no-margin {
+  margin: 0px;
+}
+
+.small-margin {
+  margin: 10px;
+}
 /****************************
  * MAP
  ***************************/
@@ -83,3 +98,38 @@
   .big-icon p {
     font-size: 20px;
   }
+
+/****************************
+ * SETTINGS
+ ***************************/
+
+.icon-settings {
+  font-size:50px;
+}
+
+.scanText {
+  font-size: 14px;
+}
+
+.item-divider p {
+  float: right;
+  display: block;
+  background-color: #e6e6e6;
+  border: 1px solid #b1b1b1;
+  padding: 2px 10px 2px 10px;
+  border-radius: 4px;
+  color:black;
+}
+  .item-divider p.activated {
+    background-color: #cacaca;
+  } 
+
+.item .fa {
+  font-size: 20px !important;
+  margin-right: 5px;
+}
+
+.selectedBeacon {
+  font-size: 20px;
+  float: right;
+}
