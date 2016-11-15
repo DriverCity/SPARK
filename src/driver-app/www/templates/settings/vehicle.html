@@ -59,7 +59,7 @@
       <!-- Devices -->
       <div id="peripheral-list" ng-show="!scanning">
         <div class="list">
-          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in blePeripherals">
+          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in blePeripherals" ng-show="device != ''">
             <i class="fa fa-bluetooth"></i>
             {{device.name}}
             <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
