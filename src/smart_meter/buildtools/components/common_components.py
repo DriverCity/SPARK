@@ -14,5 +14,8 @@ components.componentList.append(components.Component(name="misc",
 components.componentList.append(components.Component(name="GlobalConfiguration",
                                                      runTestsCmd="./GlobalConfigurationTest"))
 
+components.componentList.append(components.Component(name="CloudService",
+                                                     runTestsCmd=None))
+
 components.componentList.append(components.Component(name="application",
                                                      runTestsCmd=None))
