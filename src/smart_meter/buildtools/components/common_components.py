@@ -26,5 +26,8 @@ components.componentList.append(components.Component(name="PriceProvider",
 components.componentList.append(components.Component(name="VerifyParking",
                                                      runTestsCmd=None))
 
+components.componentList.append(components.Component(name="BLEService",
+                                                     runTestsCmd=None))
+
 components.componentList.append(components.Component(name="application",
                                                      runTestsCmd=None))
