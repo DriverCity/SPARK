@@ -12,14 +12,11 @@ const std::string Logger::ERROR_MSG = "Error: ";
 const std::string Logger::NO_LOG_FILE = "";
 
 std::unique_ptr<std::ostream> Logger::fileStream_ = std::unique_ptr<std::ostream>(nullptr);
-std::ostream* Logger::printStream_ = nullptr;
+std::ostream* Logger::printStream_ = &std::cout;
 
 
 void Logger::init(const std::string& logFile, std::ostream& output)
 {
-    assert(printStream_ == nullptr &&
-           "Initialize Logger only once!");
-
     printStream_ = &output;
 
     if (logFile != NO_LOG_FILE){
@@ -34,9 +31,6 @@ void Logger::init(const std::string& logFile, std::ostream& output)
 
 void Logger::write(const std::string& msg)
 {
-    assert(printStream_ != nullptr &&
-           "Logger must be initialized before writing.");
-
     *Logger::printStream_ << msg << std::endl;
     if (fileStream_ != nullptr){
         *fileStream_ << msg << std::endl;
@@ -47,7 +41,7 @@ void Logger::write(const std::string& msg)
 void Logger::close()
 {
     fileStream_.reset();
-    printStream_ = nullptr;
+    printStream_ = &std::cout;
 }
 
 }

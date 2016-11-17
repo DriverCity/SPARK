@@ -11,27 +11,31 @@
 #include <memory>
 #include <sstream>
 
+#ifndef COMPONENT_NAME
+#define COMPONENT_NAME "unknown"
+#endif
+
 
 // Common part of implementation for macros below
 #define LOG_IMPLEMENTATION(identifier, msg)\
 {\
-    std::ostringstream oss; \
-    oss << identifier \
+    std::ostringstream logger_impl_oss; \
+    logger_impl_oss << identifier \
         << "[" << COMPONENT_NAME << "] "\
         << std::string(__FILE__).substr(std::string(__FILE__).find_last_of("/")+1) \
         << " " << __LINE__ << ": " << msg; \
-    spark::Logger::write(oss.str());\
+    spark::Logger::write(logger_impl_oss.str());\
 }
 
 
-// Convenience macro. Prints a debug message with file name and line number.
+// Convenience macro. Prints a debug message with component name, file name and line number.
 #define LOG_DEBUG(msg) \
 {\
     LOG_IMPLEMENTATION(spark::Logger::DEBUG_MSG, msg) \
 }
 
 
-// Convenience macro. Prints an error message with file name and line number.
+// Convenience macro. Prints an error message with component name, file name and line number.
 #define LOG_ERROR(msg) \
 {\
     LOG_IMPLEMENTATION(spark::Logger::ERROR_MSG, msg) \
@@ -57,8 +61,7 @@ public:
      * @param output Printing stream. Defaults to std::cout. Can be changed
      *  for testing purposes.
      *
-     * @pre Initialize Logger only once. @p output lifetime must last at least
-     *  until close() is called.
+     * @pre @p output != nullptr.
      *
      * @post Logger is ready to be written.
      */
@@ -70,8 +73,6 @@ public:
      *
      * @param msg Log message to be written.
      *
-     * @pre init() has been called.
-     *
      * @post @p msg is printed to @p output and @p logFile given in init.
      */
     static void write(const std::string& msg);
@@ -79,7 +80,8 @@ public:
     /**
      * @brief Closes the logger.
      * @pre None.
-     * @post Log file is closed. Logger can be re-initialized at later time.
+     * @post Log file is closed. Log file and print output are set back to defualt.
+     *  Logger can be re-initialized at later time.
      */
     static void close();
 

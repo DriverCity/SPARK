@@ -21,6 +21,13 @@ TEST (LoggerTest, PrintTest)
 }
 
 
+// Test invalid log file (should crash for assertion.
+TEST (LoggerTest, LogFileDoesNotOpen)
+{
+    EXPECT_DEATH(spark::Logger::init("not_a_dir/log.log"), "");
+}
+
+
 // Print and log multiple lines.
 TEST (LoggerTest, WriteLogTest)
 {
