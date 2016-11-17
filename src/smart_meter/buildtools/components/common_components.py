@@ -15,7 +15,7 @@ components.componentList.append(components.Component(name="GlobalConfiguration",
                                                      runTestsCmd="./GlobalConfigurationTest"))
 
 components.componentList.append(components.Component(name="ParkingDatabase",
-                                                     runTestsCmd=None))
+                                                     runTestsCmd="./ParkingDatabaseTest"))
 
 components.componentList.append(components.Component(name="CloudService",
                                                      runTestsCmd=None))

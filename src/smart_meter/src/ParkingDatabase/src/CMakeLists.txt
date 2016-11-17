@@ -15,11 +15,18 @@ include_directories(../include)
 #Get access to other component's public headers.
 include_directories($ENV{BUILD_DIR}/include)
 
-# TODO: List all source files here.
-# set(SRCS )
+if(NOT ($ENV{BUILD_NAME} STREQUAL "linux_debug"))
+    include_directories($ENV{BUILD_DIR}/include/sqlite3)
+endif()
+
+# List all source files here.
+set(SRCS ParkingDatabase.cpp)
 
 # List used other components here.
 set(LINKED_LIBS misc)
+if(NOT ($ENV{BUILD_NAME} STREQUAL "linux_debug"))
+    set(LINKED_LIBS ${LINKED_LIBS} sqlite3)
+endif()
 
 # Link other components. Do not change.
 foreach(lib ${LINKED_LIBS})
@@ -36,4 +43,5 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
-# add_library(${PROJECT_NAME} SHARED ${SRCS})
+add_library(${PROJECT_NAME} SHARED ${SRCS})
+target_link_libraries(${PROJECT_NAME} sqlite3 ${LINKED_LIBS})

@@ -16,12 +16,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 # Access other component's public headers. Do not change.
 include_directories($ENV{BUILD_DIR}/include)
+if(NOT ($ENV{BUILD_NAME} STREQUAL "linux_debug"))
+    include_directories($ENV{BUILD_DIR}/include/sqlite3)
+endif()
 
 # Define all sources here
 set(SRCS main.cpp)
 
 # Link other components
-set(LINKED_LIBS Logger GlobalConfiguration)
+set(LINKED_LIBS Logger GlobalConfiguration ParkingDatabase misc sqlite3)
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)
