@@ -28,22 +28,11 @@ run the OS on virtual machine, as Instructed here. If you already have the OS in
   Follow instructions in [cross-compilation.md](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/cross-compilation.md)
 
   
-5. Install GTest
-  
-  Create a directory for GTest and change to that directory.
-  ```
-  # Get and build GTest
-  wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz
-  tar xf release-1.7.0.tar.gz
-  cd googletest-release-1.7.0
-  cmake -DBUILD_SHARED_LIBS=ON .
-  make
-  
-  # Install include files and binaries to place where the linker can find them.
-  sudo cp -a include/gtest /usr/include
-  sudo cp -a libgtest_main.so libgtest.so /usr/lib/
-  ```
-  
+5. Ínstall 3rd party components
+
+  Follow instructions in [3rd_party_components.md.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/3rd_party_components.md)
+
+
 After these steps, you are good to go. Clone SPARK repository to location of your choise 
 and see [build_test_and_deploy.md](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/build_test_and_deploy.md) 
 for instructions on how to build the project and add new
