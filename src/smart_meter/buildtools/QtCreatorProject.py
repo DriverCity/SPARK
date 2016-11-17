@@ -51,5 +51,6 @@ if __name__ == "__main__":
    files += findFiles( os.path.join(os.getcwd(), "src"), includes )
    files += findFiles( os.path.join(os.getcwd(), "buildtools"), includes )
    files += findFiles( os.path.join(os.getcwd(), "config"), includes)
+   files += findFiles( os.path.join(os.getcwd(), "3rd_party"), includes)
    createQtProject(files, includes, os.path.join(os.getcwd(), "qt.pro") )
 

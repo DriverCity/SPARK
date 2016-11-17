@@ -3,6 +3,7 @@ import os
 import shutil
 
 """List of components to be built."""
+thirdParty = []
 componentList = []
 
 """Represents single component to be buildt."""
