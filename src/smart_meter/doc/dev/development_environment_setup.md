@@ -23,7 +23,7 @@ run the OS on virtual machine, as Instructed here. If you already have the OS in
   sudo apt-get install git python cmake rsync lib32ncurses5
   ```
   
-4. Install cross-compiler for Raspberry Pi 3.
+4. Install cross-compilers
   
   Install cross-compilers for intended target devices:
   - [Raspberry Pi 3](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/raspberry_cross_compilation.md)
