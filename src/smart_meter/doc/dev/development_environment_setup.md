@@ -25,10 +25,12 @@ run the OS on virtual machine, as Instructed here. If you already have the OS in
   
 4. Install cross-compiler for Raspberry Pi 3.
   
-  Follow instructions in [cross-compilation.md](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/cross-compilation.md)
+  Install cross-compilers for intended target devices:
+  - [Raspberry Pi 3](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/raspberry_cross_compilation.md)
+  - [Intel Edison](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/edison_cross_compilation.md)
 
   
-5. Ínstall 3rd party components
+5. Install 3rd party components
 
   Follow instructions in [3rd_party_components.md.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/3rd_party_components.md)
 
