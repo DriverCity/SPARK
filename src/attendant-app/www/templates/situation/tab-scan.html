@@ -1,0 +1,33 @@
+<ion-modal-view>
+  <ion-header-bar class="bar-calm">
+    <h1 class="title">Scan</h1>
+  </ion-header-bar>
+
+  <ion-content>
+
+    <!-- Beacon -->
+    <div class="item item-divider">
+      BLE Pheripherals
+
+      <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+        {{ scanText }}
+      </span>
+
+      <p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p>
+    </div>
+
+    <div class="container align-center">
+      <!-- Devices -->
+      <div id="peripheral-list" ng-show="!scanning">
+        <div class="list">
+          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in blePeripherals" ng-show="device != ''">
+            <i class="fa fa-bluetooth"></i>
+            {{device.name}}
+            <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-modal-view>
