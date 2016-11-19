@@ -2,7 +2,7 @@
  * [CONTROLLER] METER
  *********************************/
 
-app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePerpheralsService) {
+app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePerpheralsService, $ionicPopup) {
 
   /****************************
    * VARIABLES
@@ -32,7 +32,7 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
         break;
       }
     }
-    if(!similar && device.name != "") {
+    if(!similar && device.name != null) {
       tempArray.push(device);
     }
   };
@@ -77,9 +77,21 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
     $timeout(setDeviceList, (seconds*1000));
   }
 
-  // Select beacon
-  $scope.selectBeacon = function(name) {
-    $scope.beacon = name;
+  /*
+   * Description: Connect to a BLE peripheral device
+   */
+  $scope.connect = function(device_id){
+    ble.connect(
+      device_id,
+      function(res){
+        $scope.showAlert('Response received',JSON.stringify(device));
+        $state.go('tab.device', { 'id': device_id });
+      },
+      function(err){
+        $scope.showAlert('Error','Something went wrong while trying to connect. Please try again.' + JSON.stringify(err));
+        $state.go('tab.meter');
+      }
+    );
   }
 
   /****************************
@@ -90,4 +102,14 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
     $state.go(location);
   };
 
+  $scope.showAlert = function(title,text) {
+    var alertPopup = $ionicPopup.alert({
+      title: title,
+      template: text
+    });
+
+    alertPopup.then(function(res) {
+      console.log('Alert show');
+    });
+  };
 });

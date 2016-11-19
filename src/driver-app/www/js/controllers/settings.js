@@ -30,7 +30,7 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
         break;
       }
     }
-    if(!similar && device.name != "") {
+    if(!similar && device.name != null) {
       tempArray.push(device);
     }
   };
