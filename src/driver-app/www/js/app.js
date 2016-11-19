@@ -22,6 +22,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           'Ok'                    // buttonName
         );
       }
+    } else {
+      ble.isEnabled(
+        function() {  /* Bluetooth enabled */  },
+        function() {  /* Bluetooth not yet enabled */
+          ble.enable(
+            function(){ /* bluetooth now enabled */ },
+            function(err){
+              alert('Cannot enable bluetooth');
+            }
+          );
+        }
+      );
     }
   });
 })
