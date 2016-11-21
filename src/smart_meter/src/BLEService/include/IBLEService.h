@@ -32,6 +32,11 @@ public:
      * @brief Start service.
      */
     virtual void start() = 0;
+
+    /**
+     * @brief Stop service.
+     */
+    virtual void stop() = 0;
 };
 
 } // spark

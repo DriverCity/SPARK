@@ -23,5 +23,10 @@ foreach(lib ${LINKED_LIBS})
     message($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)
 
+# Set output directories. Do not change.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
 add_library(${PROJECT_NAME} ${SRCS})
 target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS})
