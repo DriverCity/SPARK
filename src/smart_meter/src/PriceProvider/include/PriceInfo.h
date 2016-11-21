@@ -6,6 +6,8 @@
 #ifndef PRICEINFO_H
 #define PRICEINFO_H
 
+#include <string>
+
 namespace spark
 {
 
@@ -54,6 +56,12 @@ public:
      * @return True, if information is valid.
      */
     bool isValid() const;
+
+    /**
+     * @brief Convert to string.
+     * @return String representation.
+     */
+    std::string toString() const;
 
 
 private:
