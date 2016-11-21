@@ -63,7 +63,7 @@ public:
      * @param event Parking event data.
      * @return Response from the cloud.
      */
-    virtual Result verifyParkingEvent(const ParkingEvent& event);
+    virtual Result verifyParkingEvent(const ParkingEvent& event) = 0;
 
 };
 

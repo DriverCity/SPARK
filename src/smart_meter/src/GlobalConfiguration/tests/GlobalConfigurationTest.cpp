@@ -83,3 +83,18 @@ TEST_F(GlobalConfgurationTest, GetValueTest)
 }
 
 
+TEST_F(GlobalConfgurationTest, InsertTest)
+{
+    GlobalConfiguration::init("data/validConfig.txt");
+    GlobalConfiguration* inst = GlobalConfiguration::instance();
+
+    EXPECT_FALSE(inst->hasKey("newKey"));
+    inst->insert("newKey", "newValue");
+    EXPECT_TRUE(inst->hasKey("newKey"));
+    EXPECT_EQ("newValue", inst->getValue("newKey"));
+
+    inst->insert("newKey", "otherValue");
+    EXPECT_EQ("otherValue", inst->getValue("newKey"));
+}
+
+

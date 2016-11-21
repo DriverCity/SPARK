@@ -21,10 +21,18 @@ if(NOT ($ENV{BUILD_NAME} STREQUAL "linux_debug"))
 endif()
 
 # Define all sources here
-set(SRCS main.cpp)
+set(SRCS main.cpp Application.cpp)
 
 # Link other components
-set(LINKED_LIBS Logger GlobalConfiguration ParkingDatabase misc sqlite3)
+set(LINKED_LIBS
+    Logger
+    GlobalConfiguration
+    ParkingDatabase
+    misc
+    BLEService
+    PriceProvider
+    sqlite3)
+
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)
