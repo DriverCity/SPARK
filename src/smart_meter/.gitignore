@@ -7,4 +7,4 @@ deploy/*
 qt.pro
 qt.pro.user
 3rd_party/*
-
+*.autosave

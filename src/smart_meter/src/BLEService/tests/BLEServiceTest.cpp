@@ -43,12 +43,10 @@ protected:
     void SetUp()
     {
         // Create fifos.
-        std::ofstream ofs1(INPUT_FIFO);
-        ofs1 << "";
-        ofs1.close();
-        std::ofstream ofs2(RESPONSE_FIFO);
-        ofs2 << "";
-        ofs2.close();
+        system("mkfifo " INPUT_FIFO);
+        std::ofstream ofs(RESPONSE_FIFO);
+        ofs << "";
+        ofs.close();
 
         spark::Logger::init();
         m_service.reset(new spark::BLEService(INPUT_FIFO, RESPONSE_FIFO));

@@ -1,6 +1,6 @@
 # This file contains golobal configuration visible for all components.
 
 logFile:log.log
-BLEInputFifo:bleinput
-BLEResponseFifo:bleresponse
+BLEInputFifo:BLEInputFifo
+BLEResponseFifo:BLEResponseFifo
 

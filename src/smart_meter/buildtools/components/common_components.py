@@ -31,3 +31,6 @@ components.componentList.append(components.Component(name="BLEService",
 
 components.componentList.append(components.Component(name="application",
                                                      runTestsCmd=None))
+
+components.componentList.append(components.Component(name="FakeBLETool",
+                                                     runTestsCmd=None))

@@ -9,8 +9,8 @@ $PWD/uninstall_$BUILD_TYPE.sh
 mkdir $PWD/$VARIANT
 cd $PWD/$VARIANT
 unzip ../$VARIANT.zip
-mkfifo bin/bleinput
-mkfifo bin/bleresponse
+mkfifo bin/BLEInputFifo
+mkfifo bin/BLEResponseFifo
 cd ..
 
 chmod a+x $PWD/$VARIANT/bin/application

@@ -1,4 +1,4 @@
 #/bin/bash
 
-mkfifo bin/bleinput
-mkfifo bin/bleresponse
+mkfifo bin/BLEInputFifo
+mkfifo bin/BLEResponseFifo

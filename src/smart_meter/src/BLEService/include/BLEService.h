@@ -57,7 +57,7 @@ private:
 
     void startServiceThread();
     void handleMessage(const std::string& msg);
-    void sendResponse(const std::string& msg);
+    void sendResponse(std::string msg);
 
 };
 

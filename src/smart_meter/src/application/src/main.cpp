@@ -25,8 +25,10 @@ int main(int argc, char** argv)
     setup.verifier.reset(new sparktest::VerifyParkingMock);
     std::string bleInputFifo = config->getValue("BLEInputFifo");
     std::string bleResponseFifo = config->getValue("BLEResponseFifo");
-    setup.bleService.reset(new spark::BLEService(binaryDir + bleInputFifo,
-                                                 binaryDir + bleResponseFifo));
+    setup.bleService.reset(new spark::BLEService(binaryDir + "/" + bleInputFifo,
+                                                 binaryDir + "/" + bleResponseFifo));
+
+    setup.bleService->init(setup.priceProvider.get(), setup.verifier.get());
 
     spark::Application app(std::move(setup));
     return app.exec();

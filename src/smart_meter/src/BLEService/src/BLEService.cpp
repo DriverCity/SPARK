@@ -28,6 +28,8 @@ BLEService::BLEService(const std::string& inputFifo, const std::string& response
     m_inputFifo(inputFifo), m_responseFifo(responseFifo),
     m_serviceThread(), m_stopService(false)
 {
+    LOG_DEBUG("Input fifo: " << m_inputFifo);
+    LOG_DEBUG("Response fifo: " << m_responseFifo);
 }
 
 
@@ -96,7 +98,7 @@ void BLEService::startServiceThread()
         FD_ZERO(&set); /* clear the set */
         FD_SET(filedesc, &set); /* add our file descriptor to the set */
 
-        LOG_DEBUG("Waiting for input...");
+        LOG_DEBUG("Waiting for BLE message...");
         char buff[100];
         int len = 100;
         int rv = select(filedesc + 1, &set, NULL, NULL, &timeout);
@@ -113,7 +115,6 @@ void BLEService::startServiceThread()
         }
 
         close(filedesc);
-        LOG_DEBUG("closed!");
     }
 
     LOG_DEBUG("BLEService has quited!");
@@ -122,6 +123,7 @@ void BLEService::startServiceThread()
 
 void BLEService::handleMessage(const std::string& msg)
 {
+    LOG_DEBUG("Received message: " << msg);
     if (msg == GET_PRICE_MESSAGE){
         LOG_DEBUG("Requesting price information...");
         spark::PriceInfo info = m_priceProvider->getPriceInfo();
@@ -135,16 +137,17 @@ void BLEService::handleMessage(const std::string& msg)
         }
     }
     else {
-        LOG_ERROR("Unknown command!");
+        LOG_ERROR("Unknown command: " << msg);
         sendResponse("Error: unknown command");
     }
 }
 
 
-void BLEService::sendResponse(const std::string &msg)
+void BLEService::sendResponse(std::string msg)
 {
+    msg += "\0";
     int filedesc = open( m_responseFifo.c_str(), O_WRONLY );
-    write(filedesc, msg.c_str(), msg.length());
+    write(filedesc, msg.c_str(), msg.length()+1);
 }
 
 } // spark
