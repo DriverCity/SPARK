@@ -1,5 +1,10 @@
 
 #include "ParkingEvent.h"
+#include "Logger/Logger.h"
+#include "sstream"
+#include <vector>
+#include <stdexcept>
+#include <ctime>
 
 namespace spark
 {
@@ -65,6 +70,70 @@ int ParkingEvent::duration() const
 PaymentToken ParkingEvent::token() const
 {
     return m_token;
+}
+
+
+bool ParkingEvent::isValid() const
+{
+    return !m_regNum.empty();
+}
+
+
+std::string ParkingEvent::toString() const
+{
+    std::string rval;
+    if (isValid()){
+        std::ostringstream oss;
+        oss << "Park;" << m_regNum << ";" << m_startingTime << ";"
+            << m_duration << ";" << m_token.verifier() << ";" << m_token.uid();
+        rval = oss.str();
+    }
+    return rval;
+}
+
+ParkingEvent ParkingEvent::fromString(const std::string &str)
+{
+    std::vector<std::string> parts;
+    std::istringstream iss(str);
+
+    std::string tmp;
+    while (std::getline(iss, tmp, ';')){
+        parts.push_back(tmp);
+    }
+
+    if (parts.size() != 6 || parts.at(0) != "Park"){
+        LOG_ERROR("Incorrect format.");
+        return ParkingEvent();
+    }
+
+    int parkingTime(0);
+    try{
+        parkingTime = std::stoi(parts.at(3));
+    }
+    catch (std::invalid_argument&){
+        LOG_ERROR("Duration is not a number.");
+        return ParkingEvent();
+    }
+
+    if (parkingTime <= 0){
+        LOG_ERROR("Invalid duration");
+        return ParkingEvent();
+    }
+
+    if (!checkDateTime(parts.at(2))) {
+        LOG_ERROR("Invalid datetime");
+        return ParkingEvent();
+    }
+
+    PaymentToken token(parts.at(4), parts.at(5));
+    return ParkingEvent(parts.at(1), parts.at(2), parkingTime, token);
+}
+
+
+bool ParkingEvent::checkDateTime(const std::string &str)
+{
+    tm time;
+    return strptime(str.c_str(), "%Y-%m-%d %R", &time) != NULL;
 }
 
 
