@@ -38,6 +38,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
+
 .config(function (localStorageServiceProvider) {
   localStorageServiceProvider
     .setNotify(true, true);

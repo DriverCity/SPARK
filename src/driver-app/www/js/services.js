@@ -6,11 +6,11 @@ angular.module('starter.services', [])
 
 .factory("Firebase", function() {
   var config = {
-    apiKey: "AIzaSyATBJGyHZppFMC9ISOCstvbTWyybID2oRk",
-    authDomain: "spark-145412.firebaseapp.com",
-    databaseURL: "https://spark-145412.firebaseio.com",
-    storageBucket: "spark-145412.appspot.com",
-    messagingSenderId: "203401144566"
+    apiKey: "AIzaSyDhjWe4lzQBToEiVRTp98nTp09xKi7LxEM",
+    authDomain: "spark2-150308.firebaseapp.com",
+    databaseURL: "https://spark2-150308.firebaseio.com",
+    storageBucket: "",
+    messagingSenderId: "758338198382"
   };
   return firebase.initializeApp(config);
 })
@@ -78,6 +78,49 @@ angular.module('starter.services', [])
         params: {
           action: "get"
         }
+      });
+      return(request.then(handleSuccess, handleError));
+    }
+
+    // Transform the successful response
+    function handleError(response) {
+      if (!angular.isObject(response.data) ||
+        !response.data.message
+      ) {
+        return ($q.reject("An unknown error occurred."));
+      }
+      // Otherwise, use expected error message
+      return ($q.reject(response.data.message));
+    }
+
+    function handleSuccess(response) {
+      return (response.data);
+    }
+  }
+)
+
+/***************************************************************************************
+ * SERVICE CLOUD
+ **************************************************************************************/
+
+.service (
+  "CloudSrv",
+  function($http, $q) {
+    return ({
+      testRequest: testRequest,
+    });
+
+    function testRequest(something) {
+      var request = $http({
+        method: 'post',
+        url: 'https://spark2-150308.appspot-preview.com/api/v1.0/storeParkingEvent',
+        data: {
+          parkingAreaId: 80,
+          registerNumber:"ABC-123",
+          parkingType:"PAID",
+          parkingDurationInMinutes:30
+        },
+        headers: {'content-Type':'application/json'}
       });
       return(request.then(handleSuccess, handleError));
     }
