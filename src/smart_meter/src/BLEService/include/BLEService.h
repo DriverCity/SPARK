@@ -59,6 +59,8 @@ private:
     void handleMessage(const std::string& msg);
     void sendResponse(std::string msg);
 
+    void priceInfoRequest(const PriceInfo& info);
+    void verifyRequest(const PriceInfo& info, const ParkingEvent& event);
 };
 
 

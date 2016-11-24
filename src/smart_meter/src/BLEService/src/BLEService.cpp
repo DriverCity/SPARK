@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 #include "Logger/Logger.h"
+#include "misc/ParkingEvent.h"
 
 
 namespace
@@ -109,8 +110,9 @@ void BLEService::startServiceThread()
             LOG_DEBUG("Timeout");
         }
         else{
-            read( filedesc, buff, len ); /* there was data to read */
-            handleMessage(buff);
+            int count = read( filedesc, buff, len ); /* there was data to read */
+            LOG_DEBUG("Count " << count);
+            handleMessage(std::string(buff, count));
             LOG_DEBUG("Message handled!");
         }
 
@@ -124,21 +126,21 @@ void BLEService::startServiceThread()
 void BLEService::handleMessage(const std::string& msg)
 {
     LOG_DEBUG("Received message: " << msg);
+    PriceInfo info = m_priceProvider->getPriceInfo();
+
     if (msg == GET_PRICE_MESSAGE){
-        LOG_DEBUG("Requesting price information...");
-        spark::PriceInfo info = m_priceProvider->getPriceInfo();
-        if (info.isValid()){
-            LOG_DEBUG("Service is available! Price: " << info.toString());
-            sendResponse(info.toString());
-        }
-        else {
-            LOG_ERROR("Service is not available");
-            sendResponse("Error: Service is not available.");
-        }
+        priceInfoRequest(info);
+        return;
     }
+
+    ParkingEvent event = ParkingEvent::fromString(msg);
+    if (event.isValid()){
+        verifyRequest(info, event);
+    }
+
     else {
         LOG_ERROR("Unknown command: " << msg);
-        sendResponse("Error: unknown command");
+        sendResponse("Error: Unknown command.");
     }
 }
 
@@ -149,5 +151,53 @@ void BLEService::sendResponse(std::string msg)
     int filedesc = open( m_responseFifo.c_str(), O_WRONLY );
     write(filedesc, msg.c_str(), msg.length()+1);
 }
+
+
+void BLEService::priceInfoRequest(const PriceInfo& info)
+{
+    LOG_DEBUG("Requesting price information...");
+    if (info.isValid()){
+        LOG_DEBUG("Service is available! Price: " << info.toString());
+        sendResponse(info.toString());
+    }
+    else {
+        LOG_ERROR("Service is not available");
+        sendResponse("Error: Service is not available.");
+    }
+}
+
+
+void BLEService::verifyRequest(const PriceInfo& info, const ParkingEvent& event)
+{
+    LOG_DEBUG("Registering parking...");
+    if (event.duration() % info.timeResolution() != 0){
+        LOG_ERROR("Duration is not multiply of resolution");
+        sendResponse("Error: Invalid parking duration.");
+    }
+    else if (info.timeLimit() != 0 && event.duration() > info.timeLimit()){
+        LOG_ERROR("Duration exceeds time limit.");
+        sendResponse("Error: Duration exceeds time limit.");
+    }
+    else {
+        IVerifyParking::Result result = m_verifier->verify(event);
+        if (result == IVerifyParking::OK){
+            LOG_DEBUG("Registering parking succeeded.");
+            sendResponse("OK");
+        }
+        else if (result == IVerifyParking::TIMEOUT){
+            LOG_ERROR("Timeout");
+            sendResponse("Error: Request timed out.");
+        }
+        else if (result == IVerifyParking::INVALID_TOKEN){
+            LOG_ERROR("Invalid token.");
+            sendResponse("Error: Payment token is invalid.");
+        }
+        else {
+            LOG_ERROR("Other error.");
+            sendResponse("Error: Unknown error.");
+        }
+    }
+}
+
 
 } // spark

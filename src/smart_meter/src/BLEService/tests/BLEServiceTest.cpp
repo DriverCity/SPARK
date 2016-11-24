@@ -68,9 +68,9 @@ protected:
 
     void writeInputFifo(const std::string& str)
     {
-        std::ofstream ofs(INPUT_FIFO);
-        ofs << str << std::endl;
-        ofs.close();
+        FILE* fp = fopen(INPUT_FIFO, "w");
+        fputs(str.c_str(), fp);
+        fclose(fp);
     }
 
 
@@ -107,8 +107,90 @@ TEST_F(BLEServiceTest, GetPriceSuccess)
     m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
 
     m_service->start();
-    writeInputFifo("price");
-    sleep(1); // Give service time to response.
-    EXPECT_EQ(readResponseFifo(), m_priceProvider->m_info.toString());
+    writeInputFifo("price\n");
+    sleep(1); // Give service time to respond.
+    EXPECT_EQ(m_priceProvider->m_info.toString(), readResponseFifo());
 }
 
+
+TEST_F(BLEServiceTest, GetPriceFailure)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_priceProvider->m_info = spark::PriceInfo();
+
+    m_service->start();
+    writeInputFifo("price\n");
+    sleep(1); // Give service time to respond.
+    EXPECT_EQ("Error: Service is not available.", readResponseFifo());
+}
+
+
+TEST_F (BLEServiceTest, UnknownCommand)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_service->start();
+    writeInputFifo("NotACommand");
+    sleep(1); // Give service time to respond.
+    EXPECT_EQ("Error: Unknown command.", readResponseFifo());
+}
+
+
+TEST_F (BLEServiceTest, RegisterSuccess)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_verifier->m_result = spark::IVerifyParking::OK;
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
+
+    m_service->start();
+    spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
+    writeInputFifo(e.toString());
+    sleep(1);
+    EXPECT_EQ("OK", readResponseFifo());
+    EXPECT_EQ("ABC123", m_verifier->m_lastEvent.registerNumber());
+    EXPECT_EQ("2016-11-23 12:30", m_verifier->m_lastEvent.startingTime());
+    EXPECT_EQ(30, m_verifier->m_lastEvent.duration());
+    EXPECT_EQ("ver", m_verifier->m_lastEvent.token().verifier());
+    EXPECT_EQ("123", m_verifier->m_lastEvent.token().uid());
+}
+
+
+TEST_F (BLEServiceTest, RegisterFailureTimeout)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_verifier->m_result = spark::IVerifyParking::TIMEOUT;
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
+
+    m_service->start();
+    spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
+    writeInputFifo(e.toString());
+    sleep(1);
+    EXPECT_EQ("Error: Request timed out.", readResponseFifo());
+}
+
+
+TEST_F (BLEServiceTest, RegisterFailureInvalidToken)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_verifier->m_result = spark::IVerifyParking::INVALID_TOKEN;
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
+
+    m_service->start();
+    spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
+    writeInputFifo(e.toString());
+    sleep(1);
+    EXPECT_EQ("Error: Payment token is invalid.", readResponseFifo());
+}
+
+
+TEST_F (BLEServiceTest, RegisterFailureOtherError)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_verifier->m_result = spark::IVerifyParking::OTHER;
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
+
+    m_service->start();
+    spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
+    writeInputFifo(e.toString());
+    sleep(1);
+    EXPECT_EQ("Error: Unknown error.", readResponseFifo());
+}
