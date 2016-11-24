@@ -60,10 +60,8 @@ int main(int argc, char* argv[])
         std::cout << PROMPT;
         std::string msg;
         std::getline(std::cin, msg);
-        if (std::cin.peek() == EOF){
-            LOG_DEBUG("Quting!");
-            break;
-        }
+
+        LOG_DEBUG("Input: " << msg << " length: " << msg.length());
 
         //Send message
         FILE* outFd = fopen(output.c_str(), "w");
@@ -71,7 +69,7 @@ int main(int argc, char* argv[])
             LOG_ERROR("Fifo '" << output << "' does not exist.");
             return 1;
         }
-        msg += "\n";
+        msg += '\n';
         fputs(msg.c_str(), outFd);
         fclose(outFd);
 
