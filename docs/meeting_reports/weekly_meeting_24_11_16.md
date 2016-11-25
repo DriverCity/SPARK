@@ -1,4 +1,4 @@
-# Meeting notes 25.11.16
+# Meeting notes 24.11.16
 
 ## Decisions:
 ### attendant app:
