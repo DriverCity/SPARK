@@ -80,18 +80,19 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
   /*
    * Description: Connect to a BLE peripheral device
    */
-  $scope.connect = function(device_id){
-    ble.connect(
-      device_id,
-      function(res){
-        $scope.showAlert('Response received',JSON.stringify(device));
-        $state.go('tab.device', { 'id': device_id });
-      },
-      function(err){
-        $scope.showAlert('Error','Something went wrong while trying to connect. Please try again.' + JSON.stringify(err));
-        $state.go('tab.meter');
-      }
-    );
+  $scope.connect = function(id, name) {
+    // Set selected device characteristics
+    blePerpheralsService.setSelectedDeviceId(id);
+    blePerpheralsService.setSelectedDeviceName(name);
+    
+    // Define action after connexion
+    var onConnect = function() {
+      $scope.showAlert('Response received',JSON.stringify(device));
+      $state.go('tab.device', { 'id': id });
+    }
+
+    // Execute connexion
+    ble.connect(blePerpheralsService.getSelectedDeviceId(), onConnect, blePerpheralsService.onError);
   }
 
   /****************************
