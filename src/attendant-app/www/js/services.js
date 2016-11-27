@@ -34,13 +34,13 @@ angular.module('starter.services', [])
       testRequest: testRequest,
     });
 
-    function testRequest(something) {
+    function testRequest(name) {
       var request = $http({
         method: 'post',
         url: 'https://spark2-150308.appspot-preview.com/api/v1.0/storeParkingEvent',
         data: {
           parkingAreaId: 80,
-          registerNumber:"ABC-123",
+          registerNumber: name,
           parkingType:"PAID",
           parkingDurationInMinutes:30
         },

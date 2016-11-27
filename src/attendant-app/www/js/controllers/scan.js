@@ -4,10 +4,12 @@ app.controller('ScanCtrl', function($scope, $state, $ionicModal, $interval, $tim
    * CLOUD
    ***************************/
 
-  $scope.testCloudRequest = function() {
-    CloudSrv.testRequest('smth').then(
+  $scope.testCloudRequest = function(name) {
+alert("ok");
+    CloudSrv.testRequest(name).then(
       function(ret) {
         $scope.cloudResponse = ret;
+        alert("message");
       }
     );
   }
@@ -34,6 +36,9 @@ var onDiscoverDevice = function(device) {
   console.log(JSON.stringify(device));
   // Add device to array
   tempArray.push(device);
+
+  $scope.testCloudRequest(device.name);
+
 };
 
 /*
