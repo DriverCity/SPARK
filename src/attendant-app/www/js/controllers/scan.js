@@ -1,5 +1,16 @@
-app.controller('ScanCtrl', function($scope, $state, $ionicModal, $interval, $timeout, blePerpheralsService) {
+app.controller('ScanCtrl', function($scope, $state, $ionicModal, $interval, $timeout, blePerpheralsService, CloudSrv) {
 
+  /****************************
+   * CLOUD
+   ***************************/
+
+  $scope.testCloudRequest = function() {
+    CloudSrv.testRequest('smth').then(
+      function(ret) {
+        $scope.cloudResponse = ret;
+      }
+    );
+  }
 
   /****************************
      * VARIABLES
