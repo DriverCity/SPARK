@@ -1,13 +1,31 @@
-app.controller('VehicleCtrl', function($scope, $state, $stateParams, localStorageService) {
+app.controller('VehicleCtrl', function($scope, $state, $stateParams, localStorageService, parkCarService) {
 
-  $scope.id = $stateParams.id;
+  /****************************
+   * VARIABLES
+   ***************************/
+
   $scope.localVehicles = getItem("vehicles");
+  $scope.currentVehicle = null;
+
+  /****************************
+   * FUNCTIONS
+   ***************************/
+
+  $scope.selectVechicle = function(aVehicle) {
+    parkCarService.setSelectedVehicle(aVehicle);
+    $scope.currentVehicle = aVehicle;
+  }
 
   /****************************
    * UTILS
    ***************************/
 
   $scope.changeState = function(location) {
+    $state.go(location);
+  };
+
+  $scope.parkCar = function() {
+    var location = ($stateParams.for == "meter") ? "tab.meter" : "tab.disk" ;
     $state.go(location);
   };
 

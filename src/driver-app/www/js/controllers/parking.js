@@ -4,8 +4,8 @@ app.controller('ParkingCtrl', function($scope, $state) {
    * UTILS
    ***************************/
 
-  $scope.changeState = function(location) {
-    $state.go(location);
+  $scope.changeState = function(location, where) {
+    $state.go(location, { 'for': where });
   };
   
 });

@@ -53,6 +53,20 @@ angular.module('starter.services', [])
   }
 })
 
+.factory('parkCarService', function() {
+
+  var selectedVehicle = "";
+
+  return {
+    getSelectedVehicle : function() {
+      return selectedVehicle;
+    },
+    setSelectedVehicle : function(aVehicle) {
+      selectedVehicle = aVehicle;
+    }
+  }
+})
+
 /***************************************************************************************
  * SERVICE VEHICLE
  **************************************************************************************/

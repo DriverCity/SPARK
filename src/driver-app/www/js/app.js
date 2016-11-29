@@ -86,7 +86,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   })
 
     .state('tab.vehicle', {
-      url: '/vehicle',
+      url: '/vehicle/:for',
       views: {
         'tab-parking': {
           templateUrl: 'templates/parking/tab-vehicle.html',

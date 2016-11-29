@@ -1,7 +1,7 @@
 <ion-view view-title="Vehicle">
   <ion-content padding="true">
 
-  <!-- Icon -->
+    <!-- Icon -->
     <div class="big-icon centered">
       <i class="ion-checkmark"></i>
       <p>Select a car</p>
@@ -13,15 +13,14 @@
     </div>
 
     <ion-list>
-      <ion-item class="item" ng-repeat="vehicle in localVehicles">
+      <ion-item class="item" ng-repeat="vehicle in localVehicles" ng-click="selectVechicle(vehicle)">
       {{ vehicle.beacon }} - {{ vehicle.make }} {{ vehicle.model }}
-      <ion-option-button class="button-assertive">
-        &nbsp;<i class="icon ion-trash-a"></i>
-      </ion-option-button>
+      <i class="balanced selectedBeacon icon ion-checkmark" ng-show="currentVehicle == vehicle"></i>
       </ion-item>
     </ion-list>
 
-    <button class="button button-balanced button-full" ng-click="scan()" ng-disabled="{{isScanBtnDisabled}}">
+    <!-- Button -->
+    <button class="button button-balanced button-full" ng-click="parkCar()" ng-disabled="currentVehicle == null">
       Park
     </button>
 
