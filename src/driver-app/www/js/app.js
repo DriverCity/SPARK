@@ -85,11 +85,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+    .state('tab.vehicle', {
+      url: '/vehicle',
+      views: {
+        'tab-parking': {
+          templateUrl: 'templates/parking/tab-vehicle.html',
+          controller: 'VehicleCtrl'
+        }
+      }
+    })
+
     .state('tab.disk', {
       url: '/disk',
       views: {
         'tab-parking': {
-          templateUrl: 'templates/parking/tab-disk.html',
+          templateUrl: 'templates/parking/disk/tab-disk.html',
           controller: 'DiskCtrl'
         }
       }
@@ -99,7 +109,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       url: '/meter',
       views: {
         'tab-parking': {
-          templateUrl: 'templates/parking/tab-meter.html',
+          templateUrl: 'templates/parking/smart-meter/tab-meter.html',
           controller: 'MeterCtrl'
         }
       }
@@ -109,7 +119,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         url: '/device/:id',
         views: {
           'tab-parking': {
-            templateUrl: 'templates/parking/tab-device.html',
+            templateUrl: 'templates/parking/smart-meter/tab-device.html',
             controller: 'DeviceCtrl'
           }
         }
