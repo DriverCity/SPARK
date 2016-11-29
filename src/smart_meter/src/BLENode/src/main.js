@@ -5,12 +5,13 @@ var BlenoPrimaryService = bleno.PrimaryService;
 var DeviceInformationService = require('./device-information-service');
 var deviceInformationService = new DeviceInformationService();
 
-console.log('bleno - ble peripheral');
+console.log('SPARK - Smart meter');
 
 bleno.on('stateChange', function(state) {
   console.log('on -> stateChange: ' + state);
 
   if (state === 'poweredOn') {
+    console.log("on -> Smart meter is ready, let's start advertising!");
     bleno.startAdvertising('smart-meter', ['ec00']);
   }   
   else {

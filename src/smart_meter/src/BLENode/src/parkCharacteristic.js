@@ -10,7 +10,13 @@ var ParkCharacteristic = function() {
     value: null
   });
 
-  this._value = new Buffer(0);
+  var information = {
+    "price_per_hour":3.5,
+    "limit":2,
+    "resolution":60
+  }
+
+  this._value = new Buffer(JSON.stringify(information), "utf-8");
   this._updateValueCallback = null;
 };
 
@@ -21,6 +27,7 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
   callback(this.RESULT_SUCCESS, this._value);
 };
 
+/*
 ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
   this._value = data;
     console.log('ParkCharacteristic - onWriteRequest: value = ' + this._value.toString("utf-8"));
@@ -33,5 +40,6 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
 
   callback(this.RESULT_SUCCESS);
 };
+*/
 
 module.exports = ParkCharacteristic;

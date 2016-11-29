@@ -3,15 +3,13 @@ var bleno = require('bleno');
 
 var BlenoPrimaryService = bleno.PrimaryService;
 
-var ConnexionCharacteristic = require('./connexionCharacteristic');
 var ParkCharacteristic = require('./parkCharacteristic');
 
 function DeviceInformationService() {
   DeviceInformationService.super_.call(this, {
     uuid: 'ec00',
     characteristics: [
-      new ConnexionCharacteristic(),
-      new ParkCharacteristic(),
+      new ParkCharacteristic()
     ]
   });
 }
