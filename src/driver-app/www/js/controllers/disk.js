@@ -2,9 +2,19 @@
  * [CONTROLLER] DISK
  *********************************/
 
-app.controller('DiskCtrl', function($scope, $state, CloudSrv) {
+app.controller('DiskCtrl', function($scope, $state, CloudSrv, parkCarService) {
+
+  /****************************
+   * VARIABLES
+   ***************************/
 
   $scope.date = new Date();
+
+  $scope.parkEvent = {
+    vehicle:parkCarService.getSelectedVehicle(),
+    date:$scope.date.toLocaleDateString(),
+    time:$scope.date.toLocaleTimeString(),
+  }
 
   /****************************
    * CLOUD
