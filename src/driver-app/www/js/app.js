@@ -116,7 +116,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     })
 
       .state('tab.device', {
-        url: '/device/:id',
+        url: '/device',
         views: {
           'tab-parking': {
             templateUrl: 'templates/parking/smart-meter/tab-device.html',
