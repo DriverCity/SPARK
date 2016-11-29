@@ -2,7 +2,8 @@ var bleno = require('bleno');
 
 var BlenoPrimaryService = bleno.PrimaryService;
 
-var SmartCharacteristic = require('./characteristic');
+var DeviceInformationService = require('./device-information-service');
+var deviceInformationService = new DeviceInformationService();
 
 console.log('bleno - ble peripheral');
 
@@ -25,12 +26,7 @@ bleno.on('advertisingStart', function(error) {
 
   if (!error) {
     bleno.setServices([
-      new BlenoPrimaryService({
-        uuid: 'ec00',
-        characteristics: [
-          new SmartCharacteristic()
-        ]
-      })
+      deviceInformationService
     ]);
   }
 });
