@@ -17,4 +17,4 @@ chmod a+x $PWD/$VARIANT/bin/application
 chmod a+x $PWD/start_$BUILD_TYPE.sh
 
 cd $PWD/$VARIANT/bin/BLENode
-npm install npm install bluetooth-hci-socket
+npm install bluetooth-hci-socket
