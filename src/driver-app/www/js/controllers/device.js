@@ -12,6 +12,16 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   blePerpheralsService.setServiceId('ec00');
   blePerpheralsService.setCharacteristicId('ec0e');
 
+  $scope.timeValidity = null;
+  $scope.price = 0;
+
+
+  $scope.meterInfo = {
+    price_per_hour:3.5,
+    resolution:15,
+    limit:60
+  }
+
   /****************************
    * DATA CONVERTION
    ***************************/
@@ -42,7 +52,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * callback
    */
   var onRead = function(data) {
-    alert("Data received");
     // Convert data received
     var dataReceived = bytesToString(data);
     $scope.$apply(function() {
@@ -97,6 +106,39 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   };
 
   /****************************
+   * FUNCTION
+   ***************************/
+
+  $scope.timeParkValidator = function(parkTime) {
+    if(parkTime == null) {
+      $scope.timeValidity = null;
+      $price = 0;
+    } else {
+      if((parkTime % $scope.meterInfo.resolution == 0) && (parkTime <= $scope.meterInfo.limit)) {
+        $scope.timeValidity = 'valid';
+        $scope.price = (parkTime / $scope.meterInfo.resolution) * $scope.meterInfo.price_per_hour;
+      } else {
+        $scope.timeValidity = 'invalid';
+        $scope.price = 0;
+      }
+    }
+  }
+
+  $scope.fakeFill = function() {
+    $scope.number = "4242 4242 4242 4242";
+    $scope.expiry = "12/2017";
+    $scope.cvc = "123";
+  }
+
+  $scope.stripeCallback = function (code, result) {
+    if (result.error) {
+        alert('It failed! error: ' + result.error.message);
+    } else {
+        alert('Success! token: ' + result.id);
+    }
+  }
+
+  /****************************
    * UTILS
    ***************************/
 
@@ -108,6 +150,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * ONLOAD
    ***************************/
 
-  /* $scope.readData(); */
+  // $scope.readData();
 
 });

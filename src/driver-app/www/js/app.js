@@ -38,6 +38,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
+.config(function() {
+  Stripe.setPublishableKey('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+})
+
 
 .config(function (localStorageServiceProvider) {
   localStorageServiceProvider
