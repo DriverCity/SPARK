@@ -29,6 +29,7 @@ public:
 
 
     CloudServiceMock() :
+        spark::ICloudService(),
         m_connectionOk(true),
         m_pricePerHour(0),
         m_parkingTimeResolution(0),
@@ -68,7 +69,7 @@ public:
     }
 
 
-    virtual Result verifyParkingEvent(const ParkingEvent &event)
+    virtual Result verifyParkingEvent(const spark::ParkingEvent &event)
     {
         m_lastEvent = event;
         return m_verifyResult;

@@ -18,7 +18,7 @@ include_directories($ENV{BUILD_DIR}/include)
 
 # List all source files here.
 set(SRCS
-  PriceInfo.cpp
+  PriceProvider.cpp PriceInfo.cpp
 )
 
 # List used other components here.
