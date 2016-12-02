@@ -29,7 +29,7 @@ public:
 
 
     CloudServiceMock() :
-        spark::ICloudService(),
+        ICloudService(),
         m_connectionOk(true),
         m_pricePerHour(0),
         m_parkingTimeResolution(0),

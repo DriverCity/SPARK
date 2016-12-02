@@ -57,7 +57,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       views: {
         'tab-situation': {
           templateUrl: 'templates/situation/tab-disk.html',
-          controller: 'SituationCtrl'
+          controller: 'DiskCtrl'
+        }
+      }
+    })
+
+    .state('tab.scan', {
+      url: '/scan',
+      views: {
+        'tab-situation': {
+          templateUrl: 'templates/situation/tab-scan.html',
+          controller: 'ScanCtrl'
         }
       }
     })

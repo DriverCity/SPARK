@@ -34,3 +34,112 @@ TEST (ParkingEventTest, EventTest)
     EXPECT_EQ("verifier", event.token().verifier());
     EXPECT_EQ("uid123456", event.token().uid());
 }
+
+TEST (ParkingEventTest, IsValidTest)
+{
+    spark::ParkingEvent event1("ABC123", "2016-11-15 12:00", 30, spark::PaymentToken("verifier", "uid123456"));
+    spark::ParkingEvent event2;
+
+    EXPECT_TRUE(event1.isValid());
+    EXPECT_FALSE(event2.isValid());
+}
+
+
+TEST (ParkingEventTest, ToStringTest)
+{
+    // Invalid
+    spark::ParkingEvent e1;
+    EXPECT_EQ("", e1.toString());
+
+    // Valid
+    spark::ParkingEvent e2("ABC123", "2016-11-22 12:30", 90, spark::PaymentToken("ver", "123"));
+    EXPECT_EQ("Park;ABC123;2016-11-22 12:30;90;ver;123", e2.toString());
+}
+
+
+TEST (ParkingEventTest, FromStringValidTest)
+{
+    std::string s1 = "Park;ABC123;2016-11-22 12:30;90;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_EQ("ABC123", e1.registerNumber());
+    EXPECT_EQ("2016-11-22 12:30", e1.startingTime());
+    EXPECT_EQ(90, e1.duration());
+    EXPECT_EQ("ver", e1.token().verifier());
+    EXPECT_EQ("123", e1.token().uid());
+}
+
+
+TEST (ParkingEventTest, FromStringMissingRegNum)
+{
+    std::string s1 = "Park;2016-11-22 12:30;90;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringMissingStarter)
+{
+    std::string s1 = ";ABC123;2016-11-22 12:30;90;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringMissingStartTime)
+{
+    std::string s1 = "Park;ABC123;90;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringMissingDuration)
+{
+    std::string s1 = "Park;ABC123;2016-11-22 12:30;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringMissingVerifier)
+{
+    std::string s1 = "Park;ABC123;2016-11-22 12:30;90;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringMissingUid)
+{
+    std::string s1 = "Park;ABC123;2016-11-22 12:30;90;ver";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringInvalidStartTime)
+{
+    std::string s1 = "Park;ABC123;2016-11-22 12-30;90;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+
+    std::string s2 = "Park;ABC123;2016-11-22 25:30;90;ver;123";
+    spark::ParkingEvent e2 = spark::ParkingEvent::fromString(s2);
+    EXPECT_FALSE(e2.isValid());
+
+    std::string s3 = "Park;ABC123;2016-11-32 12:30;90;ver;123";
+    spark::ParkingEvent e3 = spark::ParkingEvent::fromString(s3);
+    EXPECT_FALSE(e3.isValid());
+
+    std::string s4 = "Park;ABC123;2016-13-22 12:30;90;ver;123";
+    spark::ParkingEvent e4 = spark::ParkingEvent::fromString(s4);
+    EXPECT_FALSE(e4.isValid());
+}
+
+
+TEST (ParkingEventTest, FromStringInvalidDuration)
+{
+    std::string s1 = "Park;ABC123;2016-11-22 12:30;0;ver;123";
+    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
+    EXPECT_FALSE(e1.isValid());
+}

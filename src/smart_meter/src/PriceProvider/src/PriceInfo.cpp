@@ -2,6 +2,7 @@
 
 #include "PriceInfo.h"
 #include <cassert>
+#include <sstream>
 
 namespace spark
 {
@@ -41,6 +42,13 @@ int PriceInfo::timeResolution() const
 bool PriceInfo::isValid() const
 {
     return m_resolution != 0;
+}
+
+std::string PriceInfo::toString() const
+{
+    std::ostringstream oss;
+    oss << m_hourPrice << ";" << m_timeLimit << ";" << m_resolution;
+    return oss.str();
 }
 
 

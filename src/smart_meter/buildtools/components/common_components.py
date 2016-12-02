@@ -27,7 +27,10 @@ components.componentList.append(components.Component(name="VerifyParking",
                                                      runTestsCmd=None))
 
 components.componentList.append(components.Component(name="BLEService",
-                                                     runTestsCmd=None))
+                                                     runTestsCmd="./BLEServiceTest"))
 
 components.componentList.append(components.Component(name="application",
+                                                     runTestsCmd=None))
+
+components.componentList.append(components.Component(name="FakeBLETool",
                                                      runTestsCmd=None))

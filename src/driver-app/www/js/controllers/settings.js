@@ -22,8 +22,17 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
    */
   var onDiscoverDevice = function(device) {
     console.log(JSON.stringify(device));
-    // Add device to array
-    tempArray.push(device);
+
+    var similar = false;
+    for(var i=0; i<tempArray.length; i++) {
+      if(tempArray[i].id == device.id) {
+        similar = true;
+        break;
+      }
+    }
+    if(!similar && device.name != null) {
+      tempArray.push(device);
+    }
   };
 
   /*

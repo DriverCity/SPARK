@@ -21,3 +21,12 @@ TEST (PriceInfoTest, Constructor)
     EXPECT_EQ(10, info.timeResolution());
     EXPECT_TRUE(info.isValid());
 }
+
+
+TEST (PriceInfoTest, ToStringTest)
+{
+    spark::PriceInfo info(2.5, 300, 10);
+    std::string repr = info.toString();
+
+    EXPECT_EQ("2.5;300;10", repr);
+}

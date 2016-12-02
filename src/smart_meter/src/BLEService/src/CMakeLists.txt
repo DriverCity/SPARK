@@ -12,4 +12,21 @@ set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 #Get access to other component's public headers.
 include_directories($ENV{BUILD_DIR}/include)
+include_directories(../include)
 
+set(SRCS BLEService.cpp)
+
+# Link other components
+set(LINKED_LIBS Logger misc PriceProvider)
+foreach(lib ${LINKED_LIBS})
+    link_directories($ENV{BUILD_DIR}/${lib}/bin)
+    message($ENV{BUILD_DIR}/${lib}/bin)
+endforeach(lib)
+
+# Set output directories. Do not change.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+
+add_library(${PROJECT_NAME} SHARED ${SRCS})
+target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS} pthread)

@@ -6,8 +6,8 @@
 #ifndef IBLESERVICE_H
 #define IBLESERVICE_H
 
-#include "IPriceProvider.h"
-#include "IVerifyParking.h"
+#include "PriceProvider/IPriceProvider.h"
+#include "VerifyParking/IVerifyParking.h"
 
 namespace spark
 {
@@ -32,6 +32,11 @@ public:
      * @brief Start service.
      */
     virtual void start() = 0;
+
+    /**
+     * @brief Stop service.
+     */
+    virtual void stop() = 0;
 };
 
 } // spark

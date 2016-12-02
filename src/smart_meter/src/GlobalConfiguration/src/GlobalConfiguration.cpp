@@ -54,6 +54,12 @@ std::string GlobalConfiguration::getValue(const std::string& key, bool* ok) cons
 }
 
 
+void GlobalConfiguration::insert(const std::string& key, const std::string& value)
+{
+    m_conf[key] = value;
+}
+
+
 GlobalConfiguration::GlobalConfiguration(const std::map<std::string, std::string> &conf):
     m_conf(conf)
 {

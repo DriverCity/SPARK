@@ -53,6 +53,7 @@ public:
 
     /**
      * @brief Default constructor. Required for storing events to stl-containers.
+     *  Creates an invalid ParkingEvent.
      */
     ParkingEvent();
 
@@ -89,12 +90,33 @@ public:
      */
     PaymentToken token() const;
 
+    /**
+     * @brief isValid
+     * @return
+     */
+    bool isValid() const;
+
+    /**
+     * @brief Convert parking event to string.
+     * @return String representation. Invalid event returns empty sting.
+     */
+    std::string toString() const;
+
+    /**
+     * @brief Parse ParkingEvent from string.
+     * @param str input string.
+     * @return Parking event parsed from string. If parsing fails, return invalid event.
+     */
+    static ParkingEvent fromString(const std::string& str);
+
 private:
 
     std::string m_regNum;
     std::string m_startingTime;
     int m_duration;
     PaymentToken m_token;
+
+    static bool checkDateTime(const std::string& str);
 };
 
 } // spark

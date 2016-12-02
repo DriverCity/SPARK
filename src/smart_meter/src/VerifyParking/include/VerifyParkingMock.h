@@ -22,7 +22,7 @@ public:
     // Use these to control mock behaviour
     spark::ICloudService* m_cloudService;
     spark::IParkingDatabase* m_db;
-    spark::ParkingEvent* m_lastEvent;
+    spark::ParkingEvent m_lastEvent;
     spark::IVerifyParking::Result m_result;
 
     VerifyParkingMock():
@@ -41,7 +41,7 @@ public:
         m_db = db;
     }
 
-    virtual Result verify(const spark::ParkingEvent &event)
+    virtual Result verify(const spark::ParkingEvent& event)
     {
         m_lastEvent = event;
         return m_result;

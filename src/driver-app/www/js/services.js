@@ -6,20 +6,63 @@ angular.module('starter.services', [])
 
 .factory("Firebase", function() {
   var config = {
-    apiKey: "AIzaSyDu0vNBDUArjk1mXycJDiHfILFo3eFMbck",
-    authDomain: "personnal-1146c.firebaseapp.com",
-    databaseURL: "https://personnal-1146c.firebaseio.com",
-    storageBucket: "personnal-1146c.appspot.com",
-    messagingSenderId: "906605153702"
+    apiKey: "AIzaSyDhjWe4lzQBToEiVRTp98nTp09xKi7LxEM",
+    authDomain: "spark2-150308.firebaseapp.com",
+    databaseURL: "https://spark2-150308.firebaseio.com",
+    storageBucket: "",
+    messagingSenderId: "758338198382"
   };
   return firebase.initializeApp(config);
 })
 
 .factory('blePerpheralsService', function() {
 
+  var selectedDeviceId = "";
+  var serviceId = "";
+  var characteristicId = "";
+  var selectedDeviceId = "";
+
   return {
+    getSelectedDeviceId : function() {
+      return selectedDeviceId;
+    },
+    setSelectedDeviceId : function(id) {
+      selectedDeviceId = id;
+    },
+    getSelectedDeviceName : function() {
+      return selectedDeviceName;
+    },
+    setSelectedDeviceName : function(name) {
+      selectedDeviceName = name;
+    },
+    getServiceId : function() {
+      return serviceId;
+    },
+    setServiceId : function(id) {
+      serviceId = id;
+    },
+    getCharacteristicId : function() {
+      return characteristicId;
+    },
+    setCharacteristicId : function(id) {
+      characteristicId = id;
+    },
     onError: function(reason) {
       alert("ERROR: " + JSON.stringify(reason));
+    }
+  }
+})
+
+.factory('parkCarService', function() {
+
+  var selectedVehicle = "";
+
+  return {
+    getSelectedVehicle : function() {
+      return selectedVehicle;
+    },
+    setSelectedVehicle : function(aVehicle) {
+      selectedVehicle = aVehicle;
     }
   }
 })
@@ -78,6 +121,49 @@ angular.module('starter.services', [])
         params: {
           action: "get"
         }
+      });
+      return(request.then(handleSuccess, handleError));
+    }
+
+    // Transform the successful response
+    function handleError(response) {
+      if (!angular.isObject(response.data) ||
+        !response.data.message
+      ) {
+        return ($q.reject("An unknown error occurred."));
+      }
+      // Otherwise, use expected error message
+      return ($q.reject(response.data.message));
+    }
+
+    function handleSuccess(response) {
+      return (response.data);
+    }
+  }
+)
+
+/***************************************************************************************
+ * SERVICE CLOUD
+ **************************************************************************************/
+
+.service (
+  "CloudSrv",
+  function($http, $q) {
+    return ({
+      testRequest: testRequest,
+    });
+
+    function testRequest(something) {
+      var request = $http({
+        method: 'post',
+        url: 'https://spark2-150308.appspot-preview.com/api/v1.0/storeParkingEvent',
+        data: {
+          parkingAreaId: 80,
+          registerNumber:"ABC-123",
+          parkingType:"PAID",
+          parkingDurationInMinutes:30
+        },
+        headers: {'content-Type':'application/json'}
       });
       return(request.then(handleSuccess, handleError));
     }

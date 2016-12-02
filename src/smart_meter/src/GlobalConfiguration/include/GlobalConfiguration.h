@@ -52,6 +52,12 @@ public:
      */
     std::string getValue(const std::string& key, bool* ok=0) const;
 
+    /**
+     * @brief Insert or update a parameter.
+     * @param key Parameter key.
+     * @param value Parameter value.
+     */
+    void insert(const std::string& key, const std::string& value);
 
 private:
 
