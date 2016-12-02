@@ -17,10 +17,11 @@ include_directories(../include)
 include_directories($ENV{BUILD_DIR}/include)
 
 # List all source files here.
-# set(SRCS foo.cpp)
+set(SRCS VerifyParking.cpp)
 
 # List used other components here.
-set(LINKED_LIBS CloudService ParkingDatabase)
+set(LINKED_LIBS CloudService ParkingDatabase Logger)
+
 
 # Link other components. Do not change.
 foreach(lib ${LINKED_LIBS})
@@ -38,4 +39,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 # Uncomment when there are own sources.
-#add_library(${PROJECT_NAME} SHARED ${SRCS})
+add_library(${PROJECT_NAME} SHARED ${SRCS})

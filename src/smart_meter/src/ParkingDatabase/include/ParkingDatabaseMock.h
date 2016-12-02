@@ -84,4 +84,4 @@ public:
 
 } // sparktest
 
-#endif PARKINGDATABASEMOCK_H
+#endif //PARKINGDATABASEMOCK_H

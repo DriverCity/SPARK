@@ -24,7 +24,7 @@ components.componentList.append(components.Component(name="PriceProvider",
                                                      runTestsCmd="./PriceProviderTest"))
 
 components.componentList.append(components.Component(name="VerifyParking",
-                                                     runTestsCmd=None))
+                                                     runTestsCmd="./VerifyParkingTest"))
 
 components.componentList.append(components.Component(name="BLEService",
                                                      runTestsCmd="./BLEServiceTest"))
