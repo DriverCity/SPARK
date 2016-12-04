@@ -14,6 +14,25 @@ alert("ok");
     );
   }
 
+  /**********************************
+ * [MODAL] Settings
+ *********************************/
+
+$ionicModal.fromTemplateUrl('templates/situation/tab-disk.html', {
+  scope: $scope,
+  animation: 'slide-in-up'
+}).then(function(modal) {
+  $scope.modalSettigs = modal;
+});
+
+$scope.openSettings = function() {
+  $scope.modalSettigs.show();
+};
+
+$scope.closeSettings = function() {
+  $scope.modalSettigs.hide();
+};
+
   /****************************
      * VARIABLES
      ***************************/

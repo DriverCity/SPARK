@@ -1,4 +1,4 @@
-app.controller('DiskCtrl', function($scope, $state) {
+app.controller('DiskCtrl', function($scope, $state, $stateParams) {
 
   /****************************
    * UTILS
@@ -7,5 +7,5 @@ app.controller('DiskCtrl', function($scope, $state) {
   $scope.changeState = function(location) {
     $state.go(location);
   };
-  
+
 });

@@ -52,15 +52,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-    .state('tab.disk', {
-      url: '/disk',
-      views: {
-        'tab-situation': {
-          templateUrl: 'templates/situation/tab-disk.html',
-          controller: 'DiskCtrl'
-        }
-      }
-    })
 
     .state('tab.scan', {
       url: '/scan',
