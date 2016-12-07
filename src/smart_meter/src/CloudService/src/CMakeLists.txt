@@ -11,9 +11,9 @@ set(VERSION_PATCH "0")
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 include_directories($ENV{BUILD_DIR}/include)
-
+include_directories(../include)
 # TODO: Own sources here
-#set(SRCS src.cpp)
+set(SRCS CloudService.cpp)
 
 # List used other components here.
 set(LINKED_LIBS misc)
@@ -33,4 +33,4 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
-#add_library(${PROJECT_NAME} SHARED ${SRCS})
+add_library(${PROJECT_NAME} SHARED ${SRCS})
