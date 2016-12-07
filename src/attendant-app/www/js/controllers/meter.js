@@ -14,17 +14,19 @@ alert("ok");
     );
   }
 
-  /**var options = {
+  var options = {
     timeout: 10000,
     enableHighAccuracy: true
   };
 
   $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
-**/
-    // Position coordinates
-  //  var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-    //};
+    // Position coordinates
+    //send these to cloud to get the area.
+  $scope.latitude=position.coords.latitude;
+  $scope.longitude=position.coords.longitude
+
+});
 
   /****************************
      * VARIABLES
@@ -34,6 +36,8 @@ alert("ok");
     var tempArray = [];
     var timeReduction;
 
+    $scope.latitude= 0;
+    $scope.longitude= 0;
     $scope.scanning = false;
     $scope.isScanBtnDisabled = false;
 
