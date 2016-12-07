@@ -22,6 +22,7 @@ public:
         std::unique_ptr<IPriceProvider> priceProvider;
         std::unique_ptr<IVerifyParking> verifier;
         std::unique_ptr<ICloudService> cloudService;
+        std::unique_ptr<IParkingDatabase> parkingDb;
     };
 
 

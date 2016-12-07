@@ -28,8 +28,9 @@ set(LINKED_LIBS
     misc
     BLEService
     PriceProvider
-    sqlite3)
-
+    CloudService
+    VerifyParking
+)
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)

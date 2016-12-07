@@ -33,7 +33,7 @@ PriceInfo PriceProvider::getPriceInfo()
     int limit = m_cloudService->getTimeLimit();
 
 
-    return PriceInfo(price,res, limit);
+    return PriceInfo(price,limit, res);
 
 }
 
