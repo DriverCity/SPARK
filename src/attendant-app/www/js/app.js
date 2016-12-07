@@ -53,12 +53,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   })
 
 
-    .state('tab.scan', {
-      url: '/scan',
+    .state('tab.disc', {
+      url: '/disc',
       views: {
         'tab-situation': {
-          templateUrl: 'templates/situation/tab-scan.html',
-          controller: 'ScanCtrl'
+          templateUrl: 'templates/situation/tab-disc.html',
+          controller: 'DiscCtrl'
         }
       }
     })

@@ -6,22 +6,40 @@
   </ion-header-bar>
 
   <ion-content>
+
+    <!-- Time input -->
     <div class="list">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="number" ng-model="timeLimitForDisc" ng-change="saveTimeLimit(timeLimitForDisc)" placeholder="Parking time limit">
+        </label>
+        <p>
+          &nbsp; in minutes
+        </p>
+      </div>
+      <div class="item item-input-inset">
+        <p>
+          Time : {{ timeLimitForDisc }}
+        </p>
+      </div>
+    </div>
+
+    <!---div class="list"--->
       <!-- Setting -->
-      <div class="item item-divider">
+      <!---div class="item item-divider">
         Set time limit for parking area
       </div>
       <div class="item item-divider">
        <label class="item item-input">
          <input type="text" placeholder="Time limit">
        </label>
-      </div>
+     </div--->
 
-      <div class="item item-divider">
+      <!---div class="item item-divider">
        <button class="button button-light" ng-click="changeState('tab.scan')">
          OK
        </button>
-      </div>
+     </div--->
 
     </div>
   </ion-content>

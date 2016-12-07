@@ -1,4 +1,4 @@
-app.controller('ScanCtrl', function($scope, $state, $ionicModal, $interval, $timeout, blePerpheralsService, CloudSrv) {
+app.controller('DiscCtrl', function($scope, $state, $ionicModal, $interval, $timeout, blePerpheralsService, CloudSrv) {
 
   /****************************
    * CLOUD
@@ -18,7 +18,7 @@ alert("ok");
  * [MODAL] Settings
  *********************************/
 
-$ionicModal.fromTemplateUrl('templates/situation/tab-disk.html', {
+$ionicModal.fromTemplateUrl('templates/situation/tab-settings.html', {
   scope: $scope,
   animation: 'slide-in-up'
 }).then(function(modal) {
