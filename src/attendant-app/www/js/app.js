@@ -63,6 +63,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
 
+    .state('tab.meter', {
+      url: '/meter',
+      views: {
+        'tab-situation': {
+          templateUrl: 'templates/situation/tab-meter.html',
+          controller: 'MeterCtrl'
+        }
+      }
+    })
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/situation');
 
