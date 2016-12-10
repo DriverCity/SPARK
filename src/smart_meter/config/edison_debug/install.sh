@@ -1,21 +1,22 @@
 #/bin/bash
 
-export VARIANT=edison_debug
-export BUILD_TYPE=debug
+BASEDIR=$(dirname "$0")
+VARIANT=edison_debug
+BUILD_TYPE=debug
 
 chmod a+x $PWD/uninstall_$BUILD_TYPE.sh
-$PWD/uninstall_$BUILD_TYPE.sh
+$BASEDIR/uninstall_$BUILD_TYPE.sh
 
-mkdir $PWD/$VARIANT
-cd $PWD/$VARIANT
-unzip ../$VARIANT.zip
-mkfifo bin/BLEInputFifo
-mkfifo bin/BLEResponseFifo
-cd ..
+mkdir $BASEDIR/$VARIANT
+cd $BASEDIR/$VARIANT
+unzip $BASEDIR/$VARIANT.zip
+mkfifo $BASEDIR/bin/BLEInputFifo
+mkfifo $BASEDIR/bin/BLEResponseFifo
+cd $BASEDIR
 
-chmod a+x $PWD/$VARIANT/bin/application
-chmod a+x $PWD/$VARIANT/bin/FakeBLETool
-chmod a+x $PWD/start_$BUILD_TYPE.sh
+chmod a+x $BASEDIR/$VARIANT/bin/application
+chmod a+x $BASEDIR/$VARIANT/bin/FakeBLETool
+chmod a+x $BASEDIR/$VARIANT/start_$BUILD_TYPE.sh
 
-cd $PWD/$VARIANT/bin/BLENode
+cd $VARIANT/$VARIANT/bin/BLENode
 npm install npm install bluetooth-hci-socket

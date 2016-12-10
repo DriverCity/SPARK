@@ -1,7 +1,8 @@
 #/bin/bash
 
-export VARIANT=edison_debug
+BASEDIR=$(dirname "$0")
+VARIANT=edison_debug
 
-if [ -d "$PWD/$VARIANT" ]; then
-  rm -rf $PWD/$VARIANT
+if [ -d "$BASEDIR/$VARIANT" ]; then
+  rm -rf $BASEDIR/$VARIANT
 fi

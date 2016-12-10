@@ -16,6 +16,12 @@ include_directories(../include)
 
 set(SRCS BLEService.cpp)
 
+set(INST_HDRS
+    ../include/BLEService.h
+    ../include/BLEServiceMock.h
+    ../include/IBLEService.h
+)
+
 # Link other components
 set(LINKED_LIBS Logger misc PriceProvider)
 foreach(lib ${LINKED_LIBS})
@@ -30,3 +36,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 add_library(${PROJECT_NAME} SHARED ${SRCS})
 target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS} pthread)
+
+INSTALL(TARGETS ${PROJECT_NAME} DESTINATION $ENV{DEPLOY_DIR}/bin)
+INSTALL(FILES ${INST_HDRS} DESTINATION $ENV{BUILD_DIR}/include/${PROJECT_NAME})

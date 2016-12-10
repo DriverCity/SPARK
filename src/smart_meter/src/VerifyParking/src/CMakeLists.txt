@@ -19,6 +19,12 @@ include_directories($ENV{BUILD_DIR}/include)
 # List all source files here.
 set(SRCS VerifyParking.cpp)
 
+set(INST_HDRS
+    ../include/IVerifyParking.h
+    ../include/VerifyParking.h
+    ../include/VerifyParkingMock.h
+)
+
 # List used other components here.
 set(LINKED_LIBS CloudService ParkingDatabase Logger)
 
@@ -28,11 +34,6 @@ foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)
 
-# Linker searches other components from working directory at runtime
-# DO NOT CHANGE / REMOVE
-SET(CMAKE_EXE_LINKER_FLAGS
-          "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath -Wl,$ORIGIN")
-
 # Set output directory for binaries. Do not change.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
@@ -40,3 +41,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 # Uncomment when there are own sources.
 add_library(${PROJECT_NAME} SHARED ${SRCS})
+
+INSTALL(TARGETS ${PROJECT_NAME} DESTINATION $ENV{DEPLOY_DIR}/bin)
+INSTALL(FILES ${INST_HDRS} DESTINATION $ENV{BUILD_DIR}/include/${PROJECT_NAME})

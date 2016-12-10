@@ -1,4 +1,6 @@
 
+import components
+
 """Class containing build configuration."""
 class BuildConfig(object):
 
