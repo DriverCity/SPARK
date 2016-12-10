@@ -23,7 +23,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
     // Position coordinates
     var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    $scope.inParkingArea=false;
+    $scope.inParkingArea= "not found";
 
     var featureRef = firebase.database().ref().child('parkings');
     // Real-time array for data reference
