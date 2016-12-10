@@ -23,8 +23,8 @@ if( $ENV{BUILD_NAME} STREQUAL "linux_debug" )
 
 else()
     set(SCRIPT_FILES
-        ${CONFIG_DIR}/$ENV{BUILD_NAME}/install.sh
-        ${CONFIG_DIR}/$ENV{BUILD_NAME}/uninstall.sh
+        ${CONFIG_DIR}/$ENV{BUILD_NAME}/install_$ENV{BUILD_TYPE}.sh
+        ${CONFIG_DIR}/$ENV{BUILD_NAME}/uninstall_$ENV{BUILD_TYPE}.sh
         ${CONFIG_DIR}/$ENV{BUILD_NAME}/start.sh
         ${CONFIG_DIR}/$ENV{BUILD_NAME}/upload.sh
         ${CONFIG_DIR}/linux/FakeBLETool.sh
@@ -34,4 +34,4 @@ endif()
 
 
 install(FILES ${CONF_FILES}     DESTINATION $ENV{DEPLOY_DIR}/config)
-install(FILES ${SCRIPT_FILES}   DESTINATION $ENV{DEPLOY_DIR} PERMISSIONS OWNER_READ OWNER_EXECUTE)
+install(FILES ${SCRIPT_FILES}   DESTINATION $ENV{DEPLOY_DIR} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)

@@ -11,6 +11,7 @@ set(VERSION_PATCH "0")
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 include_directories($ENV{BUILD_DIR}/include)
+include_directories(../include)
 
 set(SRCS CloudService.cpp)
 

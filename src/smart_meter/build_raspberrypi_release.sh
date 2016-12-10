@@ -1,6 +1,6 @@
 #/bin/bash
 
-export BUILD_TYPE="RELEASE"
+export BUILD_TYPE="release"
 export BUILD_ROOT=$PWD/builds
 export DEPLOY_ROOT=$PWD/deploy
 export BUILD_NAME="raspberrypi_release"

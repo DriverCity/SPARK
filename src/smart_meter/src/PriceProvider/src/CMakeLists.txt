@@ -29,7 +29,7 @@ set(INST_HDRS
 )
 
 # List used other components here.
-set(LINKED_LIBS CloudService)
+set(LINKED_LIBS Logger misc)
 
 # Link other components. Do not change.
 foreach(lib ${LINKED_LIBS})

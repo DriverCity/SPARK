@@ -30,6 +30,7 @@ set(LINKED_LIBS
     PriceProvider
     CloudService
     VerifyParking
+    sqlite3
 )
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)

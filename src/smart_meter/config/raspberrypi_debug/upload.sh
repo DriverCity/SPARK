@@ -14,6 +14,6 @@ fi
 export ZIP_FILE=$(dirname $0)/$VARIANT.zip
 export INSTALL_SCRIP=$(dirname $0)/install_$BUILD_TYPE.sh
 export UNINSTALL_SCRIP=$(dirname $0)/uninstall_$BUILD_TYPE.sh
-export START_SCRIPT=$(dirname $0)/start_$BUILD_TYPE.sh
+export START_SCRIPT=$(dirname $0)/$VARIANT/start.sh
 
-scp $ZIP_FILE $INSTALL_SCRIP $UNINSTALL_SCRIP $START_SCRIPT pi@$IP:/home/pi/
+scp $ZIP_FILE $INSTALL_SCRIP $UNINSTALL_SCRIP pi@$IP:/home/pi/
