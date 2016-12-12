@@ -14,7 +14,7 @@ addComponent( Component(name="GlobalConfiguration", runTestsCmd="./GlobalConfigu
 
 addComponent( Component(name="ParkingDatabase", runTestsCmd="./ParkingDatabaseTest") )
 
-addComponent( Component(name="CloudService", runTestsCmd=None) )
+addComponent( Component(name="CloudService", runTestsCmd="./CloudServiceTest") )
 
 addComponent( Component(name="PriceProvider", runTestsCmd="./PriceProviderTest") )
 

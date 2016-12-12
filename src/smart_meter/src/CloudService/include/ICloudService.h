@@ -32,6 +32,8 @@ public:
 
     virtual ~ICloudService() {}
 
+    virtual void init(int areaId) = 0;
+
     /**
      * @brief Check if connection to cloud is ok.
      * @return True, if connection is ok.
