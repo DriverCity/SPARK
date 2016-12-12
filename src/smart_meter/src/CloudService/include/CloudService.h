@@ -2,9 +2,8 @@
 #define CLOUDSERVICE_H
 #include "ICloudService.h"
 
+
 namespace spark {
-
-
 
 class CloudService : public ICloudService
 {
@@ -22,7 +21,12 @@ public:
     virtual int getTimeLimit();
     virtual Result verifyParkingEvent(const ParkingEvent &event);
 
-    std::string createJson(const ParkingEvent& e);
+    std::string createParkingEventJson(const ParkingEvent& e) const;
+
+    std::string createPriceRequestJSON(int parkingAreaId) const;
+
+    Result curlCodeToResult(int code);
+
 
 private:
     int m_areaId;

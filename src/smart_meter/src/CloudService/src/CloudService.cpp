@@ -2,6 +2,10 @@
 #include <cassert>
 #include <sstream>
 #include <cstdlib>
+#include <curl/curl.h>
+
+#define ACCEPT_HDR "Accept: application/json"
+#define CONTENT_TYPE_HDR "Content-Type: application/json"
 
 
 namespace spark
@@ -54,13 +58,29 @@ int CloudService::getTimeLimit()
 }
 
 
-ICloudService::Result CloudService::verifyParkingEvent(const ParkingEvent &event)
+ICloudService::Result CloudService::verifyParkingEvent(const ParkingEvent& event)
 {
-    return OK;
+    std::string json = createParkingEventJson(event);
+    CURL* curl = curl_easy_init();
+
+    curl_slist* headers = NULL;
+    headers = curl_slist_append(headers, CONTENT_TYPE_HDR);
+    headers = curl_slist_append(headers, ACCEPT_HDR);
+
+    curl_easy_setopt(curl, CURLOPT_URL, m_eventAPI.data());
+    curl_easy_setopt(curl, CURLOPT_HTTPPOST, 1L);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json.data());
+    curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+
+    CURLcode result = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
+    return curlCodeToResult(result);
 }
 
 
-std::string CloudService::createJson(const ParkingEvent &e)
+std::string CloudService::createParkingEventJson(const ParkingEvent& e) const
 {
     std::ostringstream oss;
     oss << "{"
@@ -74,6 +94,41 @@ std::string CloudService::createJson(const ParkingEvent &e)
         << "}";
 
     return oss.str();
+}
+
+
+std::string CloudService::createPriceRequestJSON(int parkingAreaId) const
+{
+    std::ostringstream oss;
+    oss << "{"
+        << "\"parkingAreaId\":" << parkingAreaId
+        << "}";
+
+    return oss.str();
+}
+
+
+ICloudService::Result CloudService::curlCodeToResult(int code)
+{
+    switch (code)
+    {
+    case CURLE_OK:
+        return OK;
+
+    case CURLE_HTTP_RETURNED_ERROR:
+        return INVALID_TOKEN;
+
+    case CURLE_NO_CONNECTION_AVAILABLE:
+    case CURLE_COULDNT_RESOLVE_HOST:
+    case CURLE_COULDNT_CONNECT:
+    case CURLE_OPERATION_TIMEDOUT:
+        return TIMEOUT;
+
+    default:
+        break;
+    }
+
+    return OTHER;
 }
 
 
