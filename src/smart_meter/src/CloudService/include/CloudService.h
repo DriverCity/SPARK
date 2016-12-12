@@ -15,7 +15,7 @@ public:
     virtual ~CloudService();
 
     // ICloudService
-    virtual void init(int areaId);
+    virtual void init(int areaId, const std::string& priceAPI, const std::string& eventAPI);
     virtual bool checkConnection();
     virtual double getPricePerHour();
     virtual int getParkingTimeResolution();
@@ -26,6 +26,8 @@ public:
 
 private:
     int m_areaId;
+    std::string m_priceAPI;
+    std::string m_eventAPI;
 };
 
 }

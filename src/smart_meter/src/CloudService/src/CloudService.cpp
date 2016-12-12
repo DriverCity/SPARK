@@ -1,30 +1,38 @@
 #include "CloudService.h"
 #include <cassert>
 #include <sstream>
+#include <cstdlib>
+
 
 namespace spark
 {
 
 CloudService::CloudService() :
-    ICloudService(), m_areaId(0)
+    ICloudService(), m_areaId(0), m_priceAPI(), m_eventAPI()
 {
 }
 
 
 CloudService::~CloudService()
 {
-
 }
 
-void CloudService::init(int areaId)
+
+void CloudService::init(int areaId,
+                        const std::string& priceAPI,
+                        const std::string& eventAPI)
 {
     m_areaId = areaId;
+    m_priceAPI = priceAPI;
+    m_eventAPI = eventAPI;
 }
 
 
 bool CloudService::checkConnection()
 {
-    return true;
+    std::string cmd = std::string("ping -c 1 ") + m_eventAPI;
+    int result = system( cmd.data() );
+    return result == 0;
 }
 
 
