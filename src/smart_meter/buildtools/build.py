@@ -7,7 +7,6 @@ import os
 import shutil
 from BuildConfig import BuildConfig
 import components
-import deliverables
 
 BUILD_ROOT = os.environ["BUILD_ROOT"]
 BUILD_DIR = os.environ["BUILD_DIR"]
