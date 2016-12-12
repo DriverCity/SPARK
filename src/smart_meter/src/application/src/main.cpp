@@ -23,22 +23,31 @@ int main(int argc, char** argv)
 
     // Instantiate components.
     spark::Application::Setup setup;
+
+    // Init cloud service
+    int parkingAreaId = std::stoi(config->getValue("parkingAreaId"));
+    std::string priceAPI = config->getValue("priceAPI");
+    std::string eventAPI = config->getValue("parkingEventAPI");
     setup.cloudService.reset(new spark::CloudService);
+    setup.cloudService->init(parkingAreaId, priceAPI, eventAPI);
+
+    // Init priceprovider
     setup.priceProvider.reset(new spark::PriceProvider);
-    setup.parkingDb.reset(new spark::ParkingDatabase("Parking.db"));
     setup.priceProvider-> init(setup.cloudService.get());
+
+    // Init verifier
+    setup.parkingDb.reset(new spark::ParkingDatabase(binaryDir + "/" + config->getValue("eventDb")));
     setup.verifier.reset(new spark::VerifyParking);
     setup.verifier->init(setup.cloudService.get(), setup.parkingDb.get());
 
+    // Init BLEService
     std::string bleInputFifo = config->getValue("BLEInputFifo");
     std::string bleResponseFifo = config->getValue("BLEResponseFifo");
     setup.bleService.reset(new spark::BLEService(binaryDir + "/" + bleInputFifo,
                                                  binaryDir + "/" + bleResponseFifo));
-
-    // Initialize components.
     setup.bleService->init(setup.priceProvider.get(), setup.verifier.get());
 
-
+    // Start application.
     spark::Application app(std::move(setup));
     return app.exec();
 }

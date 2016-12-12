@@ -1,6 +1,6 @@
 
 # Comment and empty lines.
 
-paramFoo:foo
-paramBar:bar
-paramBaz:baz
+paramFoo;foo
+paramBar;bar
+paramBaz;baz

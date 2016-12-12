@@ -19,7 +19,7 @@ TEST (CloudServiceTest, CreateJsonTest)
                                "\"parkingDurationInMinutes\":90,"
                                "\"paymentMethodInformation\":{"
                                     "\"paymentMethodType\":\"verifier\","
-                                    "\"paymentMethodReceipt\":\"id123\""
+                                    "\"paymentReceipt\":\"id123\""
                                "},"
                                "\"registerNumber\":\"ABC123\""
                                "}";
@@ -67,11 +67,11 @@ TEST (CloudServiceTest, CurlCodeToResultTest)
 {
     spark::CloudService s;
 
-    EXPECT_EQ(spark::ICloudService::OK,         s.curlCodeToResult(CURLE_OK));
-    EXPECT_EQ(spark::ICloudService::TIMEOUT,    s.curlCodeToResult(CURLE_COULDNT_CONNECT));
-    EXPECT_EQ(spark::ICloudService::TIMEOUT,    s.curlCodeToResult(CURLE_COULDNT_RESOLVE_HOST));
-    EXPECT_EQ(spark::ICloudService::TIMEOUT,    s.curlCodeToResult(CURLE_OPERATION_TIMEDOUT));
-    EXPECT_EQ(spark::ICloudService::TIMEOUT,    s.curlCodeToResult(CURLE_NO_CONNECTION_AVAILABLE));
-    EXPECT_EQ(spark::ICloudService::INVALID_TOKEN, s.curlCodeToResult(CURLE_HTTP_RETURNED_ERROR));
-    EXPECT_EQ(spark::ICloudService::OTHER,      s.curlCodeToResult(CURLE_HTTP_POST_ERROR));
+    EXPECT_EQ(spark::ICloudService::OK,             s.curlCodeToResult(CURLE_OK));
+    EXPECT_EQ(spark::ICloudService::TIMEOUT,        s.curlCodeToResult(CURLE_COULDNT_CONNECT));
+    EXPECT_EQ(spark::ICloudService::TIMEOUT,        s.curlCodeToResult(CURLE_COULDNT_RESOLVE_HOST));
+    EXPECT_EQ(spark::ICloudService::TIMEOUT,        s.curlCodeToResult(CURLE_OPERATION_TIMEDOUT));
+    EXPECT_EQ(spark::ICloudService::TIMEOUT,        s.curlCodeToResult(CURLE_NO_CONNECTION_AVAILABLE));
+    EXPECT_EQ(spark::ICloudService::INVALID_TOKEN,  s.curlCodeToResult(CURLE_HTTP_RETURNED_ERROR));
+    EXPECT_EQ(spark::ICloudService::OTHER,          s.curlCodeToResult(CURLE_HTTP_POST_ERROR));
 }

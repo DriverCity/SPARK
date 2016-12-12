@@ -143,7 +143,7 @@ TEST_F (BLEServiceTest, RegisterSuccess)
 
     m_service->start();
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
-    writeInputFifo(e.toString());
+    writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("OK", readResponseFifo());
     EXPECT_EQ("ABC123", m_verifier->m_lastEvent.registerNumber());

@@ -18,7 +18,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 include_directories($ENV{BUILD_DIR}/include)
 
 # Define all sources here
-set(SRCS main.cpp Application.cpp)
+set(SRCS
+    main.cpp
+    Application.cpp)
 
 # Link other components
 set(LINKED_LIBS

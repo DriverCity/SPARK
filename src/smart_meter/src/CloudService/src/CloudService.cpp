@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <curl/curl.h>
+#include "Logger/Logger.h"
 
 #define ACCEPT_HDR "Accept: application/json"
 #define CONTENT_TYPE_HDR "Content-Type: application/json"
@@ -34,7 +35,7 @@ void CloudService::init(int areaId,
 
 bool CloudService::checkConnection()
 {
-    std::string cmd = std::string("ping -c 1 ") + m_eventAPI;
+    std::string cmd = std::string("ping -c 1 8.8.8.8");
     int result = system( cmd.data() );
     return result == 0;
 }
@@ -60,6 +61,13 @@ int CloudService::getTimeLimit()
 
 ICloudService::Result CloudService::verifyParkingEvent(const ParkingEvent& event)
 {
+    LOG_DEBUG("RegisterNumber: " << event.registerNumber());
+    LOG_DEBUG("Duration: " << event.duration());
+    LOG_DEBUG("Verifier: " << event.token().verifier());
+    LOG_DEBUG("id: " << event.token().uid());
+    LOG_DEBUG("addr: " << m_eventAPI);
+    LOG_DEBUG("area: " << m_areaId);
+
     std::string json = createParkingEventJson(event);
     CURL* curl = curl_easy_init();
 
@@ -70,9 +78,11 @@ ICloudService::Result CloudService::verifyParkingEvent(const ParkingEvent& event
     curl_easy_setopt(curl, CURLOPT_URL, m_eventAPI.data());
     curl_easy_setopt(curl, CURLOPT_HTTPPOST, 1L);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json.data());
+    LOG_DEBUG("JSON: " << json.data());
     curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+    curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
     CURLcode result = curl_easy_perform(curl);
     curl_easy_cleanup(curl);
@@ -89,7 +99,7 @@ std::string CloudService::createParkingEventJson(const ParkingEvent& e) const
         << "\"parkingDurationInMinutes\":" << e.duration() << ","
         << "\"paymentMethodInformation\":{"
         << "\"paymentMethodType\":" << "\"" << e.token().verifier() << "\","
-        << "\"paymentMethodReceipt\":" << "\"" << e.token().uid() << "\"},"
+        << "\"paymentReceipt\":" << "\"" << e.token().uid() << "\"},"
         << "\"registerNumber\":" << "\"" << e.registerNumber() << "\""
         << "}";
 

@@ -59,7 +59,7 @@ void ConfigurationReader::readRow(ConfigurationReader::ConfigMap &conf,
     assert((!row.empty() && row.at(0) != '#') &&
            "Remove comments and empty rows before reading actual rows." );
 
-    if (std::count(row.begin(), row.end(), ':') != 1){
+    if (std::count(row.begin(), row.end(), ';') != 1){
         LOG_ERROR("Invalid configuration: incorrect number of fields on a row.");
         conf = ConfigMap();
         return;
@@ -68,7 +68,7 @@ void ConfigurationReader::readRow(ConfigurationReader::ConfigMap &conf,
     std::istringstream rowStream(row);
     std::string key;
     std::string value;
-    std::getline(rowStream, key, ':');
+    std::getline(rowStream, key, ';');
     std::getline(rowStream, value);
 
     if (conf.find(key) != conf.end()){
