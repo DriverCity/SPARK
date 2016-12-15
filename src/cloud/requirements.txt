@@ -1,0 +1,8 @@
+Flask==0.11.1
+gunicorn==19.6.0
+pyrebase==3.0.24
+jsonschema==2.5.1
+flasgger==0.5.14
+shapely==1.5.17
+google-cloud-storage==0.21.0
+tinydb==3.2.1
