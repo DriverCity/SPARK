@@ -30,7 +30,7 @@ TEST (CloudServiceTest, CreateJsonTest)
 
 
 
-TEST (CloudServiceTest, CheckConnectionSuccessTest)
+TEST (CloudServiceTest, CheckConnectionTest)
 {
     spark::CloudService s;
     std::string addr = "www.google.com";
@@ -43,15 +43,6 @@ TEST (CloudServiceTest, CheckConnectionSuccessTest)
     EXPECT_EQ(expected, actual);
 }
 
-
-TEST (CloudServiceTest, CheckConnectionFailureTest)
-{
-    spark::CloudService s;
-    std::string addr = "192.168.254.253";
-    s.init(123, "", addr);
-
-    EXPECT_FALSE(s.checkConnection());
-}
 
 
 TEST (CloudServiceTest, CreatePriceRequestJsonTest)
