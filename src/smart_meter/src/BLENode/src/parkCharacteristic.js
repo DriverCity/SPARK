@@ -25,7 +25,7 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
   var data = null;
 
   // Fifo queue
-  var fifoPathResponse = '/./BLEResponseFifo';
+  var fifoPathResponse = './BLEResponseFifo';
   var outputFifo = fs.createReadStream(fifoPathResponse);
 
   var fifoPathInput = './BLEInputFifo';
