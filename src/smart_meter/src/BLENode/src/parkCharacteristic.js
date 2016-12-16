@@ -25,13 +25,13 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
   var data = null;
 
   // Fifo queue
-  var fifoPath = '/./BLEResponseFifo';
-  var outputFifo = fs.createReadStream(fifoPath);
+  var fifoPathResponse = '/./BLEResponseFifo';
+  var outputFifo = fs.createReadStream(fifoPathResponse);
 
-  var fifoPath = './BLEInputFifo';
+  var fifoPathInput = './BLEInputFifo';
   var input = 'price\n';
 
-  fs.open('/home/pi/BLEInputFifo', 'w', (err, fd) => {
+  fs.open(fifoPathInput, 'w', (err, fd) => {
     if (err) {
       if (err.code === "EEXIST") {
         console.error('myfile already exists');
