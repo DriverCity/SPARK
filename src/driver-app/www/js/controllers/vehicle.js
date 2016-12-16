@@ -4,6 +4,13 @@ app.controller('VehicleCtrl', function($scope, $state, $stateParams, localStorag
    * VARIABLES
    ***************************/
 
+  $scope.fakeVehicle = {
+    "id":"0",
+    "make":"aMaker",
+    "model":"aModel",
+    "beacon":"sparkABC123_00318"
+  }
+
   $scope.localVehicles = getItem("vehicles");
   $scope.currentVehicle = null;
 

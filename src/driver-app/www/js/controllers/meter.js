@@ -2,7 +2,7 @@
  * [CONTROLLER] METER
  *********************************/
 
-app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePerpheralsService, $ionicPopup) {
+app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePerpheralsService, $ionicPopup, parkCarService) {
 
   /****************************
    * VARIABLES
@@ -87,7 +87,6 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
     
     // Define action after connexion
     var onConnect = function() {
-      $scope.showAlert('Response received',JSON.stringify(device));
       $state.go('tab.device', { 'id': id });
     }
 

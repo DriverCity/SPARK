@@ -33,6 +33,16 @@ public:
     virtual ~ICloudService() {}
 
     /**
+     * @brief Initialize CloudService.
+     * @param areaId Parking are Id.
+     * @param priceAPI Address to price REST API.
+     * @param eventAPI Address to event REST API.
+     */
+    virtual void init(int areaId,
+                      const std::string& priceAPI,
+                      const std::string& eventAPI) = 0;
+
+    /**
      * @brief Check if connection to cloud is ok.
      * @return True, if connection is ok.
      */

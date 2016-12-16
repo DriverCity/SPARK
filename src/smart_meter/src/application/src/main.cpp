@@ -2,10 +2,11 @@
 #include "GlobalConfiguration/GlobalConfiguration.h"
 #include "Logger/Logger.h"
 #include "BLEService/BLEService.h"
-#include "PriceProvider/PriceProviderMock.h"
-#include "VerifyParking/VerifyParkingMock.h"
-#include "CloudService/CloudServiceMock.h"
+#include "PriceProvider/PriceProvider.h"
+#include "VerifyParking/VerifyParking.h"
+#include "CloudService/CloudService.h"
 #include "Application.h"
+#include "ParkingDatabase/ParkingDatabase.h"
 #include <string>
 
 
@@ -22,20 +23,31 @@ int main(int argc, char** argv)
 
     // Instantiate components.
     spark::Application::Setup setup;
-    setup.cloudService.reset(new sparktest::CloudServiceMock);
-    setup.priceProvider.reset(new sparktest::PriceProviderMock);
-    setup.verifier.reset(new sparktest::VerifyParkingMock);
+
+    // Init cloud service
+    int parkingAreaId = std::stoi(config->getValue("parkingAreaId"));
+    std::string priceAPI = config->getValue("priceAPI");
+    std::string eventAPI = config->getValue("parkingEventAPI");
+    setup.cloudService.reset(new spark::CloudService);
+    setup.cloudService->init(parkingAreaId, priceAPI, eventAPI);
+
+    // Init priceprovider
+    setup.priceProvider.reset(new spark::PriceProvider);
+    setup.priceProvider-> init(setup.cloudService.get());
+
+    // Init verifier
+    setup.parkingDb.reset(new spark::ParkingDatabase(binaryDir + "/" + config->getValue("eventDb")));
+    setup.verifier.reset(new spark::VerifyParking);
+    setup.verifier->init(setup.cloudService.get(), setup.parkingDb.get());
+
+    // Init BLEService
     std::string bleInputFifo = config->getValue("BLEInputFifo");
     std::string bleResponseFifo = config->getValue("BLEResponseFifo");
     setup.bleService.reset(new spark::BLEService(binaryDir + "/" + bleInputFifo,
                                                  binaryDir + "/" + bleResponseFifo));
-
-    // Initialize components.
     setup.bleService->init(setup.priceProvider.get(), setup.verifier.get());
 
-    // Hard-coded mockup-price
-    ((sparktest::PriceProviderMock*)(setup.priceProvider.get()))->m_info = spark::PriceInfo(1.5, 0, 30);
-
+    // Start application.
     spark::Application app(std::move(setup));
     return app.exec();
 }

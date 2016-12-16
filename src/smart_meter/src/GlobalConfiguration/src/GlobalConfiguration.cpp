@@ -15,6 +15,12 @@ GlobalConfiguration::~GlobalConfiguration()
 }
 
 
+void GlobalConfiguration::init()
+{
+    instance_.reset( new GlobalConfiguration( std::map<std::string,std::string>() ) );
+}
+
+
 void GlobalConfiguration::init(const std::string& confFile)
 {
     ConfigurationReader::ConfigMap conf = ConfigurationReader().readFile(confFile);

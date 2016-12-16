@@ -1,4 +1,4 @@
-var app = angular.module('starter.controllers', ['ionic','firebase','ngCordova','LocalStorageModule']);
+var app = angular.module('starter.controllers', ['ionic','firebase','ngCordova','LocalStorageModule','angularPayments']);
 
 /**********************************
  * [DIRECTIVE] TEXTAREA

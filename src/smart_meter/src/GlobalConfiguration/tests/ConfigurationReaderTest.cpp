@@ -58,7 +58,7 @@ protected:
 TEST_F (ConfigurationReaderTest, ReadValidRow)
 {
     spark::ConfigurationReader::ConfigMap conf;
-    m_reader.readRow(conf, "paramFoo:Foo\n");
+    m_reader.readRow(conf, "paramFoo;Foo\n");
 
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(1), conf.size());
     ASSERT_TRUE(conf.find("paramFoo") != conf.end());
@@ -69,7 +69,7 @@ TEST_F (ConfigurationReaderTest, ReadValidRow)
 TEST_F (ConfigurationReaderTest, TooManyFieldsOnRow)
 {
     spark::ConfigurationReader::ConfigMap conf;
-    m_reader.readRow(conf, "paramFoo:Foo:other");
+    m_reader.readRow(conf, "paramFoo;Foo;other");
 
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(0), conf.size());
     // Check error message
@@ -96,8 +96,8 @@ TEST_F (ConfigurationReaderTest, ReadValidStream)
 {
     std::string inputString = "\n"
                               "# Comment.\n"
-                              "paramFoo:Foo\n"
-                              "paramBar:Bar\n";
+                              "paramFoo;Foo\n"
+                              "paramBar;Bar\n";
     std::istringstream inputStream(inputString);
 
     spark::ConfigurationReader::ConfigMap conf = m_reader.readConf(inputStream);
@@ -115,8 +115,8 @@ TEST_F (ConfigurationReaderTest, ReadInvalidStream)
 {
     std::string inputString = "\n"
                               "# Comment.\n"
-                              "paramFoo:Foo:afddsf\n"
-                              "paramBar:Bar\n";
+                              "paramFoo;Foo;afddsf\n"
+                              "paramBar;Bar\n";
 
     std::istringstream inputStream(inputString);
     spark::ConfigurationReader::ConfigMap conf = m_reader.readConf(inputStream);

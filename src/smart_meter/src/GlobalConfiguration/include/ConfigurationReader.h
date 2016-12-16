@@ -49,8 +49,8 @@ public:
      * @param conf Target configuration.
      * @param row Input row.
      * @pre @p row is not empty or a comment (starts with '#').
-     * @post Parameter read from @row is appended to @conf.
-     *  If @row is an invalid parameter, @conf is cleared.
+     * @post Parameter read from @p row is appended to @p conf.
+     *  If @p row is an invalid parameter, @p conf is cleared.
      */
     void readRow(ConfigMap& conf, const std::string& row) const;
 };

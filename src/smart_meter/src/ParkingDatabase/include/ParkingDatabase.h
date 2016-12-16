@@ -17,7 +17,7 @@ namespace spark
 /**
  * @brief Implementation for IParkingDatabase.
  */
-class ParkingDatabase : IParkingDatabase
+class ParkingDatabase : public IParkingDatabase
 {
 public:
 

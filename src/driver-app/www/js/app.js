@@ -38,6 +38,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
+.config(function() {
+  Stripe.setPublishableKey('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+})
+
 
 .config(function (localStorageServiceProvider) {
   localStorageServiceProvider
@@ -116,7 +120,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     })
 
       .state('tab.device', {
-        url: '/device/:id',
+        url: '/device',
         views: {
           'tab-parking': {
             templateUrl: 'templates/parking/smart-meter/tab-device.html',

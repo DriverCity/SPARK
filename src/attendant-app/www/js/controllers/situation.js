@@ -7,5 +7,5 @@ app.controller('SituationCtrl', function($scope, $state) {
   $scope.changeState = function(location) {
     $state.go(location);
   };
-  
+
 });

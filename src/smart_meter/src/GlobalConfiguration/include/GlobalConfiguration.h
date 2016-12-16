@@ -23,6 +23,11 @@ public:
     ~GlobalConfiguration();
 
     /**
+     * @brief Initializes an empty configuration.
+     */
+    static void init();
+
+    /**
      * @brief Initialize.
      * @param confFile Configuration file.
      * @pre None.

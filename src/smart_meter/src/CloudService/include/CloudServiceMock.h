@@ -26,6 +26,9 @@ public:
     int m_timeLimit;
     ICloudService::Result m_verifyResult;
     spark::ParkingEvent m_lastEvent;
+    int m_parkingAreaId;
+    std::string m_priceApi;
+    std::string m_eventApi;
 
 
     CloudServiceMock() :
@@ -35,13 +38,24 @@ public:
         m_parkingTimeResolution(0),
         m_timeLimit(0),
         m_verifyResult(ICloudService::OK),
-        m_lastEvent("", "", 0, spark::PaymentToken("", ""))
+        m_lastEvent("", "", 0, spark::PaymentToken("", "")),
+        m_parkingAreaId(0),
+        m_priceApi(),
+        m_eventApi()
     {
     }
 
 
     virtual ~CloudServiceMock()
     {
+    }
+
+
+    virtual void init(int areaId, const std::string &priceAPI, const std::string &eventAPI)
+    {
+        m_parkingAreaId = areaId;
+        m_priceApi = priceAPI;
+        m_eventApi = eventAPI;
     }
 
 

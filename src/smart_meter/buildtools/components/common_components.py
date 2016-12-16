@@ -1,36 +1,31 @@
 
+import os
 import sys
 sys.path.append("../")
-import components
+from components import addComponent, Component
 
 # Add components in order of dependency.
 
-components.componentList.append(components.Component(name="Logger",
-                                                     runTestsCmd="./LoggerTest"))
+addComponent(Component(name="Logger", runTestsCmd="./LoggerTest"))
 
-components.componentList.append(components.Component(name="misc",
-                                                     runTestsCmd="./misctest"))
+addComponent( Component(name="misc", runTestsCmd="./misctest") )
 
-components.componentList.append(components.Component(name="GlobalConfiguration",
-                                                     runTestsCmd="./GlobalConfigurationTest"))
+addComponent( Component(name="GlobalConfiguration", runTestsCmd="./GlobalConfigurationTest") )
 
-components.componentList.append(components.Component(name="ParkingDatabase",
-                                                     runTestsCmd="./ParkingDatabaseTest"))
+addComponent( Component(name="ParkingDatabase", runTestsCmd="./ParkingDatabaseTest") )
 
-components.componentList.append(components.Component(name="CloudService",
-                                                     runTestsCmd=None))
+addComponent( Component(name="CloudService", runTestsCmd="./CloudServiceTest") )
 
-components.componentList.append(components.Component(name="PriceProvider",
-                                                     runTestsCmd="./PriceProviderTest"))
+addComponent( Component(name="PriceProvider", runTestsCmd="./PriceProviderTest") )
 
-components.componentList.append(components.Component(name="VerifyParking",
-                                                     runTestsCmd=None))
+addComponent( Component(name="VerifyParking", runTestsCmd="./VerifyParkingTest") )
 
-components.componentList.append(components.Component(name="BLEService",
-                                                     runTestsCmd="./BLEServiceTest"))
+addComponent( Component(name="BLEService", runTestsCmd="./BLEServiceTest") )
 
-components.componentList.append(components.Component(name="application",
-                                                     runTestsCmd=None))
+addComponent( Component(name="application", runTestsCmd=None) )
 
-components.componentList.append(components.Component(name="FakeBLETool",
-                                                     runTestsCmd=None))
+addComponent( Component(name="FakeBLETool", runTestsCmd=None) )
+
+addComponent( Component(name="BLENode", runTestsCmd=None) )
+
+addComponent( Component(name="pkg", srcDir=os.environ["SOURCE_DIR"]+"/pkg") )

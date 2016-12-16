@@ -3,6 +3,7 @@
 #include "PriceInfo.h"
 #include <cassert>
 #include <sstream>
+#include "Logger/Logger.h"
 
 namespace spark
 {
@@ -20,6 +21,9 @@ PriceInfo::PriceInfo(float pricePerHour, int timeLimit, int resolution):
     m_timeLimit(timeLimit),
     m_resolution(resolution)
 {
+    LOG_DEBUG(pricePerHour);
+    LOG_DEBUG(timeLimit);
+    LOG_DEBUG(resolution);
     assert(timeLimit >= 0 && resolution > 0);
 }
 

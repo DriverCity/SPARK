@@ -1,13 +1,105 @@
-<ion-view view-title="Device">
+<ion-view view-title="Payment" hide-back-button="true">
+  <!-- Nav buttons -->
+  <ion-nav-buttons side="secondary">
+    <button class="button button-light" ng-click="disconnect()">
+      Cancel
+    </button>
+  </ion-nav-buttons>
+
+  <!-- Content -->
   <ion-content padding="true">
-    {{id}}
 
-    <button class="button button-calm button-full" ng-click="writeData()">
-      Write request
-    </button>
+    <!-- Icon -->
+    <div class="big-icon centered">
+      <i class="ion-card"></i>
+      <p>Payment process</p>
+    </div>
 
-    <button class="button button-balanced button-full" ng-click="disconnect()">
-      Disconnect
+    <span ng-show="meterInfo == undefined">
+      <!-- Meter informations -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          Wait for the meter ...<br><br>
+          <ion-spinner icon="ripple"></ion-spinner>
+        </div>
+      </div>
+    </span>
+
+    <!-- If we receive a response -->
+    <span ng-show="meterInfo != undefined">
+      <!-- Meter informations -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          <strong>{{ meterInfo.price_per_hour }}</strong> € / <strong>{{ meterInfo.resolution }}</strong> min<br>
+          <span class="limit">{{ meterInfo.limit }} minutes max</span>
+        </div>
+      </div>
+
+      <!-- Time input -->
+      <div class="list">
+        <div class="item item-input-inset">
+          <label class="item-input-wrapper" ng-class="timeValidity">
+            <input type="number" ng-model="parkTime" ng-change="timeParkValidator(parkTime)" placeholder="Parking time">
+          </label>
+          <p>
+            &nbsp; in minutes
+          </p>
+        </div>
+        <div class="item item-input-inset">
+          <p>
+            Price : {{ price }} €
+          </p>
+        </div>
+      </div>
+
+      <!-- Card form -->
+      <form class="payment-form" stripe-form="stripeCallback">
+        <!-- First row -->
+        <div class="row">
+          <div class="col col-sticky">
+            <label class="item item-input item-icon-left">
+              <i class="icon ion-card"></i>
+              <input type="text" ng-model="number" placeholder="Card Number" payments-format="card">
+            </label>
+          </div>
+        </div>
+
+        <!-- Second row -->
+        <div class="row">
+          <div class="col col-sticky col-50">
+            <label class="item item-input item-icon-left">
+              <i class="icon ion-calendar"></i>
+              <input type="text" ng-model="expiry" placeholder="Expiry" payments-format="expiry">
+            </label>
+          </div>
+          <div class="col col-sticky col-50">
+            <label class="item item-input item-icon-left">
+              <i class="icon ion-locked"></i>
+              <input type="text" ng-model="cvc" placeholder="CVC" payments-format="cvc">
+            </label>
+          </div>
+        </div>
+
+        <!-- Third row -->
+        <div class="row">
+          <div class="col col-50">
+            <span class="button button-calm button-full" ng-click="fakeFill()">
+              Fake fill
+            </span>
+          </div>
+          <div class="col col-50">
+            <button class="button button-balanced button-full" type="submit" ng-disabled="timeValidity != 'valid' ? true : false">
+              Pay
+            </button>
+          </div>
+        </div>
+      </form>
+    </span>
+<!--
+    <button class="button button-calm button-full" ng-click="readData()">
+      Read request
     </button>
+-->
+
   </ion-content>
 </ion-view>

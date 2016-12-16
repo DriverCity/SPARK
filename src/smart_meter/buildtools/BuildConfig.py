@@ -1,4 +1,6 @@
 
+import components
+
 """Class containing build configuration."""
 class BuildConfig(object):
 
@@ -19,7 +21,7 @@ class BuildConfig(object):
    def readArguments(self, argc, argv):
 
       # Args should contain at least component file and variant file.
-      if argc < 4:
+      if argc < 3:
          raise Exception("Wrong number of arguments. Define at least components and variant (in this order).")
       
       # Get components
@@ -32,10 +34,6 @@ class BuildConfig(object):
       self.variant = argv[2]
       exec('from ' + self.variant + ' import *')
       print ("Variant read.")
-
-      #Get deliverables
-      exec('from ' + argv[3] + ' import *')
-      print ("Deliverables read.")
 
       # Check for conflicting options
       for option in ['-c', '--continue', '--continue-after']:

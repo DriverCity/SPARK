@@ -1,0 +1,50 @@
+<ion-view view-title= "Scan">
+
+  <ion-content>
+
+    <div class="item item-divider">
+      <button class="button button-block button-positive" ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">
+        Scan
+      </button>
+
+    </div>
+
+    <!-- Beacon -->
+    <div class="item item-divider">
+      <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+        {{ scanText }}
+      </span>
+
+      <!--p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p--->
+    </div>
+
+    <div class="container align-center">
+      <!-- Devices -->
+      <div id="peripheral-list" ng-show="!scanning">
+        <div class="list">
+          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in blePeripherals" ng-show="device != ''">
+            <i class="fa fa-bluetooth"></i>
+            {{device.name}}
+            <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="item item-divider">
+      Area: {{inParkingArea}}
+
+    </div>
+
+    <div class="item item-divider">
+      Other areas:
+    </div>
+
+
+    <!---button class="button button-balanced button-full" ng-click="testCloudRequest(device.name)">
+      Cloud test request
+    </button>
+    {{ cloudResponse }}--->
+
+  </ion-content>
+</ion-view>

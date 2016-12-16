@@ -18,7 +18,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 include_directories($ENV{BUILD_DIR}/include)
 
 # Define all sources here
-set(SRCS main.cpp Application.cpp)
+set(SRCS
+    main.cpp
+    Application.cpp)
 
 # Link other components
 set(LINKED_LIBS
@@ -28,16 +30,15 @@ set(LINKED_LIBS
     misc
     BLEService
     PriceProvider
-    sqlite3)
-
+    CloudService
+    VerifyParking
+    sqlite3
+)
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
 endforeach(lib)
 
-# Linker searches other components from working directory at runtime
-SET(CMAKE_EXE_LINKER_FLAGS
-          "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath -Wl,$ORIGIN")
-
-
 add_executable(${PROJECT_NAME} ${SRCS})
 target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS})
+
+INSTALL(TARGETS ${PROJECT_NAME} DESTINATION $ENV{DEPLOY_DIR}/bin)

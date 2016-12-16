@@ -37,7 +37,7 @@
           <!-- If devices found -->
           <li class="item item-button-right" ng-repeat="device in blePeripherals">
             {{device.name}}
-            <button class="button button-balanced" ng-click="connect(device.id)">
+            <button class="button button-balanced" ng-click="connect(device.id,device.name)">
             connect
             </button>
           </li>

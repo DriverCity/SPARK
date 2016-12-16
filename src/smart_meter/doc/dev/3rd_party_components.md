@@ -33,3 +33,37 @@ This document describes what 3rd party components are needed and how to install 
   - Unzip package.
   - Copy header files to 3rd_party/sqlite3/include (create directory). Copy source files to 3rd_party/sqlite3/src.
   - To view database contents in target system intall sqlite3 there also (optional).
+
+
+## Google APIs C++ client
+
+1. Download source code from GoogleDrive (googleapis.zip in the root). Make a directory and unzip archive there.
+
+2. Run following commands to build and install Google APIs
+
+  ```sh
+  # Build dependencies
+  python ./prepare_dependencies.py
+  
+  # Build Google APIs
+  mkdir build && cd build
+  cmake ..
+  make
+  make install
+  
+  # make headers available
+  cd ..
+  sudo cp -a build/include/googleapis /usr/include
+  sudo cp -a external_dependencies/install/gflags /usr/include
+  sudo cp -a external_dependencies/install/glog /usr/include
+  sudo cp -a external_dependencies/install/google /usr/include
+  sudo cp -a external_dependencies/install/json /usr/include
+  sudo cp -a external_dependencies/install/openssl /usr/include
+  sudo cp -a external_dependencies/install/curl /usr/include
+  
+  # make binaries available
+  sudo cp build/lib/* /usr/lib/
+  sudo cp external_dependencies/install/lib/* /usr/lib/
+  ```
+  
+  

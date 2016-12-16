@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export BUILD_TYPE="DEBUG"
+export BUILD_TYPE="debug"
 export BUILD_ROOT=$PWD/builds
 export DEPLOY_ROOT=$PWD/deploy
 export BUILD_NAME="edison_debug"

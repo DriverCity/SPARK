@@ -39,6 +39,13 @@ public:
      * @return True, if database was cleared successfully.
      */
     virtual bool clear() = 0;
+
+
+    /**
+     * @brief isValid Checks if database is in valid state.
+     * @return true if database in valid state, false if not.
+     */
+    virtual bool isValid() const = 0;
 };
 
 } // spark

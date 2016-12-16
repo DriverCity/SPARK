@@ -52,22 +52,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-    .state('tab.disk', {
-      url: '/disk',
+
+    .state('tab.disc', {
+      url: '/disc',
       views: {
         'tab-situation': {
-          templateUrl: 'templates/situation/tab-disk.html',
-          controller: 'DiskCtrl'
+          templateUrl: 'templates/situation/tab-disc.html',
+          controller: 'DiscCtrl'
         }
       }
     })
 
-    .state('tab.scan', {
-      url: '/scan',
+    .state('tab.meter', {
+      url: '/meter',
       views: {
         'tab-situation': {
-          templateUrl: 'templates/situation/tab-scan.html',
-          controller: 'ScanCtrl'
+          templateUrl: 'templates/situation/tab-meter.html',
+          controller: 'MeterCtrl'
         }
       }
     })
