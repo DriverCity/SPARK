@@ -150,19 +150,14 @@ angular.module('starter.services', [])
   "CloudSrv",
   function($http, $q) {
     return ({
-      testRequest: testRequest,
+      parkEventRequest: parkEventRequest,
     });
 
-    function testRequest(something) {
+    function parkEventRequest(aData) {
       var request = $http({
         method: 'post',
-        url: 'https://spark2-150308.appspot-preview.com/api/v1.0/storeParkingEvent',
-        data: {
-          parkingAreaId: 80,
-          registerNumber:"ABC-123",
-          parkingType:"PAID",
-          parkingDurationInMinutes:30
-        },
+        url: 'https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/',
+        data: aData,
         headers: {'content-Type':'application/json'}
       });
       return(request.then(handleSuccess, handleError));
@@ -170,10 +165,11 @@ angular.module('starter.services', [])
 
     // Transform the successful response
     function handleError(response) {
+      console.log("error");
       if (!angular.isObject(response.data) ||
         !response.data.message
       ) {
-        return ($q.reject("An unknown error occurred."));
+        return ($q.reject("Python API scheme does not match"));
       }
       // Otherwise, use expected error message
       return ($q.reject(response.data.message));

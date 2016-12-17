@@ -11,22 +11,22 @@ app.controller('DiskCtrl', function($scope, $state, CloudSrv, parkCarService) {
   $scope.date = new Date();
 
   $scope.parkEvent = {
-    vehicle:parkCarService.getSelectedVehicle(),
-    date:$scope.date.toLocaleDateString(),
-    time:$scope.date.toLocaleTimeString(),
+    parkingContextType: "DISK",
+    registerNumber: parkCarService.getSelectedVehicle().beacon
   }
 
   /****************************
    * CLOUD
    ***************************/
 
-  $scope.testCloudRequest = function() {
-    CloudSrv.testRequest('smth').then(
-      function(ret) {
-        $scope.cloudResponse = ret;
-      }
-    );
-  }
+  CloudSrv.parkEventRequest($scope.parkEvent).then(
+    function(ret) {
+      $scope.cloudResponse = true;
+    }
+  ).catch(function(response) {
+    $scope.cloudResponse = false;
+    $scope.cloudError = response;
+  });
 
   /****************************
    * UTILS
