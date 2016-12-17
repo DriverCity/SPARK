@@ -1,23 +1,11 @@
 app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $interval, $timeout, $cordovaGeolocation, $firebaseArray, blePerpheralsService, CloudSrv) {
 
-  /****************************
-  * CLOUD
-  ***************************/
-
-  $scope.testCloudRequest = function(name) {
-    alert("ok");
-    CloudSrv.testRequest(name).then(
-      function(ret) {
-        $scope.cloudResponse = ret;
-        alert("message");
-      }
-    );
-  }
-
+/*
   var options = {
     timeout: 10000,
     enableHighAccuracy: true
   };
+
 
   $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
 
@@ -55,7 +43,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
           fillOpacity: 0.35
         });
 
-        if( google.maps.geometry.poly.containsLocation(latLng, parkingGeometry) == true){
+        if(google.maps.geometry.poly.containsLocation(latLng, parkingGeometry) == true) {
           console.log(e);
             $scope.inParkingArea = e.key;
         } else {
@@ -64,8 +52,8 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
       }
     });
-
   });
+*/
 
   /****************************
   * VARIABLES
@@ -81,6 +69,33 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   $scope.isScanBtnDisabled = false;
 
   /****************************
+  * TEST THINGS
+  ***************************/
+
+  $scope.fakeBeacons = [
+    {
+      id:"123456789",
+      name:"ABC-123"
+    }
+  ]
+
+  $scope.fakeAreaId = 777;
+
+  /****************************
+   * CLOUD
+   ***************************/
+
+  $scope.checkBeaconsValidity = function(array) {
+    for(var i=0;i<array.length;i++) {
+      var beaconRef = firebase.database().ref().child("parkingAreaParkingEvent/" + $scope.fakeAreaId + "/" + array[i].name);
+      var query = beaconRef.orderByChild("timestamp").limitToLast(25);
+      $scope.parkEventsOrdered = $firebaseArray(query);
+    }
+  }
+
+  $scope.checkBeaconsValidity($scope.fakeBeacons);
+ 
+  /****************************
   * BLUETOOTH
   ***************************/
 
@@ -91,9 +106,6 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     console.log(JSON.stringify(device));
     // Add device to array
     tempArray.push(device);
-
-    $scope.testCloudRequest(device.name);
-
   };
 
   /*
@@ -104,6 +116,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     $interval.cancel(timeReduction)
     $scope.blePeripherals = tempArray;
     $scope.scanning = false;
+
   }
 
 
