@@ -1,19 +1,28 @@
 app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $interval, $timeout, $cordovaGeolocation, $firebaseArray, blePerpheralsService, CloudSrv) {
 
-/*
+  /****************************
+   * MAP
+   ***************************/
+
   var options = {
     timeout: 10000,
     enableHighAccuracy: true
   };
 
+  var position = {
+    coords: {
+      latitude: 61.4991694,
+      longitude: 23.7600491
+    }
+  } 
 
-  $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+  // $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
 
     // Position coordinates
     var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    $scope.inParkingArea= "not found";
+    $scope.inParkingArea = "not found";
 
-    var featureRef = firebase.database().ref().child('parkings');
+    var featureRef = firebase.database().ref().child('parkingArea');
     // Real-time array for data reference
     $scope.features = $firebaseArray(featureRef);
     $scope.features.$watch(function(e) {
@@ -49,11 +58,9 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
         } else {
           console.log("no ok");
         }
-
       }
     });
-  });
-*/
+  // });
 
   /****************************
   * VARIABLES
@@ -85,6 +92,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
    * CLOUD
    ***************************/
 
+
   $scope.checkBeaconsValidity = function(array) {
     for(var i=0;i<array.length;i++) {
       var beaconRef = firebase.database().ref().child("parkingAreaParkingEvent/" + $scope.fakeAreaId + "/" + array[i].name);
@@ -95,6 +103,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
   $scope.checkBeaconsValidity($scope.fakeBeacons);
  
+
   /****************************
   * BLUETOOTH
   ***************************/
@@ -116,6 +125,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     $interval.cancel(timeReduction)
     $scope.blePeripherals = tempArray;
     $scope.scanning = false;
+
 
   }
 
@@ -155,6 +165,24 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     $scope.beacon = name;
   }
 
+  /**********************************
+   * [MODAL] Settings
+   *********************************/
+
+  $ionicModal.fromTemplateUrl('templates/situation/clickMap.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modalSettigs = modal;
+  });
+
+  $scope.openClickMap = function() {
+    $scope.modalSettigs.show();
+  };
+
+  $scope.closeClickMap = function() {
+    $scope.modalSettigs.hide();
+  };
 
   /****************************
   * UTILS
