@@ -16,7 +16,7 @@
         <div class="list">
           <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in fakeBeacons" ng-show="device != ''">
             <i class="fa fa-bluetooth"></i>
-            {{device.name}}
+            {{device.name}} {{validity}}
             <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
           </a>
         </div>
@@ -24,15 +24,12 @@
     </div>
 
     <div class="item item-divider">
-      Area
+      Area:
     </div>
 
     <div class="item item-divider">
-      Other areas
+      Other areas:
     </div>
-
-
-    {{parkEventsOrdered}}
 
   </ion-content>
 </ion-view>
