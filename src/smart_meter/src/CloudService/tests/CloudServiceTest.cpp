@@ -66,3 +66,25 @@ TEST (CloudServiceTest, CurlCodeToResultTest)
     EXPECT_EQ(spark::ICloudService::INVALID_TOKEN,  s.curlCodeToResult(CURLE_HTTP_RETURNED_ERROR));
     EXPECT_EQ(spark::ICloudService::OTHER,          s.curlCodeToResult(CURLE_HTTP_POST_ERROR));
 }
+
+
+TEST (CloudServiceTest, getPricePerHour){
+    double expected = 1.6 ;
+    spark::CloudService s;
+
+    double actual = s.getPricePerHour();
+
+    EXPECT_EQ(expected, actual);
+
+}
+
+
+TEST (CloudServiceTest, getTimeLimit){
+    int expected = 4;
+    spark::CloudService s;
+
+    int actual = s.getTimeLimit();
+
+    EXPECT_EQ(expected, actual);
+
+}
