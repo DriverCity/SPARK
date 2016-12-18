@@ -2,6 +2,8 @@
 #include <cassert>
 #include <sstream>
 #include <cstdlib>
+#include <string>
+#include <algorithm>
 #include <curl/curl.h>
 #include "Logger/Logger.h"
 
@@ -11,6 +13,121 @@
 
 namespace spark
 {
+
+
+double extractField(std::string fieldType, std::string &str){
+
+    //return value
+    double value = 0.0 ;
+
+    //initialize extracted string of field
+    std::string extractedStr ;
+
+    //Remove whitespaces from data
+    std::string::iterator lastPos = std::remove(str.begin(),str.end(),' ');
+    str.erase(lastPos,str.end());
+
+    //Define the field we want
+    fieldType = "\"" + fieldType + "\":" ;
+
+
+    //Get position of field type in string
+    std::size_t typePos = str.find(fieldType) + fieldType.length();
+    if (typePos == std::string::npos ){
+        //LOG NO FIELD ERROR
+        return 0.0;
+
+    }
+
+    //Get position for the end of field type
+    std::size_t commaPos = str.find(",",typePos);
+    if (commaPos == std::string::npos){
+        //LOG STRUCTURED DATA ERROR OR SMTH
+        return 0.0;
+    }
+
+
+    //Extract value for the field
+    try{
+    extractedStr = str.substr(typePos, commaPos-typePos );
+    }catch(std::out_of_range &e){
+        //LOG STR ERROR
+        return 0.0;
+    }
+
+    //Convert extracted value to double
+    value = std::stod(extractedStr);
+
+
+    return value;
+
+}
+
+
+size_t CurlWrite_Callback_ToString(void *contents, size_t size, size_t nmemb, std::string *s){
+
+    size_t newLength = size*nmemb;
+    size_t oldLength = s->size();
+
+    try
+    {
+        s->resize(oldLength + newLength);
+    }
+    catch(std::bad_alloc &e)
+    {
+        //LOG ERROR
+        return 0;
+    }
+
+    std::copy((char*)contents,(char*)contents+newLength,s->begin()+oldLength);
+
+    return size*nmemb;
+
+}
+
+void writeAreaInfo(int _areaNo,std::string &s){
+
+    CURL *curl;
+    CURLcode res;
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
+    std::string areaNo = std::to_string(_areaNo);
+
+
+    //std::string url = "https://spark2-150308.firebaseio.com/parkingArea//properties.json?print=pretty";
+    //std::size_t firstPos = url.find("/parkingArea/") ;
+    //std::size_t lastPos = url.find("/properties");
+
+    std::string url = "https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=" ;
+    url = url + areaNo;
+    const char * newUrl = (url).c_str();
+
+    curl = curl_easy_init();
+    //std::string s;
+    if(curl)
+    {
+
+        curl_easy_setopt(curl, CURLOPT_URL, newUrl);
+
+        //Set callback for received data
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_Callback_ToString);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+
+
+        //Perform
+        res = curl_easy_perform(curl);
+
+
+        //Check errors
+        if(res != CURLE_OK)
+        {
+            //LOG_ERROR
+        }
+
+        curl_easy_cleanup(curl);
+    }
+
+}
 
 CloudService::CloudService() :
     ICloudService(), m_areaId(0), m_priceAPI(), m_eventAPI()
@@ -43,7 +160,15 @@ bool CloudService::checkConnection()
 
 double CloudService::getPricePerHour()
 {
-    return 1.2;
+    double pricePerHour;
+
+    std::string s;
+
+    writeAreaInfo(1022,s);
+
+    pricePerHour = extractField("PRICE",s);
+
+    return pricePerHour;
 }
 
 
@@ -55,7 +180,15 @@ int CloudService::getParkingTimeResolution()
 
 int CloudService::getTimeLimit()
 {
-    return 0;
+    int maxTime;
+
+    std::string s;
+
+    writeAreaInfo(1022,s);
+
+    maxTime = extractField("MAX_TIME",s);
+
+    return int(maxTime);
 }
 
 

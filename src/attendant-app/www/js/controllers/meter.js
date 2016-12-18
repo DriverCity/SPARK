@@ -1,51 +1,74 @@
 app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $interval, $timeout, $cordovaGeolocation, $firebaseArray, blePerpheralsService, CloudSrv) {
 
-  /*
+  /****************************
+  * MAP
+  ***************************/
+
   var options = {
-  timeout: 10000,
-  enableHighAccuracy: true
-};
+    timeout: 10000,
+    enableHighAccuracy: true
+  };
 
+  var position = {
+    coords: {
+      latitude: 61.4991694,
+      longitude: 23.7600491
+    }
+  }
 
-$cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+  // $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
 
-// Position coordinates
-var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-$scope.inParkingArea= "not found";
+  // Position coordinates
+  var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  $scope.inParkingArea = "not found";
 
-var featureRef = firebase.database().ref().child('parkings');
-// Real-time array for data reference
-$scope.features = $firebaseArray(featureRef);
-$scope.features.$watch(function(e) {
-if(e.event == "child_added") {
-// Extract added feature
-var feature = $scope.features[$scope.features.length-1];
-var featureCoords = feature.geometry.coordinates[0];
+  var featureRef = firebase.database().ref().child('parkingArea');
+  // Real-time array for data reference
+  $scope.features = $firebaseArray(featureRef);
+  $scope.features.$watch(function(e) {
+    if(e.event == "child_added") {
+      // Extract added feature
+      var feature = $scope.features[$scope.features.length-1];
+      var featureCoords = feature.geometry.coordinates[0];
 
-// Convert coords to Google Map format
-var parkingCoords = [];
-for(var i=0;i<featureCoords.length;i++) {
-parkingCoords.push(
-{
-lat:parseFloat(featureCoords[i][1]),
-lng:parseFloat(featureCoords[i][0])
-}
-);
-}
+      // Convert coords to Google Map format
+      var parkingCoords = [];
+      for(var i=0;i<featureCoords.length;i++) {
+        parkingCoords.push(
+          {
+            lat:parseFloat(featureCoords[i][1]),
+            lng:parseFloat(featureCoords[i][0])
+          }
+        );
+      }
 
-// Adding it on the map
-var parkingGeometry = new google.maps.Polygon({
-paths: parkingCoords,
-strokeColor: '#FF0000',
-strokeOpacity: 0.8,
-strokeWeight: 2,
-fillColor: '#FF0000',
-fillOpacity: 0.35
-});
+      // Adding it on the map
+      var parkingGeometry = new google.maps.Polygon({
+        paths: parkingCoords,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+      });
 
-if(google.maps.geometry.poly.containsLocation(latLng, parkingGeometry) == true) {
-console.log(e);
-$scope.inParkingArea = e.key;
+      if(google.maps.geometry.poly.containsLocation(latLng, parkingGeometry) == true) {
+        console.log(e);
+        $scope.inParkingArea = e.key;
+      } else {
+        console.log("no ok");
+      }
+    }
+  });
+  // });
+
+  /****************************
+  * VARIABLES
+  ***************************/
+  /**
+  if(google.maps.geometry.poly.containsLocation(latLng, parkingGeometry) == true) {
+  console.log(e);
+  $scope.inParkingArea = e.key;
 } else {
 console.log("no ok");
 }
@@ -53,7 +76,7 @@ console.log("no ok");
 }
 });
 });
-*/
+**/
 
 /****************************
 * VARIABLES
@@ -97,9 +120,9 @@ $scope.checkBeaconsValidity = function(array) {
       $scope.currentTime = Date.now();
       $scope.parsedTime =Date.parse($scope.parkEventsOrdered[0].timestamp);
       $scope.duration = $scope.parkEventsOrdered[0].parkingDurationInMinutes * 60 * 1000;
-    //  console.log($scope.parsedTime + $scope.duration + " < " + $scope.currentTime);
+      //  console.log($scope.parsedTime + $scope.duration + " < " + $scope.currentTime);
       if ($scope.parsedTime + $scope.duration < $scope.currentTime){
-      //  console.log("not valid");
+        //  console.log("not valid");
         $scope.validity = "Not valid";
       }
       else {
@@ -107,7 +130,7 @@ $scope.checkBeaconsValidity = function(array) {
         $scope.validity = "Valid";
       }
       //console.log($scope.timestamp);
-    //  console.log($scope.currentTime);
+      //  console.log($scope.currentTime);
       //console.log($scope.parsedTime);
       //console.log($scope.duration);
     });
@@ -116,11 +139,10 @@ $scope.checkBeaconsValidity = function(array) {
 }
 
 
-//    }
-
 /****************************
 * BLUETOOTH
 ***************************/
+
 
 /*
 * Description: Add discovered device to tempArray
@@ -179,6 +201,24 @@ $scope.selectBeacon = function(name) {
   $scope.beacon = name;
 }
 
+/**********************************
+* [MODAL] Settings
+*********************************/
+
+$ionicModal.fromTemplateUrl('templates/situation/clickMap.html', {
+  scope: $scope,
+  animation: 'slide-in-up'
+}).then(function(modal) {
+  $scope.modalSettigs = modal;
+});
+
+$scope.openClickMap = function() {
+  $scope.modalSettigs.show();
+};
+
+$scope.closeClickMap = function() {
+  $scope.modalSettigs.hide();
+};
 
 /****************************
 * UTILS
