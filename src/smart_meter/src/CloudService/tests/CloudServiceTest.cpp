@@ -71,6 +71,8 @@ TEST (CloudServiceTest, CurlCodeToResultTest)
 TEST (CloudServiceTest, getPricePerHour){
     double expected = 1.6 ;
     spark::CloudService s;
+    s.init(1022, "https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=",
+           "https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/");
 
     double actual = s.getPricePerHour();
 
@@ -79,9 +81,24 @@ TEST (CloudServiceTest, getPricePerHour){
 }
 
 
-TEST (CloudServiceTest, getTimeLimit){
-    int expected = 4;
+TEST (CloudServiceTest, getTimeLimitInt){
+    int expected = 4*60;
     spark::CloudService s;
+    s.init(1022, "https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=",
+           "https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/");
+
+    int actual = s.getTimeLimit();
+
+    EXPECT_EQ(expected, actual);
+
+}
+
+
+TEST (CloudServiceTest, getTimeLimitFloat){
+    int expected = 0.5*60;
+    spark::CloudService s;
+    s.init(1234, "https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=",
+           "https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/");
 
     int actual = s.getTimeLimit();
 

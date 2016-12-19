@@ -4,6 +4,6 @@ logFile;log.log
 BLEInputFifo;BLEInputFifo
 BLEResponseFifo;BLEResponseFifo
 eventDb;events.db
-priceAPI;https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/
+priceAPI;https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=
 parkingEventAPI;https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/
-parkingAreaId;777
+parkingAreaId;1022

@@ -85,22 +85,21 @@ size_t CurlWrite_Callback_ToString(void *contents, size_t size, size_t nmemb, st
 
 }
 
-void writeAreaInfo(int _areaNo,std::string &s){
+void writeAreaInfo(int areaNo, const std::string& url, std::string& response){
 
     CURL *curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    std::string areaNo = std::to_string(_areaNo);
+    std::string areaNoStr = std::to_string(areaNo);
 
 
     //std::string url = "https://spark2-150308.firebaseio.com/parkingArea//properties.json?print=pretty";
     //std::size_t firstPos = url.find("/parkingArea/") ;
     //std::size_t lastPos = url.find("/properties");
 
-    std::string url = "https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=" ;
-    url = url + areaNo;
-    const char * newUrl = (url).c_str();
+    std::string fullUrl = url + areaNoStr;
+    const char * newUrl = fullUrl.c_str();
 
     curl = curl_easy_init();
     //std::string s;
@@ -111,7 +110,7 @@ void writeAreaInfo(int _areaNo,std::string &s){
 
         //Set callback for received data
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_Callback_ToString);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
 
         //Perform
@@ -164,7 +163,7 @@ double CloudService::getPricePerHour()
 
     std::string s;
 
-    writeAreaInfo(1022,s);
+    writeAreaInfo(m_areaId, m_priceAPI, s);
 
     pricePerHour = extractField("PRICE",s);
 
@@ -174,7 +173,7 @@ double CloudService::getPricePerHour()
 
 int CloudService::getParkingTimeResolution()
 {
-    return 10;
+    return 1;
 }
 
 
@@ -184,9 +183,9 @@ int CloudService::getTimeLimit()
 
     std::string s;
 
-    writeAreaInfo(1022,s);
+    writeAreaInfo(m_areaId, m_priceAPI, s);
 
-    maxTime = extractField("MAX_TIME",s);
+    maxTime = 60 * extractField("MAX_TIME",s);
 
     return int(maxTime);
 }
