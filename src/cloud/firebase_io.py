@@ -10,11 +10,12 @@ from pyrebase import pyrebase
 #     "storageBucket": "xxx",
 #     "serviceAccount": "xxx.json"
 # }
-with open('pyrebase_config.json') as config_str:
-    config = json.load(config_str)
+
+with open('pyrebase_config.json') as fp:
+    config = json.load(fp)
+
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
-
 
 def get_epoch_timestamp_plus_seconds(seconds):
     return datetime.datetime.fromtimestamp(time.time() + seconds).strftime('%Y-%m-%d %H:%M:%S')
