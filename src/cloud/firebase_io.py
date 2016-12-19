@@ -1,6 +1,7 @@
-import time, datetime, pytz, json
+import json
 from flask import jsonify
 from pyrebase import pyrebase
+import utils
 
 # pyrebase_config.json is of format
 # {
@@ -17,18 +18,11 @@ with open('pyrebase_config.json') as fp:
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
-def get_epoch_timestamp_plus_seconds(seconds):
-    return datetime.datetime.fromtimestamp(time.time() + seconds).strftime('%Y-%m-%d %H:%M:%S')
-
-
-def get_local_timestamp():
-    return datetime.datetime.now(pytz.timezone('Europe/Helsinki')).strftime('%Y-%m-%d %H:%M:%S')
-
 
 def store_parking_event(request_json):
     register_number = request_json['registerNumber']
     parking_event_json = {
-        'timestamp': get_local_timestamp(),
+        'timestamp': utils.get_local_timestamp(),
         'parkingType': request_json['parkingContextType'],
         'parkingDurationInMinutes': request_json['parkingDurationInMinutes']
     }
@@ -47,7 +41,7 @@ def store_parking_event(request_json):
         'parkingEventId': results['name'],
         'isConsumedByOccupancyAnalysis': False,
         'isConsumedByLongTermDataStore': False,
-        'liveUntilTime': get_epoch_timestamp_plus_seconds(60*60*24*7)
+        'liveUntilTime': utils.get_epoch_timestamp_plus_seconds(60*60*24*7)
     }
 
     notification_result = db\
@@ -62,8 +56,8 @@ def remove_dead_events():
     notifications_ref = db.child('parkingEventNotification')
     dead_notifications = notifications_ref\
         .order_by_child('liveUntilTime')\
-        .start_at(get_epoch_timestamp_plus_seconds(-365*24*60*60))\
-        .end_at(get_epoch_timestamp_plus_seconds(0)).get()
+        .start_at(utils.get_epoch_timestamp_plus_seconds(-365*24*60*60))\
+        .end_at(utils.get_epoch_timestamp_plus_seconds(0)).get()
     dead_notifications = [(dn.key(), dn.val()) for dn in dead_notifications.each()
                           if all([dn.val()['isConsumedByOccupancyAnalysis'], dn.val()['isConsumedByLongTermDataStore']])]
 
