@@ -112,8 +112,10 @@ void BLEService::startServiceThread()
         else{
             int count = read( filedesc, buff, len ); /* there was data to read */
             LOG_DEBUG("Count " << count);
-            handleMessage(std::string(buff, count-1)); // Omit newline.
-            LOG_DEBUG("Message handled!");
+            if (count != 0){
+                handleMessage(std::string(buff, count-1)); // Omit newline.
+                LOG_DEBUG("Message handled!");
+            }
         }
 
         close(filedesc);

@@ -15,12 +15,13 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   $scope.timeValidity = null;
   $scope.price = 0;
 
-
+/*
   $scope.meterInfo = {
     price_per_hour:3.5,
     resolution:15,
     limit:60
   }
+*/
 
   /****************************
    * DATA CONVERTION
@@ -52,7 +53,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * callback
    */
   var onRead = function(data) {
-    // Convert data received
     var dataReceived = bytesToString(data);
     $scope.$apply(function() {
       $scope.meterInfo = angular.fromJson(dataReceived);
@@ -73,17 +73,9 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   /* Function onWrite:
    * Callback
   */
-  var onWrite = function(buffer) {
+  var onWrite = function() {
     // Decode the ArrayBuffer into a typed Array based on the data you expect
-    alert("Something " + buffer);
-  }
-
-  /* Description:
-   * Write data to BLE peripheral
-   */
-  $scope.writeData = function(information) {
-    var str = JSON.stringify(information);
-    ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWrite, blePerpheralsService.onError);
+    alert("Data writtent to the Smart meter");
   }
 
   /****************************
@@ -132,9 +124,10 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
 
   $scope.stripeCallback = function (code, result) {
     if (result.error) {
-        alert('It failed! error: ' + result.error.message);
+      alert('It failed! error: ' + result.error.message);
     } else {
-        alert('Success! token: ' + result.id);
+      var str = "Park;"+parkCarService.getSelectedVehicle().beacon+";2000-01-01 12:30;90;SERVICE_1;"+result.id;
+      ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWrite, blePerpheralsService.onError);
     }
   }
 
@@ -150,6 +143,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * ONLOAD
    ***************************/
 
-  // $scope.readData();
+  $scope.readData();
 
 });

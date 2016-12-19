@@ -1,10 +1,12 @@
 #/bin/bash
 
-export VARIANT=raspberrypi_release
-
 sudo systemctl stop bluetooth
 sudo hciconfig hci0 up
 
-sudo node $PWD/$VARIANT/bin/BLENode/main.js &
-$PWD/$VARIANT/bin/application
+BASEDIR=$(dirname "$0")
+export LD_LIBRARY_PATH=$BASEDIR/bin
+VARIANT=raspberrypi_release
+
+node $BASEDIR/bin/BLENode/main.js &
+$BASEDIR/bin/application
 

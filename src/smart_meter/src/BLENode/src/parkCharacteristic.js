@@ -25,10 +25,10 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
   var data = null;
 
   // Fifo queue
-  var fifoPathResponse = './BLEResponseFifo';
+  var fifoPathResponse = __dirname + '/../BLEResponseFifo';
   var outputFifo = fs.createReadStream(fifoPathResponse);
 
-  var fifoPathInput = './BLEInputFifo';
+  var fifoPathInput = __dirname + '/../BLEInputFifo';
   var input = 'price\n';
 
   fs.open(fifoPathInput, 'w', (err, fd) => {
@@ -72,19 +72,27 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
   console.log('ParkCharacteristic - onReadRequest: value = ' + bufferFormat.toString("utf-8"));
 };
 
-/*
+
 ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
-  this._value = data;
-    console.log('ParkCharacteristic - onWriteRequest: value = ' + this._value.toString("utf-8"));
+  console.log('ParkCharacteristic - onWriteRequest: value = ' + data.toString("utf-8"));
 
-  if (this._updateValueCallback) {
-    console.log('ParkCharacteristic - onWriteRequest: notifying');
+  var fifoPathInput = './BLEInputFifo';
+  var input = data.toString("utf-8");
 
-    this._updateValueCallback(this._value);
-  }
-
+  fs.open(fifoPathInput, 'w', (err, fd) => {
+    if (err) {
+      if (err.code === "EEXIST") {
+        console.error('myfile already exists');
+        return;
+      } else {
+        throw err;
+      }
+    }
+    fs.writeSync(fd, input);
+    fs.close(fd);
+  });
+  
   callback(this.RESULT_SUCCESS);
 };
-*/
 
 module.exports = ParkCharacteristic;

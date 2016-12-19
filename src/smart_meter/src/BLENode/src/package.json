@@ -12,6 +12,7 @@
       "async": "latest",
       "noble": "latest",
       "bleno": "latest",
-      "util": "latest"
+      "util": "latest",
+      "deasync": "latest"
   }
 }

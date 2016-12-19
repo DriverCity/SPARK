@@ -36,7 +36,7 @@ app.controller('MapCtrl', function(Firebase, $scope, $state, $cordovaGeolocation
     });
 
     // Reference of parking open data in Firebase
-    var featureRef = firebase.database().ref().child('features');
+    var featureRef = firebase.database().ref().child('parkingArea');
     // Real-time array for data reference
     $scope.features = $firebaseArray(featureRef);
     $scope.features.$watch(function(e) {

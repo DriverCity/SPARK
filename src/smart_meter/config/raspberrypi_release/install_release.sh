@@ -1,7 +1,7 @@
 #/bin/bash
 
 BASEDIR=$(dirname "$0")
-VARIANT=raspberrypi_debug
+VARIANT=raspberrypi_release
 
 if [ "$1" = "clean" ]; then
     # Install dependencies

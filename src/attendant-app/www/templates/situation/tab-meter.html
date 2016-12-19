@@ -1,30 +1,30 @@
-<ion-view view-title= "Scan">
+<ion-view view-title="Area {{ fakeAreaId }}">
 
+  <!-- Nav buttons -->
+  <ion-nav-buttons side="secondary">
+    <button class="button" ng-click="openClickMap()">
+      Manually
+    </button>
+  </ion-nav-buttons>
+
+  <!-- Content -->
   <ion-content>
 
     <div class="item item-divider">
       <button class="button button-block button-positive" ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">
         Scan
       </button>
-
     </div>
 
-    <!-- Beacon -->
-    <div class="item item-divider">
-      <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
-        {{ scanText }}
-      </span>
-
-      <!--p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p--->
-    </div>
+    <!-- p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p> -->
 
     <div class="container align-center">
       <!-- Devices -->
       <div id="peripheral-list" ng-show="!scanning">
         <div class="list">
-          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in blePeripherals" ng-show="device != ''">
+          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in fakeBeacons" ng-show="device != ''">
             <i class="fa fa-bluetooth"></i>
-            {{device.name}}
+            {{device.name}} {{validity}}
             <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
           </a>
         </div>
@@ -32,19 +32,12 @@
     </div>
 
     <div class="item item-divider">
-      Area: {{inParkingArea}}
-
+      Area:
     </div>
 
     <div class="item item-divider">
       Other areas:
     </div>
-
-
-    <!---button class="button button-balanced button-full" ng-click="testCloudRequest(device.name)">
-      Cloud test request
-    </button>
-    {{ cloudResponse }}--->
 
   </ion-content>
 </ion-view>
