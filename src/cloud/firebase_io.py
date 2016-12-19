@@ -76,8 +76,12 @@ def remove_dead_events():
         .remove()
 
 
-# consumer is either LongTermDataStore or OccupancyAnalysis
 def consume_new_parking_events_by(consumer):
+    """
+
+    :param consumer is either LongTermDataStore or OccupancyAnalysis:
+    :return:
+    """
 
     consumed_notifications = db\
     .child('parkingEventNotification')\
