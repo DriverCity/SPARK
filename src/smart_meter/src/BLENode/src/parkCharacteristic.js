@@ -25,10 +25,10 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
   var data = null;
 
   // Fifo queue
-  var fifoPathResponse = './BLEResponseFifo';
+  var fifoPathResponse = __dirname + '/../BLEResponseFifo';
   var outputFifo = fs.createReadStream(fifoPathResponse);
 
-  var fifoPathInput = './BLEInputFifo';
+  var fifoPathInput = __dirname + '/../BLEInputFifo';
   var input = 'price\n';
 
   fs.open(fifoPathInput, 'w', (err, fd) => {

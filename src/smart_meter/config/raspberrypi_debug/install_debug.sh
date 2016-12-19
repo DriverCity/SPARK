@@ -35,7 +35,7 @@ if [ $1 = "clean" ]; then
     mkfifo $VARIANT/bin/BLEInputFifo
     mkfifo $VARIANT/bin/BLEResponseFifo
     cd $BASEDIR/$VARIANT/bin/BLENode
-    npm install bluetooth-hci-socket bleno
+    npm install
 fi
 
 echo Installation completed successfully!
