@@ -10,10 +10,8 @@ parameters:
     schema:
       id: ParkingEvent
       required:
-        - parkingAreaId
         - registerNumber
         - parkingContextType
-        - parkingDurationInMinutes
       properties:
         parkingAreaId:
           type: integer
