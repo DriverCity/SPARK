@@ -15,14 +15,6 @@ import utils
 with open('pyrebase_config.json') as fp:
     config = json.load(fp)
 
-config = {
-    "apiKey": "AIzaSyDhjWe4lzQBToEiVRTp98nTp09xKi7LxEM",
-    "authDomain": "spark2-150308.firebaseapp.com",
-    "databaseURL": "https://spark2-150308.firebaseio.com",
-    "storageBucket": "staging.spark2-150308.appspot.com",
-    "serviceAccount": "serviceaccount.json"
-}
-
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
