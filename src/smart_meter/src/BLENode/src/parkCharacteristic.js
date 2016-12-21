@@ -78,7 +78,7 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
 
   // Synchronisation variables
   var sync = true;
-  var data = null;
+  var dataFromMeter = null;
 
   // Fifo queue
   var fifoPathInput = __dirname + '/../BLEInputFifo';
@@ -101,8 +101,8 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
   });
 
   // Retrieve info from fifo
-  outputFifo.on('data', function(result) {
-    data = result;
+  outputFifo.on('dataFromMeter', function(result) {
+    dataFromMeter = result;
     sync = false;
   });
 
@@ -111,9 +111,9 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
     require('deasync').sleep(100);
   }
 
-  data = (""+data).replace(/(\r\n|\n|\r)/gm,"");
+  dataFromMeter = (""+dataFromMeter).replace(/(\r\n|\n|\r)/gm,"");
 
-  var bufferFormat = new Buffer(JSON.stringify(data), "utf-8");
+  var bufferFormat = new Buffer(JSON.stringify(dataFromMeter), "utf-8");
   callback(this.RESULT_SUCCESS, bufferFormat);
 };
 
