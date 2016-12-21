@@ -76,8 +76,16 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
 ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
   console.log('ParkCharacteristic - onWriteRequest: value = ' + data.toString("utf-8"));
 
-  var fifoPathInput = './BLEInputFifo';
+  // Synchronisation variables
+  var sync = true;
+  var data = null;
+
+  // Fifo queue
+  var fifoPathInput = __dirname + '/../BLEInputFifo';
   var input = data.toString("utf-8");
+
+  var fifoPathResponse = __dirname + '/../BLEResponseFifo';
+  var outputFifo = fs.createReadStream(fifoPathResponse);
 
   fs.open(fifoPathInput, 'w', (err, fd) => {
     if (err) {
@@ -91,8 +99,22 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
     fs.writeSync(fd, input);
     fs.close(fd);
   });
-  
-  callback(this.RESULT_SUCCESS);
+
+  // Retrieve info from fifo
+  outputFifo.on('data', function(result) {
+    data = result;
+    sync = false;
+  });
+
+  // Deasynch function for preserve callback
+  while(sync) {
+    require('deasync').sleep(100);
+  }
+
+  data = (""+data).replace(/(\r\n|\n|\r)/gm,"");
+
+  var bufferFormat = new Buffer(JSON.stringify(data), "utf-8");
+  callback(this.RESULT_SUCCESS, bufferFormat);
 };
 
 module.exports = ParkCharacteristic;
