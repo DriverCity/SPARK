@@ -18,22 +18,23 @@
 
     <!-- p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p> -->
 
-    <div class="container align-center">
-      <!-- Devices -->
-      <div id="peripheral-list" ng-show="!scanning">
-        <div class="list">
-          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in fakeBeacons" ng-show="device != ''">
-            <i class="fa fa-bluetooth"></i>
-            {{device.name}} {{device.validity}}
-            <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
-          </a>
-        </div>
-      </div>
-    </div>
 
     <div class="item item-divider">
       Area:
     </div>
+    
+      <div class="container align-center">
+        <!-- Devices -->
+        <div id="peripheral-list" ng-show="!scanning">
+          <div class="list">
+            <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in fakeBeacons" ng-show="device != ''">
+              <i class="fa fa-bluetooth"></i>
+              {{device.name}} {{device.validity}}
+              <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
+            </a>
+          </div>
+        </div>
+      </div>
 
     <div class="item item-divider">
       Other areas:
