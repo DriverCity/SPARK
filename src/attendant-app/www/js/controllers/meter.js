@@ -102,7 +102,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
         var coords = $scope.parkingArea[i].geometry.coordinates[0];
         // Format coordinates
         var parkingCoords = [];
-          
+
         for(var j=0; j<coords.length; j++) {
           parkingCoords.push(
             {
@@ -206,14 +206,16 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
       requestFirebaseVerification(i, array[i]).then(function(data) {
         var beacon = data.beacon;
         var lastParkEvent = data.lastParkEvent;
-        
+
         // Compare
-        var eventTimestamp = lastParkEvent.timestamp;
+        var eventTimestamp = lastParkEvent[0].timestamp;
         var parsedTime = Date.parse(eventTimestamp);
-        var duration = lastParkEvent.parkingDurationInMinutes * 60 * 1000;
+        var duration = lastParkEvent[0].parkingDurationInMinutes * 60 * 1000;
+
 
         var validity = false;
         if(parsedTime + duration > currentTime){
+          console.log("jee");
           validity = true;
         }
         array[data.id].validity = validity;
