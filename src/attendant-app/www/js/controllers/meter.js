@@ -30,17 +30,6 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     }
   ]
 
-  $scope.fakeAreaId = 777;
-
-  /****************************
-   * MAP
-   ***************************/
-
-  var options = {
-    timeout: 10000,
-    enableHighAccuracy: true
-  };
-
   // Fake position inside an area
   var position = {
     coords: {
@@ -49,20 +38,71 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     }
   }
 
+  $scope.fakeAreaId = 777;
+
+  /****************************
+   * POSITIONING
+   ***************************/
+
+  $scope.autoRefreshPosition = true;
+
+  $scope.changeRefreshPosition = function() {
+    
+    if(!$scope.autoRefreshPosition) {
+      $scope.startTimerPostion();
+    } else {
+      $interval.cancel($scope.timerReductionPosition)
+    }
+
+    // Invert refresh variable
+    $scope.autoRefreshPosition = !$scope.autoRefreshPosition;
+  }
+
+  $scope.startTimerPostion = function() {
+    var limit = 10;
+    var secondsLeft = limit;
+    $scope.positionText = "position checked ("+limit+"s left)";
+
+    $scope.timerReductionPosition = $interval(function() {
+      secondsLeft = secondsLeft - 1;
+      if(secondsLeft > 0) {
+        $scope.positionText = "position checked (" + secondsLeft + "s left)";
+      } else {
+        $scope.checkCurrentPosition();
+        $scope.findArea();
+        secondsLeft = limit;
+      }
+    }, 1000);
+  }
+  $scope.startTimerPostion();
+
   $scope.checkCurrentPosition = function() {
-    console.log($scope.parkingArea.length);
-
+    console.log("checking");
+    var options = {
+      timeout: 10000,
+      enableHighAccuracy: true
+    };
+    
     // $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
-      var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      var newAreaId = null;
+      $scope.positionGPS = position;
+      $scope.positionMAP = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    // }
+  }
 
+  /****************************
+   * MAP
+   ***************************/
+
+  $scope.findArea = function() {
+    $scope.parkingArea.$loaded(function() {
+      var newAreaId = null;
       // Verify all the area
       for(var i=0; i<$scope.parkingArea.length; i++) {
         // Retrieve the coords
         var coords = $scope.parkingArea[i].geometry.coordinates[0];
         // Format coordinates
         var parkingCoords = [];
-        
+          
         for(var j=0; j<coords.length; j++) {
           parkingCoords.push(
             {
@@ -77,25 +117,83 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
         });
 
         // Compare these coords with the current position
-        if(google.maps.geometry.poly.containsLocation(latLng, areaGeometry)) {
+        if($scope.positionMAP != undefined && google.maps.geometry.poly.containsLocation($scope.positionMAP, areaGeometry)) {
           newAreaId = $scope.parkingArea[i].area_number;
         }
       }
-
       $scope.currentAreaId = newAreaId;
-    // }
+    });
+  }
+
+  $scope.createClickableMap = function() {
+    // Define options
+    var mapOptions = {
+      center: $scope.positionMAP,
+      zoom: 18,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+ 
+    // Create the map
+    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+    // Adding marker current position
+    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+      var marker = new google.maps.Marker({
+        map: $scope.map,
+        animation: google.maps.Animation.DROP,
+        position: $scope.positionMAP
+      });
+    });
+
+    $scope.parkingArea.$loaded(function() {
+      for(var i=0; i<$scope.parkingArea.length; i++) {
+        var coords = $scope.parkingArea[i].geometry.coordinates[0];
+        var parkingCoords = [];
+          
+        for(var j=0; j<coords.length; j++) {
+          parkingCoords.push(
+            {
+              lat:parseFloat(coords[j][1]),
+              lng:parseFloat(coords[j][0])
+            }
+          );
+        }
+
+        var areaGeometry = new google.maps.Polygon({
+          paths: parkingCoords,
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          area_number:$scope.parkingArea[i].area_number
+        });
+        areaGeometry.setMap($scope.map);
+
+        areaGeometry.addListener('click', function(event) {
+          $scope.currentAreaId = this.area_number;
+          $scope.closeClickMap();
+        });
+      }
+    });
   }
 
   $scope.retrieveParkingArea = function() {
     var parkingAreaRef = firebase.database().ref().child("parkingArea");
     $scope.parkingArea = $firebaseArray(parkingAreaRef);
     $scope.parkingArea.$loaded(function() {
-      $scope.checkCurrentPosition();
+      $scope.findArea();
     });
   }
 
   // When the controller is loaded
+  $scope.checkCurrentPosition();
   $scope.retrieveParkingArea();
+  
+  $scope.parkingAreaLoaded = false;
+  $scope.parkingArea.$loaded(function() {
+    $scope.parkingAreaLoaded = true;
+  });
 
   /****************************
    * CLOUD
@@ -141,40 +239,9 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     return defer.promise;
   }
 
-
-/*
-  $scope.checkBeaconsValidity = function(array) {
-    // Iterate for each beacon retrieve
-    for(var i=0; i<array.length; i++) {
-      console.log($scope.requestFirebaseVerification(array[i]));
-    }
-  }
-
-  $scope.requestFirebaseVerification = function(beacon) {
-    var currentTime = Date.now();
-    var beaconRef = firebase.database().ref().child("parkingAreaParkingEvent/" + $scope.fakeAreaId + "/" + beacon.name);
-    var query = beaconRef.orderByChild("timestamp").limitToLast(1);
-    
-    // Retrieve associated park event in Firebase
-    $firebaseArray(query).$loaded(function(lastParkEvent) {
-      // Manage timestamp
-      var eventTimestamp = lastParkEvent.timestamp;
-      var parsedTime = Date.parse(eventTimestamp);
-      var duration = lastParkEvent.parkingDurationInMinutes * 60 * 1000;
-
-      var validity = false;
-      if(parsedTime + duration > currentTime){
-        validity = true;
-      }
-      return validity;
-    });
-  }
-*/
-
   /****************************
    * BLUETOOTH
    ***************************/
-
 
   /*
    * Description: Add discovered device to tempArray
@@ -244,6 +311,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
   $scope.openClickMap = function() {
     $scope.modalSettigs.show();
+    $scope.createClickableMap();
   };
 
   $scope.closeClickMap = function() {

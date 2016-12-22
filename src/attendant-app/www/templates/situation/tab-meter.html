@@ -1,8 +1,14 @@
 <ion-view view-title="Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}">
 
   <!-- Nav buttons -->
+  <ion-nav-buttons side="primary">
+    <button class="button button-stable" ng-click="changeRefreshPosition()">
+      <span ng-show="!autoRefreshPosition">unlock</span>
+      <span ng-show="autoRefreshPosition">lock</span>
+    </button>
+  </ion-nav-buttons>
   <ion-nav-buttons side="secondary">
-    <button class="button" ng-click="openClickMap()">
+    <button class="button button-stable" ng-click="openClickMap()">
       Manually
     </button>
   </ion-nav-buttons>
@@ -10,23 +16,31 @@
   <!-- Content -->
   <ion-content>
 
-    <div class="item item-divider">
-      <button class="button button-block button-positive" ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">
-        Scan
-      </button>
+    <!-- Header -->
+    <div class="container align-center">
+      <div class="list">
+        <div class="item centered">
+          {{ autoRefreshPosition ? positionText : 'blocked' }}
+          <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
+            Scan
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p> -->
-
+    <!-- Container -->
     <div class="container align-center">
-      <!-- Devices -->
       <div id="peripheral-list" ng-show="!scanning">
         <div class="list">
-          <a class="item" ng-click="selectBeacon(device.name)" ng-repeat="device in fakeBeacons" ng-show="device != ''">
-            <i class="fa fa-bluetooth"></i>
-            {{device.name}} {{device.validity}}
-            <i class="balanced selectedBeacon icon ion-checkmark" ng-show="beacon == device.name"></i>
-          </a>
+          <div class="item item-icon-left" ng-class="device.validity ? 'valid' : 'invalid'" ng-click="selectBeacon(device.name)" ng-repeat="device in fakeBeacons" ng-show="device != ''">
+            <div class="row">
+              <div class="col col-100">
+                <i class="icon ion-checkmark-circled" ng-show="device.validity"></i>
+                <i class="icon ion-close-circled" ng-show="!device.validity"></i>
+                <span class="register-number">{{ device.name }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
