@@ -16,6 +16,7 @@ class FirebaseIO():
         #     "serviceAccount": "xxx.json"
         # }
 
+        # TODO make configurable
         with open('pyrebase_config.json') as fp:
             config = json.load(fp)
 
@@ -51,7 +52,7 @@ class FirebaseIO():
             'parkingEventId': results['name'],
             'isConsumedByOccupancyAnalysis': False,
             'isConsumedByLongTermDataStore': False,
-            'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7)
+            'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7) # TODO make configurable
         }
 
         notification_result = self.db\
@@ -62,6 +63,7 @@ class FirebaseIO():
 
     def remove_dead_events(self):
         notifications_ref = self.db.child('parkingEventNotification')
+        # TODO make time configurable
         dead_notifications = notifications_ref\
             .order_by_child('liveUntilTime')\
             .start_at(TimeUtils.get_epoch_timestamp_plus_seconds(-365*24*60*60))\
