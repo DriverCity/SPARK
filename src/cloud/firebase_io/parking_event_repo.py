@@ -3,7 +3,7 @@ from firebase_io import FirebaseIO
 from utils import TimeUtils
 
 
-class ParkingEventIO(FirebaseIO):
+class ParkingEventRepository(FirebaseIO):
 
     def __init__(self):
         FirebaseIO.__init__(self)

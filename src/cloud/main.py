@@ -21,7 +21,7 @@ from flask import Flask,request,jsonify
 import parking_area
 import payment
 from cloud_storage_io import CloudStorageIO
-from firebase_io.parking_event_io import ParkingEventIO
+from firebase_io.parking_event_repo import ParkingEventRepository
 
 app = Flask(__name__)
 Swagger(app)
@@ -40,7 +40,7 @@ def store_parking_event():
             payment.validate(request.json['paymentMethodInformation']['paymentMethodType'], request.json['paymentMethodInformation'])
 
         # store valid information
-        return ParkingEventIO().store_parking_event(request.json), 201
+        return ParkingEventRepository().store_parking_event(request.json), 201
 
     except ValidationError as e:
         return jsonify({ 'errorType': 'SCHEMA_VALIDATION_ERROR', 'content': e }), 400
@@ -79,7 +79,7 @@ def update_occupancy_rates():
     """
     # TODO: logging
     try:
-        new_events = ParkingEventIO().consume_new_parking_events_by('OccupancyAnalysis')
+        new_events = ParkingEventRepository().consume_new_parking_events_by('OccupancyAnalysis')
         # TODO: analysis
         return '', 201
     except Exception as e:
@@ -97,7 +97,7 @@ def move_to_long_term_data_store():
     """
     # TODO: logging
     try:
-        new_events = ParkingEventIO().consume_new_parking_events_by('LongTermDataStore')
+        new_events = ParkingEventRepository().consume_new_parking_events_by('LongTermDataStore')
         CloudStorageIO().upload_json_to_parking_event_store(new_events)
         return '', 201
     except Exception as e:
@@ -113,7 +113,7 @@ def cleanup_firebase():
       - Cleanup firebase task
     """
     try:
-        ParkingEventIO().remove_dead_events()
+        ParkingEventRepository().remove_dead_events()
         return '', 201
     except Exception as e:
         return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
