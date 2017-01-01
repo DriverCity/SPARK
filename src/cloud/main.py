@@ -19,7 +19,7 @@ from flask import Flask,request,jsonify
 from flasgger import Swagger, swag_from, validate, ValidationError
 
 from firebase_io import FirebaseIO
-import cloud_storage_io
+from cloud_storage_io import CloudStorageIO
 import payment, parking_area
 
 app = Flask(__name__)
@@ -97,7 +97,7 @@ def move_to_long_term_data_store():
     # TODO: logging
     try:
         new_events = FirebaseIO().consume_new_parking_events_by('LongTermDataStore')
-        cloud_storage_io.upload_json_to_parking_event_store(new_events)
+        CloudStorageIO().upload_json_to_parking_event_store(new_events)
         return '', 201
     except Exception as e:
         return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
