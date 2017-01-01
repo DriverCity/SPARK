@@ -15,6 +15,13 @@
   <!-- Content -->
   <ion-content>
 
+    <!-- Loading footer -->
+    <div class="bar bar-footer bar-balanced" ng-show="parkingAreaLoaded != true">
+      <div class="title">Loading ...</div>
+    </div>
+
+    <!-- Map division -->
+    <div id="map" data-tap-disabled="true"></div>
    
   </ion-content>
 </ion-view>

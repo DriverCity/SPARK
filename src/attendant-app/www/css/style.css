@@ -99,6 +99,27 @@
     font-size: 20px;
   }
 
+.valid {
+  background-color: #68e668;
+  border-color:#5a5a5a;
+}
+  .valid i {
+    color:#1d9e1d;
+  }
+ 
+.invalid {
+  background-color: #ff6b6b;
+  border-color:#5a5a5a;
+}
+ 
+  .invalid i {
+    color:#e01919;
+  }
+ 
+.hour {
+  text-align: center;
+}
+
 /****************************
  * SETTINGS
  ***************************/

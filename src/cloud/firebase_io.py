@@ -29,8 +29,7 @@ def store_parking_event(request_json):
     register_number = request_json['registerNumber']
     parking_event_json = {
         'timestamp': get_local_timestamp(),
-        'parkingType': request_json['parkingContextType'],
-        'parkingDurationInMinutes': request_json['parkingDurationInMinutes']
+        'parkingType': request_json['parkingContextType']
     }
 
     if parking_context_type == 'PAID':
@@ -41,7 +40,7 @@ def store_parking_event(request_json):
 
     results = db\
         .child('parkingAreaParkingEvent')\
-        .child(request_json['parkingAreaId'])\
+        .child(parking_area_id)\
         .child(register_number)\
         .push(parking_event_json)
 
@@ -49,7 +48,7 @@ def store_parking_event(request_json):
     # > Notifications are stored in a flattened format
     # > Better use of indexing for server side event consumers
     notification_json = {
-        'parkingAreaId': request_json['parkingAreaId'],
+        'parkingAreaId': parking_area_id,
         'registerNumber': register_number,
         'parkingEventId': results['name'],
         'isConsumedByOccupancyAnalysis': False,

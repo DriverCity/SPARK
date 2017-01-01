@@ -73,9 +73,9 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   /* Function onWrite:
    * Callback
   */
-  var onWrite = function() {
+  var onWrite = function(data) {
     // Decode the ArrayBuffer into a typed Array based on the data you expect
-    alert("Data writtent to the Smart meter");
+    alert("Data writtent to the Smart meter : "+bytesToString(data));
   }
 
   /****************************
