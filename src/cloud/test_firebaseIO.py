@@ -20,13 +20,13 @@ class TestFirebaseIO(TestCase):
     def test_store_paid_parking_event(self):
 
         # Values to test
-        parking_context_type = 'PAID'
-        parking_duration_in_minutes = 123
+        expected_parking_context_type = 'PAID'
+        expected_parking_duration_in_minutes = 123
 
         request_json = {
             'parkingAreaId': paid_parking_area_id,
-            'parkingContextType': parking_context_type,
-            'parkingDurationInMinutes': parking_duration_in_minutes,
+            'parkingContextType': expected_parking_context_type,
+            'parkingDurationInMinutes': expected_parking_duration_in_minutes,
             'paymentMethodInformation': {
                 'paymentMethodType': paid_parking_payment_method_type,
                 'paymentReceipt': paid_parking_payment_receipt
@@ -41,13 +41,18 @@ class TestFirebaseIO(TestCase):
         # > parkingAreaParkingEvent
         expected_token = json.loads(result)['name']
         actual_token, actual_event = self.firebase_io.db.\
-            get_single_paid_event_key_and_value(paid_parking_area_id, register_number)
+            get_single_paid_event_key_and_value(paid_parking_area_id)
         self.assertEqual(expected_token, actual_token)
-        self.assertEqual(parking_duration_in_minutes, actual_event['parkingDurationInMinutes'])
-        self.assertEqual(parking_context_type, actual_event['parkingType'])
+        self.assertEqual(expected_parking_duration_in_minutes, actual_event['parkingDurationInMinutes'])
+        self.assertEqual(expected_parking_context_type, actual_event['parkingType'])
 
         # > parkingEventNotification
-        # TODO
+        actual_notification = self.firebase_io.db.get_notification(expected_token)
+        self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
+        self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
+        self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
+        self.assertEqual(expected_token, actual_notification['parkingEventId'])
+        self.assertEqual(register_number, actual_notification['registerNumber'])
 
 
 class MockDb():
@@ -67,20 +72,24 @@ class MockDb():
             return {'name': token}
 
     def __init__(self):
+        self.__root = None
         pass
 
     def child(self, name):
         return self.__root.json[name]
 
-    def get_paid_events(self, area, register_number):
+    def get_paid_events(self, area):
         return self.child(root_event_node)\
             .child(area)\
             .child(register_number)\
             .json
 
-    def get_single_paid_event_key_and_value(self, area, register_number):
-        events = self.get_paid_events(area, register_number)
+    def get_single_paid_event_key_and_value(self, area):
+        events = self.get_paid_events(area)
         for k, v in events.items(): return k, v;
+
+    def get_notification(self, token):
+        return [v for k, v in self.child(root_notification_note).json.items() if v['parkingEventId'] == token][0]
 
     def with_paid_init(self):
         self.__root = MockDb.Node({
