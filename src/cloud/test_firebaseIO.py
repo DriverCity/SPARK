@@ -1,3 +1,8 @@
+# TODO: test invalid cases
+# TODO: test timestamps
+# TODO: test cloud storaging
+# TODO: test scheduled tasks
+
 from unittest import TestCase
 import json
 from utils import TokenUtils
@@ -13,6 +18,7 @@ paid_parking_payment_method_type = 'SERVICE_1'
 paid_parking_payment_receipt = 'valid_test_hash'
 
 parking_disc_parking_area_id = 'PARKING_DISC_AREA'
+
 
 class TestFirebaseIO(TestCase):
     def setUp(self):
