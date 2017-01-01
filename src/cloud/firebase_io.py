@@ -30,7 +30,7 @@ def store_parking_event(request_json):
     }
 
     if parking_context_type == 'PAID':
-        parking_area_id = request_json.get['parkingAreaId']
+        parking_area_id = request_json['parkingAreaId']
         parking_event_json['parkingDurationInMinutes'] = request_json['parkingDurationInMinutes']
     elif parking_context_type == 'PARKING_DISC':
         parking_area_id = 'PARKING_DISC_AREA'
