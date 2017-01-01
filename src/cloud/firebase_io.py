@@ -17,6 +17,7 @@ with open('pyrebase_config.json') as fp:
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
+
 def get_epoch_timestamp_plus_seconds(seconds):
     return datetime.datetime.fromtimestamp(time.time() + seconds).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -27,9 +28,10 @@ def get_local_timestamp():
 
 def store_parking_event(request_json):
     register_number = request_json['registerNumber']
+    parking_context_type = request_json['parkingContextType']
     parking_event_json = {
         'timestamp': get_local_timestamp(),
-        'parkingType': request_json['parkingContextType']
+        'parkingType': parking_context_type
     }
 
     if parking_context_type == 'PAID':
