@@ -3,10 +3,11 @@
 # TODO: test cloud storaging
 # TODO: test scheduled tasks
 
-from unittest import TestCase
 import json
+from unittest import TestCase
+
+from firebase_io.parking_event_io import ParkingEventIO
 from utils import TokenUtils
-from firebase_io import FirebaseIO
 
 # Constants used in testing
 root_event_node = 'parkingAreaParkingEvent'
@@ -20,14 +21,14 @@ paid_parking_payment_receipt = 'valid_test_hash'
 parking_disc_parking_area_id = 'PARKING_DISC_AREA'
 
 
-class TestFirebaseIO(TestCase):
+class TestParkingEventIO(TestCase):
     def setUp(self):
-        self.firebase_io = FirebaseIO()
+        self.parking_event_io =ParkingEventIO()
 
     def test_store_parking_disc_parking_event(self):
 
         # Arrange
-        self.firebase_io.db = MockDb().with_parking_disc_init()
+        self.parking_event_io.db = MockDb().with_parking_disc_init()
 
         expected_parking_context_type = 'PARKING_DISC'
 
@@ -36,18 +37,18 @@ class TestFirebaseIO(TestCase):
         )
 
         # Act
-        result = self.firebase_io.store_parking_event(request_json)
+        result = self.parking_event_io.store_parking_event(request_json)
 
         # Assert
         # > parkingAreaParkingEvent
         expected_token = json.loads(result)['name']
-        actual_token, actual_event = self.firebase_io.db. \
+        actual_token, actual_event = self.parking_event_io.db. \
             get_single_event_key_and_value(parking_disc_parking_area_id)
         self.assertEqual(expected_token, actual_token)
         self.assertEqual(expected_parking_context_type, actual_event['parkingType'])
 
         # > parkingEventNotification
-        actual_notification = self.firebase_io.db.get_notification(expected_token)
+        actual_notification = self.parking_event_io.db.get_notification(expected_token)
         self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
         self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
         self.assertEqual(parking_disc_parking_area_id, actual_notification['parkingAreaId'])
@@ -57,7 +58,7 @@ class TestFirebaseIO(TestCase):
     def test_store_paid_parking_event(self):
 
         # Arrange
-        self.firebase_io.db = MockDb().with_paid_init()
+        self.parking_event_io.db = MockDb().with_paid_init()
 
         expected_parking_context_type = 'PAID'
         expected_parking_duration_in_minutes = 123
@@ -71,19 +72,19 @@ class TestFirebaseIO(TestCase):
         )
 
         # Act
-        result = self.firebase_io.store_parking_event(request_json)
+        result = self.parking_event_io.store_parking_event(request_json)
 
         # Assert
         # > parkingAreaParkingEvent
         expected_token = json.loads(result)['name']
-        actual_token, actual_event = self.firebase_io.db.\
+        actual_token, actual_event = self.parking_event_io.db.\
             get_single_event_key_and_value(paid_parking_area_id)
         self.assertEqual(expected_token, actual_token)
         self.assertEqual(expected_parking_duration_in_minutes, actual_event['parkingDurationInMinutes'])
         self.assertEqual(expected_parking_context_type, actual_event['parkingType'])
 
         # > parkingEventNotification
-        actual_notification = self.firebase_io.db.get_notification(expected_token)
+        actual_notification = self.parking_event_io.db.get_notification(expected_token)
         self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
         self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
