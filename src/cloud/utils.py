@@ -1,4 +1,5 @@
 import time, datetime, pytz
+from uuid import uuid4
 
 
 class TimeUtils():
@@ -10,3 +11,10 @@ class TimeUtils():
     @staticmethod
     def get_local_timestamp():
         return datetime.datetime.now(pytz.timezone('Europe/Helsinki')).strftime('%Y-%m-%d %H:%M:%S')
+
+
+class TokenUtils():
+
+    @staticmethod
+    def get_uuid():
+        return str(uuid4())

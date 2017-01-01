@@ -1,5 +1,4 @@
 import json
-from flask import jsonify
 from pyrebase import pyrebase
 from utils import TimeUtils
 
@@ -59,7 +58,7 @@ class FirebaseIO():
             .child('parkingEventNotification')\
             .push(notification_json)
 
-        return jsonify(results)
+        return json.dumps(results)
 
     def remove_dead_events(self):
         notifications_ref = self.db.child('parkingEventNotification')
