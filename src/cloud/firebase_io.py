@@ -1,7 +1,6 @@
-import json
+import time, datetime, pytz, json
 from flask import jsonify
 from pyrebase import pyrebase
-import utils
 
 # pyrebase_config.json is of format
 # {
@@ -18,15 +17,20 @@ with open('pyrebase_config.json') as fp:
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 
+def get_epoch_timestamp_plus_seconds(seconds):
+    return datetime.datetime.fromtimestamp(time.time() + seconds).strftime('%Y-%m-%d %H:%M:%S')
+
+
+def get_local_timestamp():
+    return datetime.datetime.now(pytz.timezone('Europe/Helsinki')).strftime('%Y-%m-%d %H:%M:%S')
+
 
 def store_parking_event(request_json):
-
-    parking_context_type = request_json['parkingContextType']
     register_number = request_json['registerNumber']
-
     parking_event_json = {
-        'timestamp': utils.get_local_timestamp(),
-        'parkingType': parking_context_type
+        'timestamp': get_local_timestamp(),
+        'parkingType': request_json['parkingContextType'],
+        'parkingDurationInMinutes': request_json['parkingDurationInMinutes']
     }
 
     if parking_context_type == 'PAID':
@@ -37,7 +41,7 @@ def store_parking_event(request_json):
 
     results = db\
         .child('parkingAreaParkingEvent')\
-        .child(parking_area_id)\
+        .child(request_json['parkingAreaId'])\
         .child(register_number)\
         .push(parking_event_json)
 
@@ -45,15 +49,13 @@ def store_parking_event(request_json):
     # > Notifications are stored in a flattened format
     # > Better use of indexing for server side event consumers
     notification_json = {
-        'parkingAreaId': parking_area_id,
+        'parkingAreaId': request_json['parkingAreaId'],
         'registerNumber': register_number,
         'parkingEventId': results['name'],
-        'liveUntilTime': utils.get_epoch_timestamp_plus_seconds(60*60*24*7)
+        'isConsumedByOccupancyAnalysis': False,
+        'isConsumedByLongTermDataStore': False,
+        'liveUntilTime': get_epoch_timestamp_plus_seconds(60*60*24*7)
     }
-
-    if parking_context_type == 'PAID':
-        notification_json['isConsumedByOccupancyAnalysis'] = False
-        notification_json['isConsumedByLongTermDataStore'] = False
 
     notification_result = db\
         .child('parkingEventNotification')\
@@ -67,8 +69,8 @@ def remove_dead_events():
     notifications_ref = db.child('parkingEventNotification')
     dead_notifications = notifications_ref\
         .order_by_child('liveUntilTime')\
-        .start_at(utils.get_epoch_timestamp_plus_seconds(-365*24*60*60))\
-        .end_at(utils.get_epoch_timestamp_plus_seconds(0)).get()
+        .start_at(get_epoch_timestamp_plus_seconds(-365*24*60*60))\
+        .end_at(get_epoch_timestamp_plus_seconds(0)).get()
     dead_notifications = [(dn.key(), dn.val()) for dn in dead_notifications.each()
                           if all([dn.val()['isConsumedByOccupancyAnalysis'], dn.val()['isConsumedByLongTermDataStore']])]
 
@@ -87,12 +89,8 @@ def remove_dead_events():
         .remove()
 
 
-def get_new_events_for(consumer):
-    """
-
-    :param consumer is either LongTermDataStore or OccupancyAnalysis:
-    :return:
-    """
+# consumer is either LongTermDataStore or OccupancyAnalysis
+def consume_new_parking_events_by(consumer):
 
     consumed_notifications = db\
     .child('parkingEventNotification')\
@@ -112,16 +110,14 @@ def get_new_events_for(consumer):
             .child(cn.val()['parkingEventId'])\
             .get()
 
-        result.append((parking_event.val(), cn.key()))
+        result.append(parking_event.val())
 
-    return result
-
-
-def mark_events_consumed_by(consumer, event_keys):
-
-    for key in event_keys:
-
+        # TODO: notifications may be checked even if the following processes fail
+        # TODO: form transaction
+        # Set parking event as consumed
         db\
         .child('parkingEventNotification')\
-        .child(key)\
+        .child(cn.key())\
         .update({'isConsumedBy'+consumer:True})
+
+    return result
