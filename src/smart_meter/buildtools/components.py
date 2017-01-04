@@ -81,11 +81,6 @@ class Component(object):
          result = os.system("make")
 
       if result == 0:
-          # Copy test files.
-          os.system("cp -r " + os.environ["SOURCE_DIR"] + "/" + self.name + "/tests/data " + comp_test_dir)
-
-
-      if result == 0:
          print("Building tests succeeded. Running tests for " + self.name)
          result = os.system(self.runTestsCmd)
          if result==0:

@@ -147,7 +147,8 @@ TEST_F (ConfigurationReaderTest, EmpryStream)
 
 TEST_F (ConfigurationReaderTest, ReadValidFile)
 {
-    spark::ConfigurationReader::ConfigMap conf = m_reader.readFile("data/validConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/validConfig.txt";
+    spark::ConfigurationReader::ConfigMap conf = m_reader.readFile(testFile);
 
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(3), conf.size());
 
@@ -176,7 +177,8 @@ TEST_F (ConfigurationReaderTest, FileDoesNotOpen)
 
 TEST_F (ConfigurationReaderTest, ReadInvalidFile)
 {
-    spark::ConfigurationReader::ConfigMap conf = m_reader.readFile("data/invalidConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/invalidConfig.txt";
+    spark::ConfigurationReader::ConfigMap conf = m_reader.readFile(testFile);
 
     EXPECT_EQ(spark::ConfigurationReader::ConfigMap::size_type(0), conf.size());
     // Check error message

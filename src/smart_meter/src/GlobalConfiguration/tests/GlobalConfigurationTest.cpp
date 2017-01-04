@@ -34,7 +34,8 @@ TEST_F(GlobalConfgurationTest, UninitializedTest)
 
 TEST_F(GlobalConfgurationTest, InitValid)
 {
-    GlobalConfiguration::init("data/validConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/validConfig.txt";
+    GlobalConfiguration::init(testFile);
     GlobalConfiguration* inst = GlobalConfiguration::instance();
     ASSERT_TRUE(inst != nullptr);
 }
@@ -42,14 +43,16 @@ TEST_F(GlobalConfgurationTest, InitValid)
 
 TEST_F(GlobalConfgurationTest, InitInvalid)
 {
-    GlobalConfiguration::init("data/invalidConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/invalidConfig.txt";
+    GlobalConfiguration::init(testFile);
     EXPECT_TRUE(GlobalConfiguration::instance() == nullptr);
 }
 
 
 TEST_F(GlobalConfgurationTest, HasKeyTest)
 {
-    GlobalConfiguration::init("data/validConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/validConfig.txt";
+    GlobalConfiguration::init(testFile);
     GlobalConfiguration* inst = GlobalConfiguration::instance();
 
     EXPECT_TRUE(inst->hasKey("paramFoo"));
@@ -61,7 +64,8 @@ TEST_F(GlobalConfgurationTest, HasKeyTest)
 
 TEST_F(GlobalConfgurationTest, GetValueTest)
 {
-    GlobalConfiguration::init("data/validConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/validConfig.txt";
+    GlobalConfiguration::init(testFile);
     GlobalConfiguration* inst = GlobalConfiguration::instance();
 
     bool ok = true;
@@ -85,7 +89,8 @@ TEST_F(GlobalConfgurationTest, GetValueTest)
 
 TEST_F(GlobalConfgurationTest, InsertTest)
 {
-    GlobalConfiguration::init("data/validConfig.txt");
+    std::string testFile = std::string(TEST_DATA_DIR) + "/validConfig.txt";
+    GlobalConfiguration::init(testFile);
     GlobalConfiguration* inst = GlobalConfiguration::instance();
 
     EXPECT_FALSE(inst->hasKey("newKey"));
