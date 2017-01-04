@@ -45,6 +45,21 @@ public:
      */
     IVerifyParking* verifier() const;
 
+
+protected:
+
+    /**
+     * @brief Handle incoming messages. This is overridden in DemoModeBLEService
+     * @param msg Incoming message.
+     */
+    virtual void handleMessage(const std::string& msg);
+
+    /**
+     * @brief Write response message to response fifo.
+     * @param msg Response message.
+     */
+    virtual void sendResponse(std::string msg) final;
+
 private:
 
     IPriceProvider* m_priceProvider;
@@ -56,9 +71,6 @@ private:
     std::atomic_bool m_stopService;
 
     void startServiceThread();
-    void handleMessage(const std::string& msg);
-    void sendResponse(std::string msg);
-
     void priceInfoRequest(const PriceInfo& info);
     void verifyRequest(const PriceInfo& info, const ParkingEvent& event);
 };

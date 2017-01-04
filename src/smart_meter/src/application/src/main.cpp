@@ -2,6 +2,7 @@
 #include "GlobalConfiguration/GlobalConfiguration.h"
 #include "Logger/Logger.h"
 #include "BLEService/BLEService.h"
+#include "BLEService/DemoModeBLEService.h"
 #include "PriceProvider/PriceProvider.h"
 #include "VerifyParking/VerifyParking.h"
 #include "CloudService/CloudService.h"
@@ -43,8 +44,18 @@ int main(int argc, char** argv)
     // Init BLEService
     std::string bleInputFifo = config->getValue("BLEInputFifo");
     std::string bleResponseFifo = config->getValue("BLEResponseFifo");
-    setup.bleService.reset(new spark::BLEService(binaryDir + "/" + bleInputFifo,
-                                                 binaryDir + "/" + bleResponseFifo));
+
+    if (config->hasKey("demoMode") && config->getValue("demoValue") != "0"){
+        // Demo mode
+        setup.bleService.reset(new spark::DemoModeBLEService(binaryDir + "/" + bleInputFifo,
+                                                             binaryDir + "/" + bleResponseFifo,
+                                                             confDir + "/demoConfig.txt"));
+    }
+    else {
+        // Normal mode
+        setup.bleService.reset(new spark::BLEService(binaryDir + "/" + bleInputFifo,
+                                                     binaryDir + "/" + bleResponseFifo));
+    }
     setup.bleService->init(setup.priceProvider.get(), setup.verifier.get());
 
     // Start application.

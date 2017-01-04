@@ -1,0 +1,20 @@
+
+# This File contains demo responses. Enable demo mode setting "demoMode" as "1" in global.txt.
+
+# Explanation:
+
+# Keys: number of parking registration request (starting from 0).
+
+# Values:
+# 0 = Ok (send valid test token to cloud instead of actual token).
+# 1 = Timeout (pretend connection to cloud has been lost).
+# 2 = Invalid token (Do not verify token, but pretend it was invalid).
+# 3 = Other error (Pretend that an other error occured).
+# other = Unknown command.
+
+1;0
+2;1
+3;2
+4;3
+5;4
+6;asd

@@ -10,7 +10,10 @@ set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 set(CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../config)
 
-set(CONF_FILES ${CONFIG_DIR}/global.txt)
+set(CONF_FILES
+    ${CONFIG_DIR}/global.txt
+    ${CONFIG_DIR}/demo/demoConfig.txt
+)
 
 message("Variant: " $ENV{BUILD_NAME})
 

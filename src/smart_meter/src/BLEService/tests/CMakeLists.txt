@@ -6,17 +6,21 @@ add_definitions(-DCOMPONENT_NAME=\\"${PROJECT_NAME}\\")
 include_directories(../include)
 include_directories($ENV{BUILD_DIR}/include)
 
+add_definitions(-DTEST_DATA_DIR=\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\")
+
 set(TEST_SRCS
   ../src/BLEService.cpp
+  ../src/DemoModeBLEService.cpp
 )
 
 # List test sources here
 set(SRCS
   BLEServiceTest.cpp
+  DemoModeBLEServiceTest.cpp
 )
 
 # Link other components
-set(LINKED_LIBS Logger misc PriceProvider)
+set(LINKED_LIBS Logger misc PriceProvider GlobalConfiguration)
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
     message($ENV{BUILD_DIR}/${lib}/bin)
