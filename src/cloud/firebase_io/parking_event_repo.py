@@ -3,6 +3,12 @@ from firebase_io import FirebaseIO
 from utils import TimeUtils
 
 
+def filter_to_register_number(self, register_number):
+    return self\
+        .order_by_child('registerNumber')\
+        .start_at(register_number).end_at(register_number)
+
+
 class ParkingEventRepository(FirebaseIO):
 
     __parking_event_ODS_node_name = 'parkingAreaParkingEvent'
@@ -11,6 +17,57 @@ class ParkingEventRepository(FirebaseIO):
 
     def __init__(self):
         FirebaseIO.__init__(self)
+
+    def __remove_parking_event_from_ods(self, register_number):
+        events = self.db \
+            .child(ParkingEventRepository.__parking_event_ODS_lookup_node_name) \
+            .filter_to_register_number(register_number) \
+            .get().each()
+
+        for e in events:
+            k = e.key()
+            v = e.val()
+
+            # Remove event from the ODS
+            self.db \
+                .child(ParkingEventRepository.__parking_event_ODS_node_name) \
+                .child(v['parkingAreaId']) \
+                .child(v['parkingAreaParkingEventId']) \
+                .remove()
+
+            # Remove event from the lookup
+            self.db \
+                .child(ParkingEventRepository.__parking_event_ODS_lookup_node_name) \
+                .child(k) \
+                .remove()
+
+    def __add_parking_event_to_ods(self, parking_area_id, parking_event_json):
+        add_to_ods_results = self.db\
+            .child(ParkingEventRepository.__parking_event_ODS_node_name)\
+            .child(parking_area_id)\
+            .push(parking_event_json)
+
+        lookup_json = {
+            'registerNumber': parking_event_json['registerNumber'],
+            'parkingAreaId': parking_area_id,
+            'parkingAreaParkingEventId': add_to_ods_results['name']
+        }
+
+        add_to_lookup_results = self.db\
+            .child(ParkingEventRepository.__parking_event_ODS_lookup_node_name)\
+            .push(lookup_json)
+
+        add_results = {
+            'odsId': add_to_ods_results['name'],
+            'odsLookupId': add_to_lookup_results['name']
+        }
+
+        return add_results
+
+    def __add_parking_event_to_notification_store(self, parking_event_notification_json):
+        return self.db \
+            .child(ParkingEventRepository.__parking_event_notification_store_node_name) \
+            .push(parking_event_notification_json)
 
     def store_parking_event(self, request_json):
         register_number = request_json['registerNumber']
@@ -27,19 +84,11 @@ class ParkingEventRepository(FirebaseIO):
         elif parking_context_type == 'PARKING_DISC':
             parking_area_id = 'PARKING_DISC_AREA'
 
-        # TODO: remove previous event for the register number if one exists and explain why
-        previous_parking_event_parking_areas = self.db\
-            .child(ParkingEventRepository.__parking_event_ODS_lookup_node_name)\
-            .order_by_child('registerNumber')\
-            .start_at(register_number).end_at(register_number)\
-            .get()
+        # Remove previous events from the ODS if any exist
+        self.__remove_parking_event_from_ods(register_number)
 
-        
-
-        results = self.db\
-            .child(ParkingEventRepository.__parking_event_ODS_node_name)\
-            .child(parking_area_id)\
-            .push(parking_event_json)
+        # Store the incoming event to ODS
+        add_results = self.__add_parking_event_to_ods(parking_area_id, parking_event_json)
 
         # Store notification about the event for event consumption
         # > Notifications are stored in a flattened format
@@ -47,17 +96,14 @@ class ParkingEventRepository(FirebaseIO):
         notification_json = {
             'parkingAreaId': parking_area_id,
             'registerNumber': register_number,
-            'parkingEventId': results['name'],
+            'parkingEventId': add_results['name'],
             'isConsumedByOccupancyAnalysis': False,
             'isConsumedByLongTermDataStore': False,
             'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7) # TODO make configurable
         }
+        notification_add_results = self.__add_parking_event_notification(notification_json)
 
-        notification_result = self.db\
-            .child(ParkingEventRepository.__parking_event_notification_store_node_name)\
-            .push(notification_json)
-
-        return json.dumps(results)
+        return json.dumps(add_results) # TODO: fix swagger specs for the response
 
     def remove_dead_events(self):
         notifications_ref = self.db.child(ParkingEventRepository.__parking_event_notification_store_node_name)
