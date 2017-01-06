@@ -35,35 +35,11 @@ This document describes what 3rd party components are needed and how to install 
   - To view database contents in target system intall sqlite3 there also (optional).
 
 
-## Google APIs C++ client
+## Curl
 
-1. Download source code from GoogleDrive (googleapis.zip in the root). Make a directory and unzip archive there.
+Install development package:
 
-2. Run following commands to build and install Google APIs
+```sh
+sudo apt-get install libcurl4-openssl-dev
+```
 
-  ```sh
-  # Build dependencies
-  python ./prepare_dependencies.py
-  
-  # Build Google APIs
-  mkdir build && cd build
-  cmake ..
-  make
-  make install
-  
-  # make headers available
-  cd ..
-  sudo cp -a build/include/googleapis /usr/include
-  sudo cp -a external_dependencies/install/gflags /usr/include
-  sudo cp -a external_dependencies/install/glog /usr/include
-  sudo cp -a external_dependencies/install/google /usr/include
-  sudo cp -a external_dependencies/install/json /usr/include
-  sudo cp -a external_dependencies/install/openssl /usr/include
-  sudo cp -a external_dependencies/install/curl /usr/include
-  
-  # make binaries available
-  sudo cp build/lib/* /usr/lib/
-  sudo cp external_dependencies/install/lib/* /usr/lib/
-  ```
-  
-  

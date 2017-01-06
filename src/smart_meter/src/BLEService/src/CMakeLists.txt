@@ -14,16 +14,20 @@ set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 include_directories($ENV{BUILD_DIR}/include)
 include_directories(../include)
 
-set(SRCS BLEService.cpp)
+set(SRCS
+    BLEService.cpp
+    DemoModeBLEService.cpp
+)
 
 set(INST_HDRS
     ../include/BLEService.h
     ../include/BLEServiceMock.h
     ../include/IBLEService.h
+    ../include/DemoModeBLEService.h
 )
 
 # Link other components
-set(LINKED_LIBS Logger misc PriceProvider)
+set(LINKED_LIBS Logger misc PriceProvider GlobalConfiguration)
 foreach(lib ${LINKED_LIBS})
     link_directories($ENV{BUILD_DIR}/${lib}/bin)
     message($ENV{BUILD_DIR}/${lib}/bin)

@@ -7,7 +7,6 @@ os.environ[CC] = os.environ['HOME'] + '/raspberrypi/tools/arm-bcm2708/gcc-linaro
 os.environ[CFLAGS] += ' --sysroot /mnt/raspberry-rootfs'
 os.environ[CXXFLAGS] += ' --sysroot /mnt/raspberry-rootfs'
 
-"""
 # Switch optimitisation on for release build.
 if os.environ['BUILD_TYPE'] == "release":
    os.environ[CFLAGS] += " -O3"
@@ -16,4 +15,3 @@ if os.environ['BUILD_TYPE'] == "release":
 else:
     os.environ[CFLAGS] += " -O0"
     os.environ[CXXFLAGS] += " -O0"
-"""

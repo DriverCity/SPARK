@@ -8,6 +8,8 @@ set(SRC ../src)
 include_directories(../include)
 include_directories($ENV{BUILD_DIR}/include)
 
+add_definitions(-DTEST_DATA_DIR=\\"${CMAKE_CURRENT_SOURCE_DIR}/data\\")
+
 set(TEST_SRCS
   ${SRC}/ConfigurationReader.cpp
   ${SRC}/GlobalConfiguration.cpp

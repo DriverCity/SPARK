@@ -109,7 +109,7 @@ TEST_F(BLEServiceTest, GetPriceSuccess)
     m_service->start();
     writeInputFifo("price\n");
     sleep(1); // Give service time to respond.
-    EXPECT_EQ(m_priceProvider->m_info.toString(), readResponseFifo());
+    EXPECT_EQ(m_priceProvider->m_info.toString()+"\n", readResponseFifo());
 }
 
 
@@ -121,7 +121,7 @@ TEST_F(BLEServiceTest, GetPriceFailure)
     m_service->start();
     writeInputFifo("price\n");
     sleep(1); // Give service time to respond.
-    EXPECT_EQ("Error: Service is not available.", readResponseFifo());
+    EXPECT_EQ("Error: Service is not available.\n", readResponseFifo());
 }
 
 
@@ -131,7 +131,7 @@ TEST_F (BLEServiceTest, UnknownCommand)
     m_service->start();
     writeInputFifo("NotACommand");
     sleep(1); // Give service time to respond.
-    EXPECT_EQ("Error: Unknown command.", readResponseFifo());
+    EXPECT_EQ("Error: Unknown command.\n", readResponseFifo());
 }
 
 
@@ -145,7 +145,7 @@ TEST_F (BLEServiceTest, RegisterSuccess)
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
     writeInputFifo(e.toString() + "\n");
     sleep(1);
-    EXPECT_EQ("OK", readResponseFifo());
+    EXPECT_EQ("OK\n", readResponseFifo());
     EXPECT_EQ("ABC123", m_verifier->m_lastEvent.registerNumber());
     EXPECT_EQ("2016-11-23 12:30", m_verifier->m_lastEvent.startingTime());
     EXPECT_EQ(30, m_verifier->m_lastEvent.duration());
@@ -164,7 +164,7 @@ TEST_F (BLEServiceTest, RegisterFailureTimeout)
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
     writeInputFifo(e.toString());
     sleep(1);
-    EXPECT_EQ("Error: Request timed out.", readResponseFifo());
+    EXPECT_EQ("Error: Request timed out.\n", readResponseFifo());
 }
 
 
@@ -178,7 +178,7 @@ TEST_F (BLEServiceTest, RegisterFailureInvalidToken)
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
     writeInputFifo(e.toString());
     sleep(1);
-    EXPECT_EQ("Error: Payment token is invalid.", readResponseFifo());
+    EXPECT_EQ("Error: Payment token is invalid.\n", readResponseFifo());
 }
 
 
@@ -192,5 +192,5 @@ TEST_F (BLEServiceTest, RegisterFailureOtherError)
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
     writeInputFifo(e.toString());
     sleep(1);
-    EXPECT_EQ("Error: Unknown error.", readResponseFifo());
+    EXPECT_EQ("Error: Unknown error.\n", readResponseFifo());
 }

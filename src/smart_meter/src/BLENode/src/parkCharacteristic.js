@@ -19,6 +19,7 @@ var ParkCharacteristic = function() {
 util.inherits(ParkCharacteristic, BlenoCharacteristic);
 
 ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
+  console.log('ParkCharacteristic - onReadRequest - Received');
 
   // Synchronisation variables
   var sync = true;
@@ -69,20 +70,20 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
 
   // Send callback
   callback(this.RESULT_SUCCESS, bufferFormat);
-  console.log('ParkCharacteristic - onReadRequest: value = ' + bufferFormat.toString("utf-8"));
+  console.log('ParkCharacteristic - onReadRequest - Response sended');
 };
 
 
-ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
-  console.log('ParkCharacteristic - onWriteRequest: value = ' + data.toString("utf-8"));
+ParkCharacteristic.prototype.onWriteRequest = function(dataReceived, offset, withoutResponse, callback) {
+  console.log('ParkCharacteristic - onWriteRequest - Received : ' + dataReceived.toString("utf-8"));
 
   // Synchronisation variables
   var sync = true;
-  var dataFromMeter = null;
+  var data = null;
 
   // Fifo queue
   var fifoPathInput = __dirname + '/../BLEInputFifo';
-  var input = data.toString("utf-8");
+  var input = dataReceived.toString("utf-8");
 
   var fifoPathResponse = __dirname + '/../BLEResponseFifo';
   var outputFifo = fs.createReadStream(fifoPathResponse);
@@ -101,8 +102,8 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
   });
 
   // Retrieve info from fifo
-  outputFifo.on('dataFromMeter', function(result) {
-    dataFromMeter = result;
+  outputFifo.on('data', function(result) {
+    data = result;
     sync = false;
   });
 
@@ -111,10 +112,16 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
     require('deasync').sleep(100);
   }
 
-  dataFromMeter = (""+dataFromMeter).replace(/(\r\n|\n|\r)/gm,"");
+  data = (""+data).replace(/(\r\n|\n|\r)/gm,"");
+  console.log(data);
 
-  var bufferFormat = new Buffer(JSON.stringify(dataFromMeter), "utf-8");
-  callback(this.RESULT_SUCCESS, bufferFormat);
+  if(data == "OK\0") {
+    console.log("Success");
+    callback(this.RESULT_SUCCESS);
+  } else {
+    console.log("Error");
+    callback(this.RESULT_UNLIKELY_ERROR);
+  }
 };
 
 module.exports = ParkCharacteristic;
