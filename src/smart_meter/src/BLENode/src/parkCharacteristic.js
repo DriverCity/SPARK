@@ -74,16 +74,16 @@ ParkCharacteristic.prototype.onReadRequest = function(offset, callback) {
 };
 
 
-ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
-  console.log('ParkCharacteristic - onWriteRequest - Received (' + data.toString("utf-8") + ')');
+ParkCharacteristic.prototype.onWriteRequest = function(dataReceived, offset, withoutResponse, callback) {
+  console.log('ParkCharacteristic - onWriteRequest - Received : ' + dataReceived.toString("utf-8"));
 
   // Synchronisation variables
   var sync = true;
-  var dataFromMeter = null;
+  var data = null;
 
   // Fifo queue
   var fifoPathInput = __dirname + '/../BLEInputFifo';
-  var input = data.toString("utf-8");
+  var input = dataReceived.toString("utf-8");
 
   var fifoPathResponse = __dirname + '/../BLEResponseFifo';
   var outputFifo = fs.createReadStream(fifoPathResponse);
@@ -102,8 +102,8 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
   });
 
   // Retrieve info from fifo
-  outputFifo.on('dataFromMeter', function(result) {
-    dataFromMeter = result;
+  outputFifo.on('data', function(result) {
+    data = result;
     sync = false;
   });
 
@@ -112,10 +112,10 @@ ParkCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResp
     require('deasync').sleep(100);
   }
 
-  dataFromMeter = (""+dataFromMeter).replace(/(\r\n|\n|\r)/gm,"");
+  data = (""+data).replace(/(\r\n|\n|\r)/gm,"");
 
-  if(dataFromMeter == "OK") {
-    callback(this.RESULT_SUCCESS, bufferFormat);
+  if(data == "OK") {
+    callback(this.RESULT_SUCCESS);
   } else {
     callback(this.RESULT_UNLIKELY_ERROR);
   }
