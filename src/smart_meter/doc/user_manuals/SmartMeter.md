@@ -43,7 +43,7 @@ eventDb | Name of SQLite database for temporarily storing parking events. | Not 
 priceAPI | Http address for quering parking prices. | This address is supposed to be usable just appending area id to the address. | priceAPI;https://spark2-150308.firebaseio.com/parkingArea.json?orderBy=%22area_number%22&equalTo=
 parkingEventAPI | Http address of REST API for registering a parking event. | | parkingEventAPI;https://spark2-150308.appspot-preview.com/api/v1.0/parkingEvent/
 logFile | Name of application output log file | Log file does not need to exist. Directory does. Default directory is the bin-directory. | logFile;log.log
-demoMode | Switch demo mode on (1) or off (0). This parameter is optional. Demo-mode is off by default. | Demo mode allows creating rare situations that would be hard to create otherwise. Intended for development purposes only. | demoMode;1
+demoMode | Switch demo mode on (1) or off (0). This parameter is optional. Demo-mode is off by default. | [See here for more information.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/demo_mode.md) | demoMode;1
 
 The order of parameters does not matter. Each key-value pair has to be on its own line. There may be empty lines and comments starting with '#'.
 As a whole, global.txt may look like this:
