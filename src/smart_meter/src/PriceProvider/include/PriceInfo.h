@@ -29,7 +29,7 @@ public:
      * @param pricePerHour Price per hour in EUR.
      * @param timeLimit Maximum parking time in minutes.
      * @param resolution Time resolution in minutes.
-     * @pre @p timeLimit >= 0, @p resolution > 0.
+     * @post Created object is valid, if @p pricePerHour >= 0, @p timeLimit >= 0 and @p resolution > 0.
      */
     PriceInfo(float pricePerHour, int timeLimit, int resolution);
 
@@ -62,6 +62,15 @@ public:
      * @return String representation.
      */
     std::string toString() const;
+
+    /**
+     * @brief Create PriceInfo from string representation.
+     * @param str Input string.
+     * @param separator Separator character.
+     * @return PriceInfo represented by @p str,
+     *  or invalid PriceInfo, if @p str does not represent a valid object.
+     */
+    static PriceInfo fromString(const std::string& str, char separator = ';');
 
 
 private:
