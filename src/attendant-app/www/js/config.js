@@ -1,4 +1,15 @@
-var app = angular.module('starter.controllers', ['ionic','firebase','ngCordova']);
+var app = angular.module('starter.controllers', ['ionic','firebase','ngCordova','ionic-timepicker']);
+
+app.config(function (ionicTimePickerProvider) {
+  var timePickerObj = {
+    inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+    format: 12,
+    step: 15,
+    setLabel: 'Set',
+    closeLabel: 'Close'
+  };
+  ionicTimePickerProvider.configTimePicker(timePickerObj);
+});
 
 /**********************************
  * [DIRECTIVE] TEXTAREA
