@@ -10,8 +10,10 @@ from firebase_io.parking_event_repo import ParkingEventRepository
 from utils import TokenUtils
 
 # Constants used in testing
-root_event_node = 'parkingAreaParkingEvent'
-root_notification_note = 'parkingEventNotification'
+root_event_node = ParkingEventRepository._parking_event_ODS_node_name
+root_lookup_node = ParkingEventRepository._parking_event_ODS_lookup_node_name
+root_notification_note = ParkingEventRepository._parking_event_notification_store_node_name
+
 register_number = 'ABC-123'
 
 paid_parking_area_id = '777'
@@ -20,8 +22,11 @@ paid_parking_payment_receipt = 'valid_test_hash'
 
 parking_disc_parking_area_id = 'PARKING_DISC_AREA'
 
+secondary_area_id = '888'
+
 
 class TestParkingEventIO(TestCase):
+
     def setUp(self):
         self.parking_event_repo = ParkingEventRepository()
 
@@ -41,11 +46,14 @@ class TestParkingEventIO(TestCase):
 
         # Assert
         # > parkingAreaParkingEvent
-        expected_token = json.loads(result)['name']
-        actual_token, actual_event = self.parking_event_repo.db. \
-            get_single_event_key_and_value(parking_disc_parking_area_id)
+        expected_token = json.loads(result)['odsId']
+        actual_token, actual_event = self.parking_event_repo.db \
+            .get_single_event_key_and_value(parking_disc_parking_area_id)
         self.assertEqual(expected_token, actual_token)
         self.assertEqual(expected_parking_context_type, actual_event['parkingType'])
+
+        # > parkingEventLookup
+        self.__assert_lookup_matches(result, actual_token)
 
         # > parkingEventNotification
         actual_notification = self.parking_event_repo.db.get_notification(expected_token)
@@ -76,12 +84,15 @@ class TestParkingEventIO(TestCase):
 
         # Assert
         # > parkingAreaParkingEvent
-        expected_token = json.loads(result)['name']
+        expected_token = json.loads(result)['odsId']
         actual_token, actual_event = self.parking_event_repo.db.\
             get_single_event_key_and_value(paid_parking_area_id)
         self.assertEqual(expected_token, actual_token)
         self.assertEqual(expected_parking_duration_in_minutes, actual_event['parkingDurationInMinutes'])
         self.assertEqual(expected_parking_context_type, actual_event['parkingType'])
+
+        # > parkingEventLookup
+        self.__assert_lookup_matches(result, actual_token)
 
         # > parkingEventNotification
         actual_notification = self.parking_event_repo.db.get_notification(expected_token)
@@ -90,6 +101,57 @@ class TestParkingEventIO(TestCase):
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
+
+    def test_store_paid_parking_over_previous(self):
+
+        # Arrange
+        self.parking_event_repo.db = MockDb().with_paid_init()
+
+        expected_parking_context_type = 'PAID'
+        expected_parking_duration_in_minutes = 123
+
+        request_json = TestUtils.build_request(
+            parking_context_type=expected_parking_context_type,
+            parking_duration_in_minutes=expected_parking_duration_in_minutes,
+            parking_area_id=paid_parking_area_id,
+            payment_method_type=paid_parking_payment_method_type,
+            payment_receipt=paid_parking_payment_receipt
+        )
+
+        # Act
+        result_0 = self.parking_event_repo.store_parking_event(request_json)
+
+        # Add over existing
+        request_json['parkingAreaId'] = 777
+        result = self.parking_event_repo.store_parking_event(request_json)
+
+        # Assert
+        # > parkingAreaParkingEvent
+        expected_token = json.loads(result)['odsId']
+        actual_token, actual_event = self.parking_event_repo.db. \
+            get_single_event_key_and_value(paid_parking_area_id)
+        self.assertEqual(expected_token, actual_token)
+        self.assertEqual(expected_parking_duration_in_minutes, actual_event['parkingDurationInMinutes'])
+        self.assertEqual(expected_parking_context_type, actual_event['parkingType'])
+
+        # > parkingEventLookup
+        self.__assert_lookup_matches(result, actual_token)
+
+        # > parkingEventNotification
+        actual_notification = self.parking_event_repo.db.get_notification(expected_token)
+        self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
+        self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
+        self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
+        self.assertEqual(expected_token, actual_notification['parkingEventId'])
+        self.assertEqual(register_number, actual_notification['registerNumber'])
+
+    def __assert_lookup_matches(self, result, expected_token):
+        expected_lookup_id = json.loads(result)['odsLookupId']
+        actual_lookup_id, lookup = self.parking_event_repo.db \
+            .get_single_lookup_key_and_value(parking_disc_parking_area_id)
+        actual_lookup_token = lookup['parkingAreaParkingEventId']
+        self.assertEqual(expected_lookup_id, actual_lookup_id)
+        self.assertEqual(expected_token, actual_lookup_token)
 
 
 class TestUtils():
@@ -125,19 +187,69 @@ class TestUtils():
 
 class MockDb():
     class Node():
+        class KeyValue():
+            def __init__(self, key, value):
+                self.__key = key
+                self.__value = value
+            def key(self):
+                return self.__key
+            def val(self):
+                return self.__value
+
         def __init__(self, children=None):
+            self.parent = None
+            self.parent_key = None
+            self.__filter_by_child = None
             if children is not None:
                 self.json = children
+                for k, v in children.items():
+                    if isinstance(v, MockDb.Node):
+                        v.parent = self
+                        v.parent_key = k
             else:
                 self.json = {}
 
         def child(self, name):
+            if self.json.has_key(name) is False:
+                self.json[name] = MockDb.Node()
             return self.json[name]
 
         def push(self, inner_node):
             token = TokenUtils.get_uuid()
             self.json[token] = inner_node
             return {'name': token}
+
+        def order_by_child(self, name):
+            self.__filter_by_child = name
+            return self
+
+        def start_at(self, value):
+            children = [(k, v) for k, v in self.json.items() if k == self.__filter_by_child and v == value]
+            self.json = {}
+            for k, v in children:
+                self.json[k] = v
+            return self
+
+        def end_at(self, value):
+            return self
+
+        def get(self):
+            return self
+
+        def set(self, json_value):
+            self.json = {}
+            for k, v in json_value.items():
+                self.json[k] = v
+
+        def each(self):
+            return [MockDb.Node.KeyValue(k, v) for k, v in self.json.items()]
+
+        def val(self):
+            if any(self.json) is False: return None
+            return self.json
+
+        def remove(self):
+            del self
 
     def __init__(self):
         self.__root = None
@@ -146,15 +258,22 @@ class MockDb():
     def child(self, name):
         return self.__root.json[name]
 
-    def get_events(self, area):
+    def get_event(self, area, odsId):
         return self.child(root_event_node)\
             .child(area)\
-            .child(register_number)\
-            .json
+            .child(odsId)
+
+    def get_lookup(self, area, odsId):
+        return self.child(root_lookup_node)\
+            .child(odsId)
 
     def get_single_event_key_and_value(self, area):
-        events = self.get_events(area)
-        for k, v in events.items(): return k, v;
+        event = self.get_event(area, register_number)
+        return register_number, event.json
+
+    def get_single_lookup_key_and_value(self, area):
+        lookup = self.get_lookup(area, register_number)
+        return register_number, lookup.json
 
     def get_notification(self, token):
         return [v for k, v in self.child(root_notification_note).json.items() if v['parkingEventId'] == token][0]
@@ -170,8 +289,14 @@ class MockDb():
             root_event_node: MockDb.Node({
                 area_id: MockDb.Node({
                     register_number: MockDb.Node()
+                }),
+                secondary_area_id: MockDb.Node({
+                    register_number: MockDb.Node()
                 })
             }),
-            root_notification_note: MockDb.Node()
+            root_notification_note: MockDb.Node(),
+            root_lookup_node: MockDb.Node({
+                register_number: MockDb.Node()
+            })
         })
         return self
