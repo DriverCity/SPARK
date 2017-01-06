@@ -37,6 +37,7 @@ Value | Explanation
 1 | Request to the cloud times out. The request is not actually sent to the cloud, but smart meter will write a timeout error message to BLENode's response fifo.
 2 | Payment token is invalid. The request is not actually sent to the cloud, but smart meter will write invalid token error message to BLENode's response fifo.
 3 | Other error in the cloud. The request is not actually sent to the cloud, but smart meter will write error message to BLENode's response fifo.
+4 | Forced Ok response. The request is not actually sent to the cloud, but smart meter will write OK message to BLENode's response fifo.
 any other | Unknown command. Smart meter responds with error message about unknown command.
 
 Example configuration:

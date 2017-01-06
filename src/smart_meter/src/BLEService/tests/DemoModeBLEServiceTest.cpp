@@ -206,6 +206,23 @@ TEST_F(DemoModeBLEServiceTest, OtherErrorResponse)
 }
 
 
+TEST_F(DemoModeBLEServiceTest, ForcedOkResponse)
+{
+    spark::DemoModeBLEService ble(INPUT_FIFO, RESPONSE_FIFO, std::string(TEST_DATA_DIR)+"/ForcedOkDemo.txt");
+    m_verifier->m_result = spark::IVerifyParking::TIMEOUT;
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 120, 1);
+    spark::ParkingEvent e("ABC123", "2000-01-01 10:00", 90, spark::PaymentToken("SERVICE_1", "invalid"));
+
+    ble.start();
+    writeInputFifo(e.toString() + "\n");
+    sleep(2);
+    std::string response = readResponseFifo();
+
+    EXPECT_EQ("OK\n", response);
+    EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
+}
+
+
 TEST_F(DemoModeBLEServiceTest, UnknownCommand)
 {
     spark::DemoModeBLEService ble(INPUT_FIFO, RESPONSE_FIFO, std::string(TEST_DATA_DIR)+"/UnknownDemo.txt");

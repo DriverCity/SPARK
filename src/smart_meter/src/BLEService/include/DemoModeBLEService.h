@@ -25,7 +25,8 @@ public:
         OK = 0,
         TIMEOUT,
         INVALID_TOKEN,
-        OTHER
+        OTHER_ERROR,
+        FORCED_OK
     };
 
     DemoModeBLEService(const std::string& inputFifo,

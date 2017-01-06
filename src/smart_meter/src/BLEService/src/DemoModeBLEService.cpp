@@ -76,9 +76,13 @@ void DemoModeBLEService::hanleDemoValue(int demoValue, const std::string& msg)
         LOG_DEBUG("Invalid token demo");
         sendResponse("Error: Payment token is invalid.");
     }
-    else if (demoValue == (int)DemoResult::OTHER){
+    else if (demoValue == (int)DemoResult::OTHER_ERROR){
         LOG_DEBUG("Other error demo");
         sendResponse("Error: Unknown error.");
+    }
+    else if (demoValue == (int)DemoResult::FORCED_OK){
+        LOG_DEBUG("Forced Ok demo");
+        sendResponse("OK");
     }
     else {
         LOG_DEBUG("Unknown command demo");
@@ -90,11 +94,9 @@ void DemoModeBLEService::hanleDemoValue(int demoValue, const std::string& msg)
 void DemoModeBLEService::handlePrice()
 {
     if (m_demoPrice.isValid()){
-        LOG_DEBUG("Foo");
         sendResponse(m_demoPrice.toString());
     }
     else {
-        LOG_DEBUG("Bar");
         BLEService::handleMessage(PRICE_CMD);
     }
 }
