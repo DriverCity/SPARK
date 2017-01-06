@@ -5,6 +5,10 @@ from utils import TimeUtils
 
 class ParkingEventRepository(FirebaseIO):
 
+    __parking_event_ODS_node_name = 'parkingAreaParkingEvent'
+    __parking_event_ODS_lookup_node_name = 'parkingEventLookup'
+    __parking_event_notification_store_node_name = 'parkingEventNotification'
+
     def __init__(self):
         FirebaseIO.__init__(self)
 
@@ -13,7 +17,8 @@ class ParkingEventRepository(FirebaseIO):
         parking_context_type = request_json['parkingContextType']
         parking_event_json = {
             'timestamp': TimeUtils.get_local_timestamp(),
-            'parkingType': parking_context_type
+            'parkingType': parking_context_type,
+            'registerNumber': register_number
         }
 
         if parking_context_type == 'PAID':
@@ -22,10 +27,18 @@ class ParkingEventRepository(FirebaseIO):
         elif parking_context_type == 'PARKING_DISC':
             parking_area_id = 'PARKING_DISC_AREA'
 
+        # TODO: remove previous event for the register number if one exists and explain why
+        previous_parking_event_parking_areas = self.db\
+            .child(ParkingEventRepository.__parking_event_ODS_lookup_node_name)\
+            .order_by_child('registerNumber')\
+            .start_at(register_number).end_at(register_number)\
+            .get()
+
+        
+
         results = self.db\
-            .child('parkingAreaParkingEvent')\
+            .child(ParkingEventRepository.__parking_event_ODS_node_name)\
             .child(parking_area_id)\
-            .child(register_number)\
             .push(parking_event_json)
 
         # Store notification about the event for event consumption
@@ -41,13 +54,13 @@ class ParkingEventRepository(FirebaseIO):
         }
 
         notification_result = self.db\
-            .child('parkingEventNotification')\
+            .child(ParkingEventRepository.__parking_event_notification_store_node_name)\
             .push(notification_json)
 
         return json.dumps(results)
 
     def remove_dead_events(self):
-        notifications_ref = self.db.child('parkingEventNotification')
+        notifications_ref = self.db.child(ParkingEventRepository.__parking_event_notification_store_node_name)
         # TODO make time configurable
         dead_notifications = notifications_ref\
             .order_by_child('liveUntilTime')\
@@ -59,21 +72,23 @@ class ParkingEventRepository(FirebaseIO):
         for dn_id, dn in dead_notifications:
 
             # Remove dead events
-            self.db.child('parkingAreaParkingEvent')\
+            self.db.child(ParkingEventRepository.__parking_event_ODS_node_name)\
                 .child(dn['parkingAreaId'])\
                 .child(dn['registerNumber'])\
                 .child(dn['parkingEventId'])\
                 .remove()
 
+            # TODO: Remove from ODS registry
+
             # Remove dead notifications
-            self.db.child('parkingEventNotification')\
+            self.db.child(ParkingEventRepository.__parking_event_notification_store_node_name)\
                 .child(dn_id)\
                 .remove()
 
     # consumer is either LongTermDataStore or OccupancyAnalysis
     def consume_new_parking_events_by(self, consumer):
         consumed_notifications = self.db\
-            .child('parkingEventNotification')\
+            .child(ParkingEventRepository.__parking_event_notification_store_node_name)\
             .order_by_child('isConsumedBy' + consumer)\
             .start_at(False).end_at(False)\
             .get()
@@ -84,7 +99,7 @@ class ParkingEventRepository(FirebaseIO):
 
             # Get parking event for the result set
             parking_event = self.db\
-                .child('parkingAreaParkingEvent')\
+                .child(ParkingEventRepository.__parking_event_ODS_node_name)\
                 .child(cn.val()['parkingAreaId'])\
                 .child(cn.val()['registerNumber'])\
                 .child(cn.val()['parkingEventId'])\
@@ -96,7 +111,7 @@ class ParkingEventRepository(FirebaseIO):
             # TODO: form transaction
             # Set parking event as consumed
             self.db\
-                .child('parkingEventNotification')\
+                .child(ParkingEventRepository.__parking_event_notification_store_node_name)\
                 .child(cn.key())\
                 .update({'isConsumedBy'+consumer:True})
 
