@@ -113,10 +113,13 @@ ParkCharacteristic.prototype.onWriteRequest = function(dataReceived, offset, wit
   }
 
   data = (""+data).replace(/(\r\n|\n|\r)/gm,"");
+  console.log(data);
 
-  if(data == "OK") {
+  if(data == "OK\0") {
+    console.log("Success");
     callback(this.RESULT_SUCCESS);
   } else {
+    console.log("Error");
     callback(this.RESULT_UNLIKELY_ERROR);
   }
 };

@@ -149,7 +149,7 @@ void BLEService::handleMessage(const std::string& msg)
 
 void BLEService::sendResponse(std::string msg)
 {
-    msg += "\0";
+    msg += "\n\0";
     int filedesc = open( m_responseFifo.c_str(), O_WRONLY );
     write(filedesc, msg.c_str(), msg.length()+1);
 }

@@ -88,7 +88,7 @@ TEST_F(DemoModeBLEServiceTest, PriceRequest)
     writeInputFifo("price\n");
     sleep(2);
     std::string response = readResponseFifo();
-    EXPECT_EQ(m_priceProvider->m_info.toString(), response);
+    EXPECT_EQ(m_priceProvider->m_info.toString()+"\n", response);
 }
 
 
@@ -105,7 +105,7 @@ TEST_F(DemoModeBLEServiceTest, NoDemoResponse)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("OK", response);
+    EXPECT_EQ("OK\n", response);
     EXPECT_EQ(e.registerNumber(), m_verifier->m_lastEvent.registerNumber());
     EXPECT_EQ(e.startingTime(), m_verifier->m_lastEvent.startingTime());
     EXPECT_EQ(e.duration(), m_verifier->m_lastEvent.duration());
@@ -127,7 +127,7 @@ TEST_F(DemoModeBLEServiceTest, OkDemoResponse)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("OK", response);
+    EXPECT_EQ("OK\n", response);
     EXPECT_EQ(e.registerNumber(), m_verifier->m_lastEvent.registerNumber());
     EXPECT_EQ(e.startingTime(), m_verifier->m_lastEvent.startingTime());
     EXPECT_EQ(e.duration(), m_verifier->m_lastEvent.duration());
@@ -149,7 +149,7 @@ TEST_F(DemoModeBLEServiceTest, TimeoutResponse)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("Error: Request timed out.", response);
+    EXPECT_EQ("Error: Request timed out.\n", response);
     EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
 }
 
@@ -167,7 +167,7 @@ TEST_F(DemoModeBLEServiceTest, InvalidTokenResponse)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("Error: Payment token is invalid.", response);
+    EXPECT_EQ("Error: Payment token is invalid.\n", response);
     EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
 }
 
@@ -185,7 +185,7 @@ TEST_F(DemoModeBLEServiceTest, OtherErrorResponse)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("Error: Unknown error.", response);
+    EXPECT_EQ("Error: Unknown error.\n", response);
     EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
 }
 
@@ -203,7 +203,7 @@ TEST_F(DemoModeBLEServiceTest, UnknownCommand)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("Error: Unknown command.", response);
+    EXPECT_EQ("Error: Unknown command.\n", response);
     EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
 }
 
@@ -221,99 +221,7 @@ TEST_F(DemoModeBLEServiceTest, ConfigError)
     sleep(2);
     std::string response = readResponseFifo();
 
-    EXPECT_EQ("Error: Invalid demo configuration.", response);
+    EXPECT_EQ("Error: Invalid demo configuration.\n", response);
     EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
 }
 
-
-/*
-TEST_F(DemoModeBLEServiceTest, AllResponses)
-{
-    spark::DemoModeBLEService ble(INPUT_FIFO, RESPONSE_FIFO, std::string(TEST_DATA_DIR)+"/allResponses.txt");
-    ble.init(m_priceProvider.get(), m_verifier.get());
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 120, 1);
-    spark::ParkingEvent e("ABC123", "2000-01-01 10:00", 90, spark::PaymentToken("SERVICE_1", "valid_test_hash"));
-    ble.start();
-
-    // 1st is ok demo
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        spark::ParkingEvent e("ABC123", "2000-01-01 10:00", 90, spark::PaymentToken("real_service", "real_token"));
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("OK", response);
-        EXPECT_EQ(e.registerNumber(), m_verifier->m_lastEvent.registerNumber());
-        EXPECT_EQ(e.startingTime(), m_verifier->m_lastEvent.startingTime());
-        EXPECT_EQ(e.duration(), m_verifier->m_lastEvent.duration());
-        EXPECT_EQ("valid_test_hash", m_verifier->m_lastEvent.token().uid());
-        EXPECT_EQ("SERVICE_1", m_verifier->m_lastEvent.token().verifier());
-    }
-
-    // 2nd has no demo value.
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        spark::ParkingEvent e("ABC123", "2000-01-01 10:00", 90, spark::PaymentToken("real_service", "real_token"));
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("OK", response);
-        EXPECT_EQ(e.registerNumber(), m_verifier->m_lastEvent.registerNumber());
-        EXPECT_EQ(e.startingTime(), m_verifier->m_lastEvent.startingTime());
-        EXPECT_EQ(e.duration(), m_verifier->m_lastEvent.duration());
-        EXPECT_EQ(e.token().uid(), m_verifier->m_lastEvent.token().uid());
-        EXPECT_EQ(e.token().verifier(), m_verifier->m_lastEvent.token().verifier());
-        m_verifier->reset();
-    }
-
-    // 3rd is a timeout demo
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("Error: Request timed out.", response);
-        EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
-    }
-
-    // 4th is invalid token demo
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("Error: Payment token is invalid.", response);
-        EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
-    }
-
-    // 5th is a config error
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("Error: Invalid demo configuration.", response);
-        EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
-    }
-
-    // 6th is an unknown command demo.
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("Error: Unknown command.", response);
-        EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
-    }
-
-    // 7th is an unknown error demo
-    {
-        m_verifier->m_result = spark::IVerifyParking::OK;
-        writeInputFifo(e.toString() + "\n");
-        sleep(2);
-        std::string response = readResponseFifo();
-        EXPECT_EQ("Error: Unknown error.", response);
-        EXPECT_FALSE(m_verifier->m_lastEvent.isValid());
-    }
-}
-*/
