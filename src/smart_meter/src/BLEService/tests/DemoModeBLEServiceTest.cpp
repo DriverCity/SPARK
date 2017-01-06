@@ -78,9 +78,9 @@ protected:
 };
 
 
-TEST_F(DemoModeBLEServiceTest, PriceRequest)
+TEST_F(DemoModeBLEServiceTest, PriceRequestNormal)
 {
-    spark::DemoModeBLEService ble(INPUT_FIFO, RESPONSE_FIFO, std::string(TEST_DATA_DIR)+"/allResponses.txt");
+    spark::DemoModeBLEService ble(INPUT_FIFO, RESPONSE_FIFO, std::string(TEST_DATA_DIR)+"/empty.txt");
     ble.init(m_priceProvider.get(), m_verifier.get());
     m_priceProvider->m_info = spark::PriceInfo(1.2, 60, 1);
 
@@ -89,6 +89,22 @@ TEST_F(DemoModeBLEServiceTest, PriceRequest)
     sleep(2);
     std::string response = readResponseFifo();
     EXPECT_EQ(m_priceProvider->m_info.toString()+"\n", response);
+}
+
+
+TEST_F(DemoModeBLEServiceTest, PriceRequestDemo)
+{
+    spark::DemoModeBLEService ble(INPUT_FIFO, RESPONSE_FIFO, std::string(TEST_DATA_DIR)+"/PriceDemo.txt");
+    ble.init(m_priceProvider.get(), m_verifier.get());
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 60, 1);
+
+    ble.start();
+    writeInputFifo("price\n");
+    sleep(2);
+    std::string response = readResponseFifo();
+
+    spark::PriceInfo expected(1.8, 0, 10);
+    EXPECT_EQ(expected.toString()+"\n", response);
 }
 
 

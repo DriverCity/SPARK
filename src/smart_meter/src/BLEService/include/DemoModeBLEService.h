@@ -44,8 +44,11 @@ private:
 
     ConfigurationReader::ConfigMap m_demoConf;
     int m_step;
+    PriceInfo m_demoPrice;
 
     void hanleDemoValue(int demoValue, const std::string& msg);
+    void handlePrice();
+    PriceInfo parsePrice(std::string str) const;
 };
 
 

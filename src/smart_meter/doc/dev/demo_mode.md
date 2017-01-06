@@ -17,9 +17,13 @@ successful build. Edit this file to change demo mode settings. The configuration
 
 - Empty lines, which are ignored.
 - Comments starting with '#', which are ignored.
+- Price specification.
 - Key-value pairs separated with semicolon.
 
-Each key-value pair will specify the number of parking event registering request and it's demonstrated value. The key
+Price specification sets a predefined value for parking price information. Give price information in format **price;price per hour (EUR):time limit (min):resolution (min)**,
+e.g. **price;1.2:120:1**. If price information is left unspecified, price is fetched from firebase like normally.
+
+Every other key-value pair will specify the number of parking event registering request and it's demonstrated value. The key
 represents the number of parking registering request. The first parking event reqistering request is indexed as '0', 
 and each request after that will increase the index by one. Not all requests need to be defined. 
 If an index is missing from configuration, smart meter will handle requests as in normal mode.
@@ -38,6 +42,9 @@ any other | Unknown command. Smart meter responds with error message about unkno
 Example configuration:
 ```
 # My demo config (config/demoConfig.txt)
+
+# Price is not fetched from cloud.
+price;1.2:120:1
 
 # First request's payment token will be replaced with a valid test token
 0;0
