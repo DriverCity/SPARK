@@ -113,7 +113,7 @@ class TestParkingEventIO(TestCase):
         request_json = TestUtils.build_request(
             parking_context_type=expected_parking_context_type,
             parking_duration_in_minutes=expected_parking_duration_in_minutes,
-            parking_area_id=paid_parking_area_id,
+            parking_area_id=secondary_area_id,
             payment_method_type=paid_parking_payment_method_type,
             payment_receipt=paid_parking_payment_receipt
         )
@@ -122,7 +122,7 @@ class TestParkingEventIO(TestCase):
         result_0 = self.parking_event_repo.store_parking_event(request_json)
 
         # Add over existing
-        request_json['parkingAreaId'] = 777
+        request_json['parkingAreaId'] = paid_parking_area_id
         result = self.parking_event_repo.store_parking_event(request_json)
 
         # Assert

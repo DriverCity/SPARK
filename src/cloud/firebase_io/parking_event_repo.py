@@ -53,7 +53,7 @@ class ParkingEventRepository(FirebaseIO):
         lookup_event = self.db \
             .child(ParkingEventRepository._parking_event_ODS_lookup_node_name) \
             .child(register_number) \
-            .val()
+            .get().val()
 
         if lookup_event is not None:
             self.__remove_parking_events_from_ods_by_lookup_events([lookup_event])
