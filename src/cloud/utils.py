@@ -22,6 +22,7 @@ class TimeUtils():
     def get_local_datestamp():
         return TimeUtils.__get_local_now().strftime('%Y-%m-%d')
 
+
 class TokenUtils():
 
     @staticmethod
