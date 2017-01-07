@@ -2,7 +2,7 @@ import json
 from pyrebase import pyrebase
 
 
-class FirebaseIO():
+class FirebaseRepo():
 
     def __init__(self):
 

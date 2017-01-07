@@ -6,7 +6,7 @@
 import json
 from unittest import TestCase
 
-from firebase_io.parking_event_repo import ParkingEventRepository
+from parking_event_repo import ParkingEventRepository
 from utils import TokenUtils
 
 # Constants used in testing

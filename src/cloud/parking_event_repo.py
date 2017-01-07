@@ -1,16 +1,17 @@
 import json
-from firebase_io import FirebaseIO
+
+from firebase_repo import FirebaseRepo
 from utils import TimeUtils
 
 
-class ParkingEventRepository(FirebaseIO):
+class ParkingEventRepository(FirebaseRepo):
 
     _parking_event_ODS_node_name = 'parkingAreaParkingEvent'
     _parking_event_ODS_lookup_node_name = 'parkingEventLookup'
     _parking_event_notification_store_node_name = 'parkingEventNotification'
 
     def __init__(self):
-        FirebaseIO.__init__(self)
+        FirebaseRepo.__init__(self)
 
     def __remove_lookup_events_by_ods_key(self, ods_key):
         self.db \
