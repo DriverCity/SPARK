@@ -56,7 +56,7 @@ class TestParkingEventIO(TestCase):
         self.__assert_lookup_matches(result, actual_token)
 
         # > parkingEventNotification
-        actual_notification = self.parking_event_repo.db.get_notification(expected_token)
+        actual_notification = self.parking_event_repo.db.get_notification(parking_disc_parking_area_id, expected_token)
         self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
         self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
         self.assertEqual(parking_disc_parking_area_id, actual_notification['parkingAreaId'])
@@ -95,7 +95,7 @@ class TestParkingEventIO(TestCase):
         self.__assert_lookup_matches(result, actual_token)
 
         # > parkingEventNotification
-        actual_notification = self.parking_event_repo.db.get_notification(expected_token)
+        actual_notification = self.parking_event_repo.db.get_notification(paid_parking_area_id, expected_token)
         self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
         self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
@@ -137,13 +137,15 @@ class TestParkingEventIO(TestCase):
         # > parkingEventLookup
         self.__assert_lookup_matches(result, actual_token)
 
-        # > parkingEventNotification
-        actual_notification = self.parking_event_repo.db.get_notification(expected_token)
+        # > parkingEventNotifications
+        actual_notification = self.parking_event_repo.db.get_notification(paid_parking_area_id, expected_token)
         self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
         self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
+        secondary_notification = self.parking_event_repo.db.get_notification(secondary_area_id, expected_token)
+        self.assertEqual(secondary_area_id, secondary_notification['parkingAreaId'])
 
     def __assert_lookup_matches(self, result, expected_token):
         expected_lookup_id = json.loads(result)['odsLookupId']
@@ -275,8 +277,8 @@ class MockDb():
         lookup = self.get_lookup(area, register_number)
         return register_number, lookup.json
 
-    def get_notification(self, token):
-        return [v for k, v in self.child(root_notification_note).json.items() if v['parkingEventId'] == token][0]
+    def get_notification(self, areaId, token):
+        return [v for k, v in self.child(root_notification_note).json.items() if v['parkingEventId'] == token and v['parkingAreaId'] == areaId][0]
 
     def with_paid_init(self):
         return self.__with_basic_area_id_init(paid_parking_area_id)
