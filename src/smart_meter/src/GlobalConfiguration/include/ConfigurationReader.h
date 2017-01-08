@@ -24,7 +24,14 @@ public:
      */
     typedef std::map<std::string,std::string> ConfigMap;
 
+    /**
+     * @brief Constructor.
+     */
     ConfigurationReader();
+
+    /**
+     * @brief Destructor.
+     */
     ~ConfigurationReader();
 
     /**

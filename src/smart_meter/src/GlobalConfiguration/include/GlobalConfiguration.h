@@ -20,6 +20,9 @@ class GlobalConfiguration
 {
 public:
 
+    /**
+     * @brief Destructor.
+     */
     ~GlobalConfiguration();
 
     /**

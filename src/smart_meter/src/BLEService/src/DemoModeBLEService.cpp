@@ -1,6 +1,9 @@
 
 #include "DemoModeBLEService.h"
 #include "Logger/Logger.h"
+#include <algorithm>
+
+#define PRICE_CMD "price"
 
 namespace spark
 {
@@ -10,9 +13,14 @@ DemoModeBLEService::DemoModeBLEService(const std::string &inputFifo,
                                        const std::string &responseFifo,
                                        const std::string& demoConfFile) :
 
-    BLEService(inputFifo, responseFifo), m_demoConf(), m_step(0)
+    BLEService(inputFifo, responseFifo), m_demoConf(), m_step(0), m_demoPrice()
 {
     m_demoConf = ConfigurationReader().readFile(demoConfFile);
+
+    if (m_demoConf.find(PRICE_CMD) != m_demoConf.end()){
+        m_demoPrice = PriceInfo::fromString(m_demoConf[PRICE_CMD], ':');
+    }
+
     LOG_DEBUG("Created BLEService in demo mode.");
 }
 
@@ -26,8 +34,8 @@ void DemoModeBLEService::handleMessage(const std::string &msg)
 {
     std::string step_str = std::to_string(m_step);
 
-    if (msg == "price"){
-        BLEService::handleMessage(msg);
+    if (msg == PRICE_CMD){
+        handlePrice();
     }
     else if (m_demoConf.find(step_str) == m_demoConf.end()){
         BLEService::handleMessage(msg);
@@ -68,13 +76,28 @@ void DemoModeBLEService::hanleDemoValue(int demoValue, const std::string& msg)
         LOG_DEBUG("Invalid token demo");
         sendResponse("Error: Payment token is invalid.");
     }
-    else if (demoValue == (int)DemoResult::OTHER){
+    else if (demoValue == (int)DemoResult::OTHER_ERROR){
         LOG_DEBUG("Other error demo");
         sendResponse("Error: Unknown error.");
+    }
+    else if (demoValue == (int)DemoResult::FORCED_OK){
+        LOG_DEBUG("Forced Ok demo");
+        sendResponse("OK");
     }
     else {
         LOG_DEBUG("Unknown command demo");
         sendResponse(("Error: Unknown command."));
+    }
+}
+
+
+void DemoModeBLEService::handlePrice()
+{
+    if (m_demoPrice.isValid()){
+        sendResponse(m_demoPrice.toString());
+    }
+    else {
+        BLEService::handleMessage(PRICE_CMD);
     }
 }
 

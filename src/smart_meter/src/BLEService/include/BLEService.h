@@ -23,9 +23,14 @@ public:
 
     /**
      * @brief Constructor. Call init before staring.
+     * @param inputFifo Path to fifo for incoming messages.
+     * @param responseFifo Path to fifo for response messages.
      */
     BLEService(const std::string& inputFifo, const std::string& responseFifo);
 
+    /**
+     * @brief Destructor.
+     */
     virtual ~BLEService();
 
     // Implements IBLEService
