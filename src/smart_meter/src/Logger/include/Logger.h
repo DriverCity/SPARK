@@ -12,11 +12,20 @@
 #include <sstream>
 
 #ifndef COMPONENT_NAME
+/**
+ * @def COMPONENT_NAME
+ * @brief If Component name is not defined, use 'unknown' as component name.
+ */
 #define COMPONENT_NAME "unknown"
 #endif
 
 
-// Common part of implementation for macros below
+/**
+ * @def LOG_IMPLEMENTATION(identifier, msg)
+ * @brief Common part of implementation for macros below. For internal use only.
+ * @param identifier Message type.
+ * @param msg Message to be printed.
+ */
 #define LOG_IMPLEMENTATION(identifier, msg)\
 {\
     std::ostringstream logger_impl_oss; \
@@ -28,14 +37,22 @@
 }
 
 
-// Convenience macro. Prints a debug message with component name, file name and line number.
+/**
+ * @def LOG_DEBUG(msg)
+ * @brief Convenience macro. Prints a debug message with component name, file name and line number.
+ * @param msg Message to be printed.
+ */
 #define LOG_DEBUG(msg) \
 {\
     LOG_IMPLEMENTATION(spark::Logger::DEBUG_MSG, msg) \
 }
 
 
-// Convenience macro. Prints an error message with component name, file name and line number.
+/**
+ * @def LOG_ERROR(msg)
+ * @brief Convenience macro. Prints an error message with component name, file name and line number.
+ * @param msg Message to be printed.
+ */
 #define LOG_ERROR(msg) \
 {\
     LOG_IMPLEMENTATION(spark::Logger::ERROR_MSG, msg) \

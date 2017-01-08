@@ -10,7 +10,9 @@
 namespace spark
 {
 
-
+/**
+ * @brief Implementation for the IVerifyParking class.
+ */
 class VerifyParking : public spark::IVerifyParking
 {
 public:
@@ -46,15 +48,29 @@ public:
     Result verify(const ParkingEvent& event);
 
 
-
+    /**
+     * @brief Get used CloudService.
+     * @return Pointer to CloudService.
+     */
     ICloudService* getCloudService() const;
 
+    /**
+     * @brief Get parking database.
+     * @return Pointer to parking database.
+     */
     IParkingDatabase* getDbPointer() const;
 
 
-
+    /**
+     * @brief Set CloudService
+     * @param cloudService New CloudService.
+     */
     void setCloudService(ICloudService* cloudService);
 
+    /**
+     * @brief Set parking database.
+     * @param db New ParkingDatabase.
+     */
     void setDbPointer(IParkingDatabase* db);
 
 

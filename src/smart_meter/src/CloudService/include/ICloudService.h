@@ -24,12 +24,19 @@ public:
      */
     enum Result
     {
-        OK = 0,             //! Success
-        TIMEOUT,            //! Connection timed out.
-        INVALID_TOKEN,      //! Payment token is invalid.
-        OTHER               //! Other error.
+        //! Success
+        OK = 0,
+        //! Connection timed out.
+        TIMEOUT,
+        //! Payment token is invalid.
+        INVALID_TOKEN,
+        //! Other error.
+        OTHER
     };
 
+    /**
+     * @brief Destructor.
+     */
     virtual ~ICloudService() {}
 
     /**

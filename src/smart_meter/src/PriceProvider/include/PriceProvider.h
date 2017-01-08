@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Define abstract interface for PriceProvider.
+ * @brief Define the PriceProvider class.
  */
 
 #ifndef PRICEPROVIDER_H
@@ -14,7 +14,7 @@ namespace spark
 {
 
 /**
- * @brief Abstract interface for getting price information.
+ * @brief Implementation for the IPriceProvider interface.
  */
 class PriceProvider : public IPriceProvider
 {
@@ -27,6 +27,10 @@ public:
     
     virtual PriceInfo getPriceInfo();
 
+    /**
+     * @brief get cloud service.
+     * @return Pointer to CloudService.
+     */
     ICloudService * getCloudService() const;
     
 private:

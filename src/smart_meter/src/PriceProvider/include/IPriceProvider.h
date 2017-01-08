@@ -24,7 +24,7 @@ public:
     /**
      * @brief Initialize PriceProvider.
      * @param cloudService Cloud service.
-     * @pre @cloudService is not nullptr.
+     * @pre @p cloudService is not nullptr.
      * @post PriceProvider is ready to be used.
      */
     virtual void init(ICloudService* cloudService) = 0;
