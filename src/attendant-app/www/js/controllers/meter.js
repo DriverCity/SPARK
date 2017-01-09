@@ -8,12 +8,11 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   var tempArray = [];
   var timeReduction;
 
-  $scope.latitude= 0;
-  $scope.longitude= 0;
+  $scope.latitude = 0;
+  $scope.longitude = 0;
   $scope.scanning = false;
   $scope.isScanBtnDisabled = false;
 
-  $scope.currentAreaId = null;
 
   /****************************
    * TEST THINGS
@@ -22,11 +21,11 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   $scope.fakeBeacons = [
     {
       id:"123456789",
-      name:"ABC-123"
+      name:"sparkABC123_00318"
     },
     {
       id:"223456789",
-      name:"DEF-123"
+      name:"sparkDEF456_00490"
     }
   ]
 
@@ -38,7 +37,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     }
   }
 
-  $scope.fakeAreaId = 777;
+  $scope.fakeAreaId = 2118;
 
   /****************************
    * POSITIONING
@@ -77,7 +76,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   $scope.startTimerPostion();
 
   $scope.checkCurrentPosition = function() {
-    console.log("checking");
+    console.log("Checking current GPS location");
     var options = {
       timeout: 10000,
       enableHighAccuracy: true
@@ -86,6 +85,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     // $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
       $scope.positionGPS = position;
       $scope.positionMAP = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      $scope.findArea();
     // }
   }
 
@@ -94,7 +94,9 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
    ***************************/
 
   $scope.findArea = function() {
+    console.log("Checking current Area id based on location");
     $scope.parkingArea.$loaded(function() {
+      console.log("Parking area loaded from Firebase");
       var newAreaId = null;
       // Verify all the area
       for(var i=0; i<$scope.parkingArea.length; i++) {
@@ -121,11 +123,17 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
           newAreaId = $scope.parkingArea[i].area_number;
         }
       }
-      $scope.currentAreaId = newAreaId;
+      if(newAreaId != null) {
+        console.log("Area id : "+newAreaId);
+        $scope.currentAreaId = newAreaId;
+        console.log("currentAreaId : "+$scope.currentAreaId);
+      }
     });
   }
 
   $scope.createClickableMap = function() {
+    console.log("call create clickable")
+
     // Define options
     var mapOptions = {
       center: $scope.positionMAP,
@@ -178,67 +186,74 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     });
   }
 
-  $scope.retrieveParkingArea = function() {
+  $scope.startingInstruction = function() {
+    console.log("start instruction");
+
+    // Retrieve parking Aree
     var parkingAreaRef = firebase.database().ref().child("parkingArea");
     $scope.parkingArea = $firebaseArray(parkingAreaRef);
-    $scope.parkingArea.$loaded(function() {
-      $scope.findArea();
-    });
-  }
 
-  // When the controller is loaded
-  $scope.checkCurrentPosition();
-  $scope.retrieveParkingArea();
-  
-  $scope.parkingAreaLoaded = false;
-  $scope.parkingArea.$loaded(function() {
-    $scope.parkingAreaLoaded = true;
-  });
+    // Check current position
+    $scope.checkCurrentPosition();
+  }
 
   /****************************
    * CLOUD
    ***************************/
 
-  $scope.checkBeaconsValidity = function(array) {
-    var currentTime = Date.now();
-    // Iterate for each beacon retrieve
-    for(var i=0; i<array.length; i++) {
-      requestFirebaseVerification(i, array[i]).then(function(data) {
-        var beacon = data.beacon;
-        var lastParkEvent = data.lastParkEvent;
+  $scope.checkCloudValidity = function(beaconsDetectedList) {
+    var currentTime = new Date();
+    // Check availability of mandatory variable
 
-        // Compare
-        var eventTimestamp = lastParkEvent[0].timestamp;
-        var parsedTime = Date.parse(eventTimestamp);
-        var duration = lastParkEvent[0].parkingDurationInMinutes * 60 * 1000;
+    if($scope.currentAreaId == undefined || $scope.currentAreaId == null) {
+      alert("Nothing retrieved, area unkown");
+    } else if(beaconsDetectedList == null || beaconsDetectedList.length == 0) {
+      alert("Nothing retrieved, beacons' list empty or not defined")
+    } else {
+      var parkingPaidRef = firebase.database().ref().child("parkingAreaParkingEvent/"+$scope.currentAreaId);
+      var arrayRetrieved = $firebaseArray(parkingPaidRef);
 
+      arrayRetrieved.$loaded(function() {
+        console.log(arrayRetrieved);
 
-        var validity = false;
-        if(parsedTime + duration > currentTime){
-          console.log("jee");
-          validity = true;
+        for(var i=0; i<beaconsDetectedList.length; i++) {
+          // Try to find index of beacon in array from firebase
+          var index = arrayRetrieved.$indexFor(beaconsDetectedList[i].name);
+          if(index == -1) {
+            beaconsDetectedList[i].inThisArea = false;
+            beaconsDetectedList[i].validity = false;
+          } else {
+            beaconsDetectedList[i].inThisArea = true;
+
+            var eventTimestamp = arrayRetrieved[index].timestamp;
+            var eventTime = new Date();
+            
+            var splitSpace = eventTimestamp.split(" ");
+            var dateSplit = splitSpace[0].split("-");
+            var timeSplit = splitSpace[1].split(":");
+
+            eventTime.setUTCFullYear(dateSplit[0]);           // Year
+            eventTime.setUTCMonth(parseInt(dateSplit[1])-1);  // Month
+            eventTime.setUTCDate(dateSplit[2]);               // Day
+
+            eventTime.setHours(timeSplit[0]);    // Hours for Finland
+            eventTime.setMinutes(timeSplit[1]);  // Minutes
+            eventTime.setSeconds(timeSplit[2]);  // Seconds
+
+            eventTimePlusDuration = new Date(eventTime.getTime() + arrayRetrieved[index].parkingDurationInMinutes * 60000);
+
+            console.log(eventTime);
+            console.log(eventTimePlusDuration);
+
+            if(eventTimePlusDuration > currentTime){
+              beaconsDetectedList[i].validity = true;
+            } else {
+              beaconsDetectedList[i].validity = false;
+            }
+          }
         }
-        array[data.id].validity = validity;
       });
     }
-  }
-
-  $scope.checkBeaconsValidity($scope.fakeBeacons);
-
-  function requestFirebaseVerification(id, beacon) {
-    var defer = $q.defer();
-
-    var beaconRef = firebase.database().ref().child("parkingAreaParkingEvent/" + $scope.fakeAreaId + "/" + beacon.name);
-    var query = beaconRef.orderByChild("timestamp").limitToLast(1);
-    $firebaseArray(query).$loaded(function(lastParkEvent) {
-      defer.resolve({
-        id:id,
-        beacon:beacon,
-        lastParkEvent:lastParkEvent
-      });
-    });
-
-    return defer.promise;
   }
 
   /****************************
@@ -246,23 +261,29 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
    ***************************/
 
   /*
-   * Description: Add discovered device to tempArray
+   * Description:
+   * Add discovered device to tempArray
    */
   var onDiscoverDevice = function(device) {
-    console.log(JSON.stringify(device));
-    // Add device to array
-    tempArray.push(device);
+    if(device.name.indexOf("spark") == 0) {
+      device.name = device.name.substring(5, device.name.length);
+      tempArray.push(device);
+    }
   };
 
   /*
    * Description: Set device list and make visible
    */
   var setDeviceList = function(){
-    $scope.scanText = "Scan Complete";
     $interval.cancel(timeReduction)
+
+    // Check validity
     $scope.blePeripherals = tempArray;
+    $scope.checkCloudValidity($scope.blePeripherals);
+
+    // Update status
+    $scope.scanText = "Scan Complete";
     $scope.scanning = false;
-    //  $scope.checkBeaconsValidity($scope.blePeripherals);
   }
 
   /*
@@ -292,7 +313,6 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
     // Set Timeout for applying device info to cards
     $timeout(setDeviceList, (seconds*1000));
-
   }
 
   // Select beacon
@@ -323,6 +343,11 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   /****************************
   * UTILS
   ***************************/
+
+  $scope.comeBackHome = function() {
+    $interval.cancel($scope.timerReductionPosition);
+    $state.go("tab.situation");
+  };
 
   $scope.changeState = function(location) {
     $state.go(location);

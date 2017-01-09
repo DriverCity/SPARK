@@ -29,7 +29,7 @@ def main(argc, argv):
       # Build and test
       result = runBuildSteps(config)
 
-   if BUILD_NAME != "linux_debug":
+   if BUILD_NAME not in ["linux_debug", "linux_coverage"]:
       createArchive()
 
    # Change back to original directory
@@ -71,7 +71,7 @@ def runBuildSteps(config):
       print("Starting component " + comp.name)
 
       # Run test step (only in linux debug build)
-      if (config.runTests and BUILD_NAME == "linux_debug"):
+      if (config.runTests and BUILD_NAME == "linux_debug" or BUILD_NAME == "linux_coverage"):
          if not comp.runTests(config.cleanBeforeBuild):
             return 1
 
