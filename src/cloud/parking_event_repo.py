@@ -1,4 +1,5 @@
 import json
+from itertools import groupby, count
 
 from firebase_repo import FirebaseRepo
 from utils import TimeUtils
@@ -75,6 +76,9 @@ class ParkingEventRepository(FirebaseRepo):
             'parkingAreaParkingEventId': register_number
         }
 
+        if parking_event_json['parkingType'] == 'PAID':
+            lookup_json['durationEndTimestamp'] = TimeUtils.get_local_timestamp(parking_event_json['parkingDurationInMinutes'])
+
         self.db\
             .child(ParkingEventRepository._parking_event_ODS_lookup_node_name)\
             .child(register_number) \
@@ -113,6 +117,9 @@ class ParkingEventRepository(FirebaseRepo):
         # Store the incoming event to ODS
         add_results = self.__add_parking_event_to_ods(parking_area_id, parking_event_json)
 
+        is_to_be_consumed_by_occupancy_analysis = (parking_context_type == 'PAID')
+        is_to_be_consumed_by_long_term_datastore = (parking_context_type == 'PAID')
+
         # Store notification about the event for event consumption
         # > Notifications are stored in a flattened format
         # > Better use of indexing for server side event consumers
@@ -120,9 +127,10 @@ class ParkingEventRepository(FirebaseRepo):
             'parkingAreaId': parking_area_id,
             'registerNumber': register_number,
             'parkingEventId': add_results['odsId'],
-            'isConsumedByOccupancyAnalysis': False,
-            'isConsumedByLongTermDataStore': False,
-            'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7) # TODO make configurable
+            'isConsumedByOccupancyAnalysis': (is_to_be_consumed_by_occupancy_analysis == False),
+            'isConsumedByLongTermDataStore': (is_to_be_consumed_by_long_term_datastore == False), #TODO: this is a bit illogical
+            'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7), # TODO make configurable
+            'parkingAreaParkingEvent': parking_event_json
         }
         notification_add_results = self.__add_parking_event_to_notification_store(notification_json)
 
@@ -185,3 +193,21 @@ class ParkingEventRepository(FirebaseRepo):
                 .update({'isConsumedBy'+consumer:True})
 
         return result
+
+    def get_occuring_paid_event_counts(self):
+
+        now = TimeUtils.get_local_timestamp()
+        counts = {}
+
+        occuring_events = self.db \
+            .child('parkingEventLookup') \
+            .order_by_child('durationEndTimestamp') \
+            .start_at(now).end_at('9') \
+            .get()
+
+        occuring_events = self.db.sort(occuring_events, 'parkingAreaId')
+
+        for k, g in groupby(occuring_events.each(), lambda i: i['parkingAreaId']):
+            counts[k] = count(g)
+
+        return counts

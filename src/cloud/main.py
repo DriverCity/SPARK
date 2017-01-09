@@ -21,7 +21,8 @@ from flask import Flask,request,jsonify
 import parking_area
 import payment
 from cloud_storage_io import CloudStorageIO
-from firebase_io.parking_event_repo import ParkingEventRepository
+from parking_event_repo import ParkingEventRepository
+from occupancy_rates_repo import OccupancyRatesRepository
 
 app = Flask(__name__)
 Swagger(app)
@@ -47,28 +48,6 @@ def store_parking_event():
     except payment.PaymentException as e:
         return jsonify({ 'errorType': 'PAYMENT_ERROR', 'content': e}), 400
 
-
-#@app.route('/api/v1.0/parkingArea/', methods=['GET'])
-#@swag_from('swagger_specs/parkingAreaLocation.yml')
-def get_parking_area():
-    # TODO: logging
-    try:
-        # validate schema
-        validate(request.json, 'ParkingArea', 'swagger_specs/parkingAreaLocation.yml', root=__file__)
-
-        latitude = request.args['latitude']
-        longnitude = request.args['longnitude']
-
-        # TODO
-
-        return jsonify({ 'parkingAreaId': latitude }), 200
-
-    except ValidationError as e:
-        return jsonify({ 'errorType': 'SCHEMA_VALIDATION_ERROR', 'content': e }), 400
-    except parking_area.LocationException as e:
-        return jsonify({ 'errorType': 'LOCATION_ERROR', 'content': e }), 400
-
-
 @app.route('/tasks/occupancy', methods=['GET'])
 def update_occupancy_rates():
     """
@@ -79,8 +58,8 @@ def update_occupancy_rates():
     """
     # TODO: logging
     try:
-        new_events = ParkingEventRepository().consume_new_parking_events_by('OccupancyAnalysis')
-        # TODO: analysis
+        counts = ParkingEventRepository().get_occuring_paid_event_counts()
+        OccupancyRatesRepository().refresh_occupancies(counts)
         return '', 201
     except Exception as e:
         # TODO: make fault responding better
