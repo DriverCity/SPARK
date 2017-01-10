@@ -8,7 +8,7 @@ app.controller('VehicleCtrl', function($scope, $state, $stateParams, localStorag
     "id":"0",
     "make":"aMaker",
     "model":"aModel",
-    "beacon":"sparkABC123_00318"
+    "beacon":"ABC123_00318"
   }
 
   $scope.localVehicles = getItem("vehicles");
