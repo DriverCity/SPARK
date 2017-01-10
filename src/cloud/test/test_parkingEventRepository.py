@@ -211,12 +211,12 @@ class TestUtils():
             request['parkingDurationInMinutes'] = parking_duration_in_minutes
 
         if payment_method_type is not None:
-            if request.has_key('paymentMethodInformation') is False:
+            if 'paymentMethodInformation' not in request:
                 request['paymentMethodInformation'] = {}
             request['paymentMethodInformation']['paymentMethodType'] = payment_method_type
 
         if payment_receipt is not None:
-            if request.has_key('paymentMethodInformation') is False:
+            if 'paymentMethodInformation' not in request:
                 request['paymentMethodInformation'] = {}
             request['paymentMethodInformation']['paymentReceipt'] = payment_receipt
 
@@ -248,7 +248,7 @@ class MockDb():
                 self.json = {}
 
         def child(self, name):
-            if self.json.has_key(name) is False:
+            if name not in self.json:
                 self.json[name] = MockDb.Node()
             return self.json[name]
 
