@@ -11,10 +11,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   // Pre defined UUID for Connexion service
   blePerpheralsService.setServiceId('ec00');
   blePerpheralsService.setCharacteristicId('ec0e');
-
-  $scope.timeValidity = null;
-  $scope.price = 0;
-
 /*
   $scope.meterInfo = {
     price_per_hour:3.5,
@@ -22,6 +18,30 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     limit:60
   }
 */
+  $scope.timeValidity = null;
+
+  
+  $scope.timeSelected = null;
+  $scope.price = null;
+  // $scope.timeSelected = $scope.meterInfo.resolution;
+  // $scope.price = $scope.meterInfo.price_per_hour;
+
+  /****************************
+   * PRICE INPUT
+   ***************************/
+
+  $scope.manageTime = function(way) {
+    if($scope.meterInfo != null) {
+      if(way == "+" && $scope.timeSelected != $scope.meterInfo.limit) {
+        $scope.timeSelected += $scope.meterInfo.resolution;
+        $scope.price += $scope.meterInfo.price_per_hour;
+      } 
+      if(way == "-" && $scope.timeSelected != $scope.meterInfo.resolution) {
+        $scope.timeSelected -= $scope.meterInfo.resolution;
+        $scope.price -= $scope.meterInfo.price_per_hour;
+      }
+    }
+   }
 
   /****************************
    * DATA CONVERTION
@@ -56,6 +76,9 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     var dataReceived = bytesToString(data);
     $scope.$apply(function() {
       $scope.meterInfo = angular.fromJson(dataReceived);
+
+      $scope.timeSelected = $scope.meterInfo.resolution;
+      $scope.price = $scope.meterInfo.price_per_hour;
     });
   }
 
@@ -73,9 +96,16 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   /* Function onWrite:
    * Callback
   */
-  var onWrite = function(data) {
+  var onWriteSuccess = function() {
     // Decode the ArrayBuffer into a typed Array based on the data you expect
-    alert("Data writtent to the Smart meter : "+bytesToString(data));
+    alert("Parking success !");
+    // Go back home
+    $scope.disconnect();
+  }
+
+  var onWriteError = function() {
+    // Decode the ArrayBuffer into a typed Array based on the data you expect
+    alert("Parking unexpected error");
   }
 
   /****************************
@@ -92,7 +122,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   };
 
   /* Description:
-  Disconnect from the BLE peripheral*/
+   * Disconnect from the BLE peripheral
+   */
   $scope.disconnect = function() {
     ble.disconnect(blePerpheralsService.getSelectedDeviceId(), backToHome, blePerpheralsService.onError);
   };
@@ -100,21 +131,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   /****************************
    * FUNCTION
    ***************************/
-
-  $scope.timeParkValidator = function(parkTime) {
-    if(parkTime == null) {
-      $scope.timeValidity = null;
-      $price = 0;
-    } else {
-      if((parkTime % $scope.meterInfo.resolution == 0) && (parkTime <= $scope.meterInfo.limit)) {
-        $scope.timeValidity = 'valid';
-        $scope.price = (parkTime / $scope.meterInfo.resolution) * $scope.meterInfo.price_per_hour;
-      } else {
-        $scope.timeValidity = 'invalid';
-        $scope.price = 0;
-      }
-    }
-  }
 
   $scope.fakeFill = function() {
     $scope.number = "4242 4242 4242 4242";
@@ -126,8 +142,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     if (result.error) {
       alert('It failed! error: ' + result.error.message);
     } else {
-      var str = "Park;"+parkCarService.getSelectedVehicle().beacon+";2000-01-01 12:30;90;SERVICE_1;"+result.id;
-      ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWrite, blePerpheralsService.onError);
+      var str = "Park;"+parkCarService.getSelectedVehicle().beacon+";2000-01-01 12:30;"+$scope.timeSelected+";SERVICE_1;valid_test_hash\n";
+      ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWriteSuccess, onWriteError);
     }
   }
 
@@ -143,6 +159,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * ONLOAD
    ***************************/
 
-  $scope.readData();
+  // $scope.readData();
 
 });

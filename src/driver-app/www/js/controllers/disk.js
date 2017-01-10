@@ -11,7 +11,8 @@ app.controller('DiskCtrl', function($scope, $state, CloudSrv, parkCarService) {
   $scope.date = new Date();
 
   $scope.parkEvent = {
-    parkingContextType: "DISK",
+    parkingAreaId: 0,
+    parkingContextType: "PARKING_DISC",
     registerNumber: parkCarService.getSelectedVehicle().beacon
   }
 
