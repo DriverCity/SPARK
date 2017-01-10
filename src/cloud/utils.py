@@ -25,11 +25,11 @@ class TimeUtils():
 
     @staticmethod
     def get_local_weekday():
-        return TimeUtils.__get_local_now().strftime('%w')
+        return int(TimeUtils.__get_local_now().strftime('%w'))
 
     @staticmethod
     def get_local_hour():
-        return TimeUtils.__get_local_now().strftime('%H')
+        return int(TimeUtils.__get_local_now().strftime('%H'))
 
 
 class TokenUtils():

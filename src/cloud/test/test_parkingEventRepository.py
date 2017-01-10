@@ -182,7 +182,6 @@ class TestParkingEventIO(TestCase):
             expected_end_timestamp = TimeUtils.get_local_timestamp(actual_event['parkingDurationInMinutes'])
             self.assertEqual(expected_end_timestamp, actual_end_timestamp)
 
-            pass
 
     def __assert_lookup_matches(self, result, expected_token):
         expected_lookup_id = json.loads(result)['odsLookupId']
