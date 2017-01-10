@@ -11,18 +11,12 @@ class OccupancyRatesRepository(FirebaseRepo):
     def __init__(self):
         FirebaseRepo.__init__(self)
 
-    @staticmethod
-    def get_area_table_name(area_id):
-        return 'area_' + area_id + '_end_time'
-
     def refresh_occupancies(self, counts):
 
         now_weekday = TimeUtils.get_local_weekday()
         if now_weekday < 6:
             now_weekday = -1
         now_hour = TimeUtils.get_local_hour()
-        # TODO
-        now_hour = 12
 
         parking_areas = self.db\
             .child(OccupancyRatesRepository.__occupancy_rates_ODS_node_name)\
@@ -41,20 +35,18 @@ class OccupancyRatesRepository(FirebaseRepo):
             is_occupancy_rate_set = False
             properties = pa['properties']
 
-            if properties.has_key('TYPE_OF_FINANCIAL') is False:
-                pass
+            if 'TYPE_OF_FINANCIAL' not in properties:
+                None
             elif properties['TYPE_OF_FINANCIAL'] == 'M':
-                print("OK")
                 if properties[time_start_name] <= now_hour < properties[time_end_name]:
                     is_occupancy_rate_set = True
 
-            if is_occupancy_rate_set is True and pa.has_key('area_number'):
-                parking_area_id = pa['area_number']
+            if is_occupancy_rate_set is True:
                 amount_of_parked_cars = 0
-                if counts.has_key(parking_area_id):
-                    amount_of_parked_cars = counts[parking_area_id]
+                if key in counts:
+                    amount_of_parked_cars = counts[key]
 
-                occupancy_rate = min(1, amount_of_parked_cars / properties['NUMBER_OF_PLACES'])
+                occupancy_rate = min(1, amount_of_parked_cars / float(properties['NUMBER_OF_PLACES']))
             else:
                 occupancy_rate = OccupancyRatesRepository.__unknown_occupancy_value
 
