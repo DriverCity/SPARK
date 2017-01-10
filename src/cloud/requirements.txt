@@ -7,3 +7,4 @@ shapely==1.5.17
 google-cloud-storage==0.21.0
 tinydb==3.2.1
 pytz==2016.10
+mock==2.0.0

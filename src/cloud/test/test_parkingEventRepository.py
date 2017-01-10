@@ -5,9 +5,11 @@
 
 import json
 from unittest import TestCase
+from mock import mock
+from datetime import datetime
 
 from parking_event_repo import ParkingEventRepository
-from utils import TokenUtils
+from utils import TokenUtils, TimeUtils
 
 # Constants used in testing
 root_event_node = ParkingEventRepository._parking_event_ODS_node_name
@@ -57,11 +59,12 @@ class TestParkingEventIO(TestCase):
 
         # > parkingEventNotification
         actual_notification = self.parking_event_repo.db.get_notification(parking_disc_parking_area_id, expected_token)
-        self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
-        self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
+        self.assertEqual(True, actual_notification['isConsumedByLongTermDataStore'])
+        #self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
         self.assertEqual(parking_disc_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
+
 
     def test_store_paid_parking_event(self):
 
@@ -146,6 +149,40 @@ class TestParkingEventIO(TestCase):
         self.assertEqual(register_number, actual_notification['registerNumber'])
         secondary_notification = self.parking_event_repo.db.get_notification(secondary_area_id, expected_token)
         self.assertEqual(secondary_area_id, secondary_notification['parkingAreaId'])
+
+    def test_duration_timestamp(self):
+
+        # Assign
+        mock_now = datetime(2016, 1, 1, 1, 1, 1, 1)
+        with mock.patch('datetime.datetime') as dt_mock:
+            dt_mock.now.return_value = mock_now
+            self.parking_event_repo.db = MockDb().with_paid_init()
+
+            expected_parking_context_type = 'PAID'
+            expected_parking_duration_in_minutes = 60
+
+            request_json = TestUtils.build_request(
+                parking_context_type=expected_parking_context_type,
+                parking_duration_in_minutes=expected_parking_duration_in_minutes,
+                parking_area_id=paid_parking_area_id,
+                payment_method_type=paid_parking_payment_method_type,
+                payment_receipt=paid_parking_payment_receipt
+            )
+
+            # Act
+            result = self.parking_event_repo.store_parking_event(request_json)
+
+            # Assert
+            _, actual_event = self.parking_event_repo.db. \
+                get_single_event_key_and_value(paid_parking_area_id)
+
+            _, lookup = self.parking_event_repo.db \
+                .get_single_lookup_key_and_value(parking_disc_parking_area_id)
+            actual_end_timestamp = lookup['durationEndTimestamp']
+            expected_end_timestamp = TimeUtils.get_local_timestamp(actual_event['parkingDurationInMinutes'])
+            self.assertEqual(expected_end_timestamp, actual_end_timestamp)
+
+            pass
 
     def __assert_lookup_matches(self, result, expected_token):
         expected_lookup_id = json.loads(result)['odsLookupId']
