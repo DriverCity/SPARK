@@ -14,42 +14,26 @@ class ParkingEventRepository(FirebaseRepo):
     def __init__(self):
         FirebaseRepo.__init__(self)
 
-    def __remove_lookup_events_by_ods_key(self, ods_key):
+    def __remove_lookup_events_by_register_number(self, register_number):
         self.db \
             .child(ParkingEventRepository._parking_event_ODS_lookup_node_name) \
-            .order_by_child('parkingAreaParkingEventId')\
-            .start_at(ods_key).end_at(ods_key) \
+            .child(register_number) \
             .remove()
 
     def __remove_parking_events_from_ods_by_lookup_events(self, lookup_events):
         for e in lookup_events:
             parking_area_id = e['parkingAreaId']
-            ods_key = e['parkingAreaParkingEventId']
+            register_number = e['registerNumber']
 
             # Remove from the ODS
             self.db \
                 .child(ParkingEventRepository._parking_event_ODS_node_name) \
                 .child(parking_area_id) \
-                .child(ods_key) \
+                .child(register_number) \
                 .remove()
 
             # Remove from the lookup
-            self.__remove_lookup_events_by_ods_key(ods_key)
-
-    def __remove_parking_event_from_ods_by_ods_key(self, ods_key):
-
-        # Remove from the ODS
-        self.db \
-            .child(ParkingEventRepository._parking_event_ODS_node_name) \
-            .child(ods_key) \
-            .remove()
-
-        # Remove from the lookup
-        self.db \
-            .child(ParkingEventRepository._parking_event_ODS_lookup_node_name) \
-            .order_by_child('parkingAreaParkingEventId') \
-            .start_at(ods_key).end_at(ods_key) \
-            .remove()
+            self.__remove_lookup_events_by_register_number(register_number)
 
     def __remove_parking_event_from_ods_by_register_number(self, register_number):
         lookup_event = self.db \
