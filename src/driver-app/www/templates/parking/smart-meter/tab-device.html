@@ -36,21 +36,20 @@
       </div>
 
       <!-- Time input -->
-      <div class="list">
-        <div class="item item-input-inset">
-          <label class="item-input-wrapper" ng-class="timeValidity">
-            <input type="number" ng-model="parkTime" ng-change="timeParkValidator(parkTime)" placeholder="Parking time">
-          </label>
-          <p>
-            &nbsp; in minutes
-          </p>
+      <div class="row centered">
+        <div class="col">
+          <button class="button icon ion-minus-round" ng-click="manageTime('-')"></button>
         </div>
-        <div class="item item-input-inset">
-          <p>
-            Price : {{ price }} €
-          </p>
+        <div class="col">
+          <strong>{{ timeSelected }} minutes</strong><br />
+          Price : {{ price }} €
+        </div>
+        <div class="col">
+          <button class="button icon ion-plus-round" ng-click="manageTime('+')"></button>
         </div>
       </div>
+
+      <div class="list"></div>
 
       <!-- Card form -->
       <form class="payment-form" stripe-form="stripeCallback">
