@@ -1,5 +1,5 @@
 import json
-from itertools import groupby, count
+from itertools import groupby
 
 from firebase_repo import FirebaseRepo
 from utils import TimeUtils
@@ -207,7 +207,7 @@ class ParkingEventRepository(FirebaseRepo):
 
         occuring_events = self.db.sort(occuring_events, 'parkingAreaId')
 
-        for k, g in groupby(occuring_events.each(), lambda i: i['parkingAreaId']):
-            counts[k] = count(g)
+        for k, g in groupby(occuring_events.each(), lambda i: i.val()['parkingAreaId']):
+            counts[k] = sum(1 for i in g)
 
         return counts
