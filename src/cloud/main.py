@@ -57,13 +57,13 @@ def update_occupancy_rates():
       - Occupancy rates analysis task
     """
     # TODO: logging
-    #try:
-    counts = ParkingEventRepository().get_occuring_paid_event_counts()
-    OccupancyRatesRepository().refresh_occupancies(counts)
-    return '', 201
-    #except Exception as e:
+    try:
+        counts = ParkingEventRepository().get_occuring_paid_event_counts()
+        OccupancyRatesRepository().refresh_occupancies(counts)
+        return '', 201
+    except Exception as e:
         # TODO: make fault responding better
-    #    return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
+        return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
 
 
 @app.route('/tasks/store', methods=['GET'])
