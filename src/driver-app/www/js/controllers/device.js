@@ -73,9 +73,16 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   /* Function onWrite:
    * Callback
   */
-  var onWrite = function(data) {
+  var onWriteSuccess = function() {
     // Decode the ArrayBuffer into a typed Array based on the data you expect
-    alert("Data writtent to the Smart meter : "+bytesToString(data));
+    alert("Parking success !");
+    // Go back home
+    $scope.disconnect();
+  }
+
+  var onWriteError = function() {
+    // Decode the ArrayBuffer into a typed Array based on the data you expect
+    alert("Parking unexpected error");
   }
 
   /****************************
@@ -92,7 +99,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   };
 
   /* Description:
-  Disconnect from the BLE peripheral*/
+   * Disconnect from the BLE peripheral
+   */
   $scope.disconnect = function() {
     ble.disconnect(blePerpheralsService.getSelectedDeviceId(), backToHome, blePerpheralsService.onError);
   };
@@ -126,8 +134,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     if (result.error) {
       alert('It failed! error: ' + result.error.message);
     } else {
-      var str = "Park;"+parkCarService.getSelectedVehicle().beacon+";2000-01-01 12:30;90;SERVICE_1;"+result.id;
-      ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWrite, blePerpheralsService.onError);
+      var str = "Park;"+parkCarService.getSelectedVehicle().beacon+";2000-01-01 12:30;90;SERVICE_1;valid_test_hash\n";
+      ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWriteSuccess, onWriteError);
     }
   }
 
