@@ -3,8 +3,8 @@ cron:
   url: /tasks/occupancy
   schedule: every 5 minutes
 - description: move to long term data store
-  url: /task/store
+  url: /tasks/store
   schedule: every 8 hours
 - description: clean up firebase
-  url: /task/cleanup
+  url: /tasks/cleanup
   schedule: every 24 hours
