@@ -18,7 +18,7 @@ app.controller('MapCtrl', function(Firebase, $scope, $state, $cordovaGeolocation
   var unknow = "#a2a2a2", low = "#0fe067", medium = "#ff9933", lot = "#e03a0f";
 
   $scope.defineColor = function(occupancyRate) {
-    if(occupancyRate == "UNKNOW") return unknow;
+    if(occupancyRate == "UNKNOWN" || occupancyRate == null) return unknow;
     if(parseFloat(occupancyRate) < 0.3) return low;
     if(parseFloat(occupancyRate) > 0.7) return lot;
     return medium;
