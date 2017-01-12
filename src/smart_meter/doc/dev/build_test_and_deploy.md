@@ -35,13 +35,15 @@ build variant. Scripts and build variants are:
 
 - build_linux_debug.sh : This script builds, tests and deploys the debug version for Linux desktop. You may use this variant
   for testing the code on your own desktop, not needing to cross-compile and run the code on the target hardware, which is convenient
-  for development. This is the only variant supporting automated tests during the build.
+  for development.
   
 - build_raspberrypi_debug.sh: This script builds and deploys the debug version of the software for Raspberry Pi 3.
 
 - build_raspberrypi_release.sh: This script compiles and deploys the release version of the software for Raspberry Pi 3.
 
-All scripts can be provided with extra arguments to modify their functionality. Formally, scripts can be called like:
+- build_linux_coverage: Build and run unit tests and create test coverage report. HTML-report will be generated in builds/linux_coverage/report/index.html. Extra parameters defined in following paragraphs do not have effect on this script.
+
+All scripts (except for coverage tests) can be provided with extra arguments to modify their functionality. Formally, scripts can be called like:
 
 ```
 build_<variant>.sh [clean-all | [[--continue | --continue-after] -c <component_name> [clean]][build | test | all]
