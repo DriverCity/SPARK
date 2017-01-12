@@ -34,7 +34,7 @@ public:
      * @pre @p cloudService != nullptr, @p db != nullptr.
      * @post VerifyParking is ready to use.
      */
-    void init(ICloudService* cloudService, IParkingDatabase* db);
+    void init(ICloudService* cloudService);
 
 
     /**
@@ -58,7 +58,7 @@ public:
      * @brief Get parking database.
      * @return Pointer to parking database.
      */
-    IParkingDatabase* getDbPointer() const;
+    //IParkingDatabase* getDbPointer() const;
 
 
     /**
@@ -71,14 +71,14 @@ public:
      * @brief Set parking database.
      * @param db New ParkingDatabase.
      */
-    void setDbPointer(IParkingDatabase* db);
+    //void setDbPointer(IParkingDatabase* db);
 
 
 
 
 private:
     ICloudService* m_cloudService;
-    IParkingDatabase* m_db;
+    //IParkingDatabase* m_db;
 
 
 };

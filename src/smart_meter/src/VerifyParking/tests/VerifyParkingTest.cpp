@@ -7,6 +7,6 @@ TEST(VerifyParkingTest, constructorTest){
     spark::VerifyParking testInstance;
 
     EXPECT_EQ(nullptr,testInstance.getCloudService());
-    EXPECT_EQ(nullptr,testInstance.getDbPointer());
+    //EXPECT_EQ(nullptr,testInstance.getDbPointer());
 
 }

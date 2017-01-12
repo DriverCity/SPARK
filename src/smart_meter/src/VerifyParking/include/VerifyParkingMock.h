@@ -21,13 +21,12 @@ public:
 
     // Use these to control mock behaviour
     spark::ICloudService* m_cloudService;
-    spark::IParkingDatabase* m_db;
+    //spark::IParkingDatabase* m_db;
     spark::ParkingEvent m_lastEvent;
     spark::IVerifyParking::Result m_result;
 
     VerifyParkingMock():
         m_cloudService(nullptr),
-        m_db(nullptr),
         m_lastEvent(),
         m_result(spark::IVerifyParking::OK)
     {
@@ -35,10 +34,10 @@ public:
 
     virtual ~VerifyParkingMock() {}
 
-    virtual void init(spark::ICloudService *cloudService, spark::IParkingDatabase *db)
+    virtual void init(spark::ICloudService *cloudService)
     {
         m_cloudService = cloudService;
-        m_db = db;
+        //m_db = db;
     }
 
     virtual Result verify(const spark::ParkingEvent& event)
@@ -54,7 +53,7 @@ public:
     void reset()
     {
         m_cloudService = nullptr;
-        m_db = nullptr;
+        //m_db = nullptr;
         m_lastEvent = spark::ParkingEvent();
         m_result = spark::IVerifyParking::OK;
     }

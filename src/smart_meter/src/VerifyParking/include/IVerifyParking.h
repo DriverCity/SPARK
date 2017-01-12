@@ -40,7 +40,7 @@ public:
      * @pre @p cloudService != nullptr, @p db != nullptr.
      * @post VerifyParking is ready to use.
      */
-    virtual void init(ICloudService* cloudService, IParkingDatabase* db) = 0;
+    virtual void init(ICloudService* cloudService) = 0;
 
     /**
      * @brief Register parking event.
