@@ -20,7 +20,7 @@ run the OS on virtual machine, as Instructed here. If you already have the OS in
   
   Run following command to install required packages:
   ```
-  sudo apt-get install git python cmake rsync lib32ncurses5
+  sudo apt-get install git python cmake rsync lib32ncurses5 lcov
   ```
   
 4. Install cross-compilers
