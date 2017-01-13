@@ -28,4 +28,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 add_executable(${PROJECT_NAME} ${TEST_SRCS} ${SRCS})
-target_link_libraries(${PROJECT_NAME} gtest sqlite3 ${LINKED_LIBS})
+target_link_libraries(${PROJECT_NAME} gtest gtest_main sqlite3 ${LINKED_LIBS})

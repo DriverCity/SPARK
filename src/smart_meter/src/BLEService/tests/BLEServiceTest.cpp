@@ -194,3 +194,29 @@ TEST_F (BLEServiceTest, RegisterFailureOtherError)
     sleep(1);
     EXPECT_EQ("Error: Unknown error.\n", readResponseFifo());
 }
+
+
+TEST_F (BLEServiceTest, ParkingTimeExceedsTheLimit)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 120, 10);
+
+    m_service->start();
+    spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 200, spark::PaymentToken("ver", "123"));
+    writeInputFifo(e.toString());
+    sleep(1);
+    EXPECT_EQ("Error: Duration exceeds time limit.\n", readResponseFifo());
+}
+
+
+TEST_F (BLEServiceTest, ParkingTimeNotAMultipleOfResolution)
+{
+    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_priceProvider->m_info = spark::PriceInfo(1.2, 120, 10);
+
+    m_service->start();
+    spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 15, spark::PaymentToken("ver", "123"));
+    writeInputFifo(e.toString());
+    sleep(1);
+    EXPECT_EQ("Error: Invalid parking duration.\n", readResponseFifo());
+}

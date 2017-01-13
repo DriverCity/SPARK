@@ -32,6 +32,13 @@ TEST_F(GlobalConfgurationTest, UninitializedTest)
 }
 
 
+TEST_F(GlobalConfgurationTest, InitWithNoParameters)
+{
+    GlobalConfiguration::init();
+    EXPECT_TRUE(GlobalConfiguration::instance() != nullptr);
+}
+
+
 TEST_F(GlobalConfgurationTest, InitValid)
 {
     std::string testFile = std::string(TEST_DATA_DIR) + "/validConfig.txt";

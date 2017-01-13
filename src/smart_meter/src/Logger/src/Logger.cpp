@@ -1,6 +1,5 @@
 
 #include "Logger.h"
-#include <cassert>
 #include <iostream>
 #include <fstream>
 
@@ -22,8 +21,7 @@ void Logger::init(const std::string& logFile, std::ostream& output)
     if (logFile != NO_LOG_FILE){
         fileStream_.reset(new std::ofstream(logFile));
         if( !(*fileStream_) ){
-            *printStream_ << "FATAL: Opening log file " << logFile << " failed!" << std::endl;
-            assert(*fileStream_ && "Opening log file failed!");
+            *printStream_ << "ERROR: logfile '" << logFile << "' did not open!" << std::endl;
         }
     }
 }

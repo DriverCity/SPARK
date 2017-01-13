@@ -143,3 +143,11 @@ TEST (ParkingEventTest, FromStringInvalidDuration)
     spark::ParkingEvent e1 = spark::ParkingEvent::fromString(s1);
     EXPECT_FALSE(e1.isValid());
 }
+
+
+TEST (ParkingEventTest, FromStringDurationNotANumber)
+{
+   std::string str = "Park;ABC123;2016-11-22 12:30;asd;ver;123";
+   spark::ParkingEvent e1 = spark::ParkingEvent::fromString(str);
+   EXPECT_FALSE(e1.isValid());
+}
