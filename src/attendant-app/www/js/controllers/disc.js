@@ -116,10 +116,20 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
    */
   var onDiscoverDevice = function(device) {
     if(device.name.indexOf("spark") == 0) {
-      device.name = device.name.substring(5, device.name.length);
-      tempArray.push(device);
+      var similar = false;
+      for(var i=0; i<tempArray.length; i++) {
+        if(tempArray[i].id == device.id) {
+          similar = true;
+          break;
+        }
+      }
+      if(!similar && device.name != null) {
+        device.name = device.name.substring(5, device.name.length);
+        tempArray.push(device);
+      }
     }
   };
+
 
   /*
    * Description:

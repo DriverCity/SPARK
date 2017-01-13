@@ -21,17 +21,18 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
    * Description: Add discovered device to tempArray
    */
   var onDiscoverDevice = function(device) {
-    console.log(JSON.stringify(device));
-
-    var similar = false;
-    for(var i=0; i<tempArray.length; i++) {
-      if(tempArray[i].id == device.id) {
-        similar = true;
-        break;
+    if(device.name.indexOf("spark") == 0) {
+      var similar = false;
+      for(var i=0; i<tempArray.length; i++) {
+        if(tempArray[i].id == device.id) {
+          similar = true;
+          break;
+        }
       }
-    }
-    if(!similar && device.name != null) {
-      tempArray.push(device);
+      if(!similar && device.name != null) {
+        device.name = device.name.substring(5, device.name.length);
+        tempArray.push(device);
+      }
     }
   };
 
