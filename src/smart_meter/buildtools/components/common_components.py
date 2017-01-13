@@ -22,7 +22,7 @@ addComponent( Component(name="VerifyParking", runTestsCmd="./VerifyParkingTest")
 
 addComponent( Component(name="BLEService", runTestsCmd="./BLEServiceTest") )
 
-addComponent( Component(name="application", runTestsCmd=None) )
+addComponent( Component(name="application", runTestsCmd="./ApplicationTest") )
 
 addComponent( Component(name="FakeBLETool", runTestsCmd=None) )
 

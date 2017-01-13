@@ -20,7 +20,8 @@ include_directories($ENV{BUILD_DIR}/include)
 # Define all sources here
 set(SRCS
     main.cpp
-    Application.cpp)
+    Application.cpp
+    Initializer.cpp)
 
 # Link other components
 set(LINKED_LIBS

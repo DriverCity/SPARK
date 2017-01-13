@@ -36,7 +36,6 @@ public:
     /**
      * @brief Initialize VerifyParking.
      * @param cloudService Cloud service.
-     * @param db Temporary event database.
      * @pre @p cloudService != nullptr, @p db != nullptr.
      * @post VerifyParking is ready to use.
      */

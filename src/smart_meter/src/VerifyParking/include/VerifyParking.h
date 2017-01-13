@@ -30,8 +30,7 @@ public:
     /**
      * @brief Initialize VerifyParking.
      * @param cloudService Cloud service.
-     * @param db Temporary event database.
-     * @pre @p cloudService != nullptr, @p db != nullptr.
+     * @pre @p cloudService != nullptr.
      * @post VerifyParking is ready to use.
      */
     void init(ICloudService* cloudService);
@@ -53,12 +52,6 @@ public:
      * @return Pointer to CloudService.
      */
     ICloudService* getCloudService() const;
-
-    /**
-     * @brief Get parking database.
-     * @return Pointer to parking database.
-     */
-    //IParkingDatabase* getDbPointer() const;
 
 
     /**

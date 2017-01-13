@@ -20,3 +20,5 @@ addComponent( Component(name="PriceProvider", runTestsCmd="./PriceProviderTest")
 addComponent( Component(name="VerifyParking", runTestsCmd="./VerifyParkingTest") )
 
 addComponent( Component(name="BLEService", runTestsCmd="./BLEServiceTest") )
+
+addComponent( Component(name="application", runTestsCmd="./ApplicationTest") )

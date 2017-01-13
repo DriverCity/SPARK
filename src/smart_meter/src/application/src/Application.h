@@ -30,15 +30,15 @@ public:
     struct Setup
     {
         //! BLE Service
-        std::unique_ptr<IBLEService> bleService;
+        std::shared_ptr<IBLEService> bleService;
         //! Price provider
-        std::unique_ptr<IPriceProvider> priceProvider;
+        std::shared_ptr<IPriceProvider> priceProvider;
         //! VerifyParking
-        std::unique_ptr<IVerifyParking> verifier;
+        std::shared_ptr<IVerifyParking> verifier;
         //! Cloud Service
-        std::unique_ptr<ICloudService> cloudService;
+        std::shared_ptr<ICloudService> cloudService;
         //! Parking database
-        std::unique_ptr<IParkingDatabase> parkingDb;
+        std::shared_ptr<IParkingDatabase> parkingDb;
     };
 
 
@@ -47,26 +47,13 @@ public:
      * @param setup Setup parameters.
      * @pre All @p setup members are initialized.
      */
-    Application(Setup&& setup);
+    Application(const Setup& setup);
 
     /**
      * @brief Destructor.
      */
     ~Application();
 
-    /**
-     * @brief Extract directory from full application path.
-     * @param argv0 Full application path.
-     * @return Path's directory part.
-     */
-    static std::string getBinaryDir(const std::string& argv0);
-
-    /**
-     * @brief Extract configuration directory from full application path.
-     * @param argv0 Full application path.
-     * @return Full path to configuration directory.
-     */
-    static std::string getConfigDir(const std::string& argv0);
 
     /**
      * @brief exec Start application.
