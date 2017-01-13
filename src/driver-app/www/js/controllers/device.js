@@ -13,16 +13,15 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   blePerpheralsService.setCharacteristicId('ec0e');
 /*
   $scope.meterInfo = {
-    price_per_hour:3.5,
-    resolution:15,
-    limit:60
+    price_per_hour:1.6,
+    resolution:5,
+    limit:240
   }
 */
   $scope.timeValidity = null;
 
-  
-  $scope.timeSelected = null;
-  $scope.price = null;
+  $scope.timeSelected = 0;
+  $scope.price = 0;
   // $scope.timeSelected = $scope.meterInfo.resolution;
   // $scope.price = $scope.meterInfo.price_per_hour;
 
@@ -30,18 +29,25 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * PRICE INPUT
    ***************************/
 
-  $scope.manageTime = function(way) {
+  $scope.increaseTime = function() {
     if($scope.meterInfo != null) {
-      if(way == "+" && $scope.timeSelected != $scope.meterInfo.limit) {
+      if($scope.meterInfo.limit == 0 || $scope.meterInfo.limit != 0 && $scope.timeSelected != $scope.meterInfo.limit ) {
         $scope.timeSelected += $scope.meterInfo.resolution;
-        $scope.price += $scope.meterInfo.price_per_hour;
-      } 
-      if(way == "-" && $scope.timeSelected != $scope.meterInfo.resolution) {
-        $scope.timeSelected -= $scope.meterInfo.resolution;
-        $scope.price -= $scope.meterInfo.price_per_hour;
+        $scope.price = $scope.meterInfo.price_per_hour / 60 * $scope.timeSelected;
+        $scope.price = parseFloat($scope.price.toFixed(2));
       }
     }
-   }
+  }
+
+  $scope.decreaseTime = function() {
+    if($scope.meterInfo != null) {
+      if($scope.timeSelected != $scope.meterInfo.resolution) {
+        $scope.timeSelected -= $scope.meterInfo.resolution;
+        $scope.price = $scope.meterInfo.price_per_hour / 60 * $scope.timeSelected;
+        $scope.price = parseFloat($scope.price.toFixed(2));
+      }
+    }
+  }
 
   /****************************
    * DATA CONVERTION
@@ -77,8 +83,13 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     $scope.$apply(function() {
       $scope.meterInfo = angular.fromJson(dataReceived);
 
+      $scope.meterInfo.price_per_hour = parseFloat($scope.meterInfo.price_per_hour);
+      $scope.meterInfo.resolution = parseFloat($scope.meterInfo.resolution);
+      $scope.meterInfo.limit = parseFloat($scope.meterInfo.limit);
+
       $scope.timeSelected = $scope.meterInfo.resolution;
-      $scope.price = $scope.meterInfo.price_per_hour;
+      $scope.price = $scope.meterInfo.price_per_hour / 60 * $scope.timeSelected;
+      $scope.price = parseFloat($scope.price.toFixed(2));
     });
   }
 
@@ -159,6 +170,6 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * ONLOAD
    ***************************/
 
-  // $scope.readData();
+  $scope.readData();
 
 });

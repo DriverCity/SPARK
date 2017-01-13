@@ -30,7 +30,7 @@
       <!-- Meter informations -->
       <div class="card">
         <div class="item item-text-wrap centered">
-          <strong>{{ meterInfo.price_per_hour }}</strong> € / <strong>{{ meterInfo.resolution }}</strong> min<br>
+          <strong>{{ meterInfo.price_per_hour }}</strong> € / hour<br>
           <span class="limit">{{ meterInfo.limit }} minutes max</span>
         </div>
       </div>
@@ -38,14 +38,14 @@
       <!-- Time input -->
       <div class="row centered">
         <div class="col">
-          <button class="button icon ion-minus-round" ng-click="manageTime('-')"></button>
+          <button class="button icon ion-minus-round" ng-click="decreaseTime()"></button>
         </div>
         <div class="col">
           <strong>{{ timeSelected }} minutes</strong><br />
           Price : {{ price }} €
         </div>
         <div class="col">
-          <button class="button icon ion-plus-round" ng-click="manageTime('+')"></button>
+          <button class="button icon ion-plus-round" ng-click="increaseTime()"></button>
         </div>
       </div>
 
