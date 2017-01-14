@@ -151,3 +151,43 @@ TEST (ParkingEventTest, FromStringDurationNotANumber)
    spark::ParkingEvent e1 = spark::ParkingEvent::fromString(str);
    EXPECT_FALSE(e1.isValid());
 }
+
+
+TEST (ParkingEventTest, ShouldBeEqual)
+{
+    spark::ParkingEvent e1 = spark::ParkingEvent("ASD123", "2000-01-01 10:10", 90, spark::PaymentToken("ver", "id123"));
+    spark::ParkingEvent e2 = spark::ParkingEvent("ASD123", "2000-01-01 10:10", 90, spark::PaymentToken("ver", "id123"));
+    EXPECT_TRUE(e1 == e2);
+}
+
+
+TEST (ParkingEventTest, ShouldNotBeEqual)
+{
+    spark::ParkingEvent e1 = spark::ParkingEvent("ASD123", "2000-01-01 10:10", 90, spark::PaymentToken("ver", "id123"));
+
+    {
+        // diff regnum
+        spark::ParkingEvent e2 = spark::ParkingEvent("ASD456", "2000-01-01 10:10", 90, spark::PaymentToken("ver", "id123"));
+        EXPECT_FALSE(e1 == e2);
+    }
+    {
+        // diff time
+        spark::ParkingEvent e2 = spark::ParkingEvent("ASD123", "2000-01-01 10:11", 90, spark::PaymentToken("ver", "id123"));
+        EXPECT_FALSE(e1 == e2);
+    }
+    {
+        // diff duration
+        spark::ParkingEvent e2 = spark::ParkingEvent("ASD123", "2000-01-01 10:10", 91, spark::PaymentToken("ver", "id123"));
+        EXPECT_FALSE(e1 == e2);
+    }
+    {
+        // diff verifier
+        spark::ParkingEvent e2 = spark::ParkingEvent("ASD123", "2000-01-01 10:10", 90, spark::PaymentToken("asd", "id123"));
+        EXPECT_FALSE(e1 == e2);
+    }
+    {
+        // diff transaction id
+        spark::ParkingEvent e2 = spark::ParkingEvent("ASD123", "2000-01-01 10:10", 90, spark::PaymentToken("ver", "id456"));
+        EXPECT_FALSE(e1 == e2);
+    }
+}

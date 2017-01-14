@@ -2,6 +2,7 @@
 #include "PriceProvider.h"
 #include "CloudService/CloudServiceMock.h"
 
+using namespace ::testing;
 
 TEST(PriceProviderTest,constructortest)
 {
@@ -14,16 +15,15 @@ TEST(PriceProviderTest,constructortest)
     EXPECT_EQ(&cloudmock,provider.getCloudService());
 }
 
-TEST(PriceInfo, getpricetest)
+TEST(PriceProviderTest, getpricetest)
 {
     spark::PriceProvider provider;
     sparktest::CloudServiceMock cloudmock;
-
     provider.init(&cloudmock);
 
-    cloudmock.m_pricePerHour = 2.5;
-    cloudmock.m_parkingTimeResolution = 2;
-    cloudmock.m_timeLimit =5;
+    EXPECT_CALL(cloudmock, getPricePerHour()).WillOnce(Return(2.5));
+    EXPECT_CALL(cloudmock, getParkingTimeResolution()).WillOnce(Return(2));
+    EXPECT_CALL(cloudmock, getTimeLimit()).WillOnce(Return(5));
 
     spark::PriceInfo info = provider.getPriceInfo();
     EXPECT_EQ(2.5,info.pricePerHour());

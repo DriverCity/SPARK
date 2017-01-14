@@ -18,7 +18,7 @@
 #define INPUT_FIFO "testInputFifo"
 #define RESPONSE_FIFO "testResponseFifo"
 
-
+using namespace ::testing;
 
 class BLEServiceTest : public ::testing::Test
 {
@@ -26,9 +26,7 @@ public:
 
     BLEServiceTest():
         ::testing::Test(),
-        m_service(nullptr),
-        m_priceProvider(new sparktest::PriceProviderMock()),
-        m_verifier(new sparktest::VerifyParkingMock())
+        m_service(nullptr)
     {
     }
 
@@ -36,8 +34,8 @@ public:
 protected:
 
     std::shared_ptr<spark::BLEService> m_service;
-    std::shared_ptr<sparktest::PriceProviderMock> m_priceProvider;
-    std::shared_ptr<sparktest::VerifyParkingMock> m_verifier;
+    sparktest::PriceProviderMock m_priceProvider;
+    sparktest::VerifyParkingMock m_verifier;
     int m_responseFd;
 
     void SetUp()
@@ -57,8 +55,6 @@ protected:
     void TearDown()
     {
         m_service.reset();
-        m_priceProvider->reset();
-        m_verifier->reset();
         spark::Logger::close();
         close(m_responseFd);
         system("rm " INPUT_FIFO);
@@ -94,30 +90,31 @@ TEST_F(BLEServiceTest, ConstructorTest)
 
 TEST_F(BLEServiceTest, InitTest)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
+    m_service->init(&m_priceProvider, &m_verifier);
 
-    EXPECT_TRUE(m_service->priceProvider() == m_priceProvider.get());
-    EXPECT_TRUE(m_service->verifier() == m_verifier.get());
+    EXPECT_TRUE(m_service->priceProvider() == &m_priceProvider);
+    EXPECT_TRUE(m_service->verifier() == &m_verifier);
 }
 
 
 TEST_F(BLEServiceTest, GetPriceSuccess)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 0, 10);
 
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
     m_service->start();
     writeInputFifo("price\n");
     sleep(1); // Give service time to respond.
-    EXPECT_EQ(m_priceProvider->m_info.toString()+"\n", readResponseFifo());
+    EXPECT_EQ(price.toString()+"\n", readResponseFifo());
 }
 
 
 TEST_F(BLEServiceTest, GetPriceFailure)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_priceProvider->m_info = spark::PriceInfo();
+    m_service->init(&m_priceProvider, &m_verifier);
 
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(spark::PriceInfo()));
     m_service->start();
     writeInputFifo("price\n");
     sleep(1); // Give service time to respond.
@@ -127,7 +124,8 @@ TEST_F(BLEServiceTest, GetPriceFailure)
 
 TEST_F (BLEServiceTest, UnknownCommand)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).Times(0);
+    m_service->init(&m_priceProvider, &m_verifier);
     m_service->start();
     writeInputFifo("NotACommand");
     sleep(1); // Give service time to respond.
@@ -137,32 +135,30 @@ TEST_F (BLEServiceTest, UnknownCommand)
 
 TEST_F (BLEServiceTest, RegisterSuccess)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_verifier->m_result = spark::IVerifyParking::OK;
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
-
-    m_service->start();
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 0, 10);
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
+
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
+    EXPECT_CALL(m_verifier, verify(e)).WillOnce(Return(spark::IVerifyParking::OK));
+    m_service->start();
     writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("OK\n", readResponseFifo());
-    EXPECT_EQ("ABC123", m_verifier->m_lastEvent.registerNumber());
-    EXPECT_EQ("2016-11-23 12:30", m_verifier->m_lastEvent.startingTime());
-    EXPECT_EQ(30, m_verifier->m_lastEvent.duration());
-    EXPECT_EQ("ver", m_verifier->m_lastEvent.token().verifier());
-    EXPECT_EQ("123", m_verifier->m_lastEvent.token().uid());
 }
 
 
 TEST_F (BLEServiceTest, RegisterFailureTimeout)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_verifier->m_result = spark::IVerifyParking::TIMEOUT;
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
-
-    m_service->start();
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 0, 10);
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
-    writeInputFifo(e.toString());
+
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
+    EXPECT_CALL(m_verifier, verify(e)).WillOnce(Return(spark::IVerifyParking::TIMEOUT));
+    m_service->start();
+
+    writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("Error: Request timed out.\n", readResponseFifo());
 }
@@ -170,13 +166,15 @@ TEST_F (BLEServiceTest, RegisterFailureTimeout)
 
 TEST_F (BLEServiceTest, RegisterFailureInvalidToken)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_verifier->m_result = spark::IVerifyParking::INVALID_TOKEN;
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
-
-    m_service->start();
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 0, 10);
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
-    writeInputFifo(e.toString());
+
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
+    EXPECT_CALL(m_verifier, verify(e)).WillOnce(Return(spark::IVerifyParking::INVALID_TOKEN));
+    m_service->start();
+
+    writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("Error: Payment token is invalid.\n", readResponseFifo());
 }
@@ -184,13 +182,14 @@ TEST_F (BLEServiceTest, RegisterFailureInvalidToken)
 
 TEST_F (BLEServiceTest, RegisterFailureOtherError)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_verifier->m_result = spark::IVerifyParking::OTHER;
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 0, 10);
-
-    m_service->start();
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 0, 10);
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 30, spark::PaymentToken("ver", "123"));
-    writeInputFifo(e.toString());
+
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
+    EXPECT_CALL(m_verifier, verify(e)).WillOnce(Return(spark::IVerifyParking::OTHER));
+    m_service->start();
+    writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("Error: Unknown error.\n", readResponseFifo());
 }
@@ -198,12 +197,14 @@ TEST_F (BLEServiceTest, RegisterFailureOtherError)
 
 TEST_F (BLEServiceTest, ParkingTimeExceedsTheLimit)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 120, 10);
-
-    m_service->start();
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 120, 10);
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 200, spark::PaymentToken("ver", "123"));
-    writeInputFifo(e.toString());
+
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
+    EXPECT_CALL(m_verifier, verify(_)).Times(0);
+    m_service->start();
+    writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("Error: Duration exceeds time limit.\n", readResponseFifo());
 }
@@ -211,12 +212,14 @@ TEST_F (BLEServiceTest, ParkingTimeExceedsTheLimit)
 
 TEST_F (BLEServiceTest, ParkingTimeNotAMultipleOfResolution)
 {
-    m_service->init(m_priceProvider.get(), m_verifier.get());
-    m_priceProvider->m_info = spark::PriceInfo(1.2, 120, 10);
+    m_service->init(&m_priceProvider, &m_verifier);
+    spark::PriceInfo price(1.2, 120, 10);
 
+    EXPECT_CALL(m_priceProvider, getPriceInfo()).WillOnce(Return(price));
+    EXPECT_CALL(m_verifier, verify(_)).Times(0);
     m_service->start();
     spark::ParkingEvent e("ABC123", "2016-11-23 12:30", 15, spark::PaymentToken("ver", "123"));
-    writeInputFifo(e.toString());
+    writeInputFifo(e.toString() + "\n");
     sleep(1);
     EXPECT_EQ("Error: Invalid parking duration.\n", readResponseFifo());
 }

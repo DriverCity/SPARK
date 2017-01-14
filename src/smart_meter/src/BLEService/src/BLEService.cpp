@@ -128,15 +128,16 @@ void BLEService::startServiceThread()
 void BLEService::handleMessage(const std::string& msg)
 {
     LOG_DEBUG("Received message: " << msg);
-    PriceInfo info = m_priceProvider->getPriceInfo();
 
     if (msg == GET_PRICE_MESSAGE){
+        PriceInfo info = m_priceProvider->getPriceInfo();
         priceInfoRequest(info);
         return;
     }
 
     ParkingEvent event = ParkingEvent::fromString(msg);
     if (event.isValid()){
+        PriceInfo info = m_priceProvider->getPriceInfo();
         verifyRequest(info, event);
     }
 

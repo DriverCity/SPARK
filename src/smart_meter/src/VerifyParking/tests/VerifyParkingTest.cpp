@@ -3,19 +3,7 @@
 #include "ParkingDatabase/ParkingDatabaseMock.h"
 #include "CloudService/CloudServiceMock.h"
 
-namespace
-{
-
-void CmpEvents(spark::ParkingEvent expected, spark::ParkingEvent actual)
-{
-    EXPECT_EQ(expected.registerNumber(), actual.registerNumber());
-    EXPECT_EQ(expected.startingTime(), actual.startingTime());
-    EXPECT_EQ(expected.duration(), actual.duration());
-    EXPECT_EQ(expected.token().verifier(), actual.token().verifier());
-    EXPECT_EQ(expected.token().uid(), actual.token().uid());
-}
-
-}
+using namespace ::testing;
 
 
 class VerifyParkingTest : public ::testing::Test
@@ -54,70 +42,65 @@ TEST_F(VerifyParkingTest, initTest)
 TEST_F(VerifyParkingTest, VerifyParkingShouldReturnOk)
 {
     m_verifier->init(&m_cloudMock);
-    m_cloudMock.m_connectionOk = true;
-    m_cloudMock.m_verifyResult = spark::ICloudService::OK;
     spark::ParkingEvent e("ABC123", "2000-01-01 12:00", 90, spark::PaymentToken("ver", "id123"));
 
+    EXPECT_CALL(m_cloudMock, checkConnection()).WillOnce(Return(true));
+    EXPECT_CALL(m_cloudMock, verifyParkingEvent(e)).WillOnce(Return(spark::ICloudService::OK));
     spark::IVerifyParking::Result result = m_verifier->verify(e);
 
     EXPECT_EQ(spark::IVerifyParking::OK, result);
-    CmpEvents(e, m_cloudMock.m_lastEvent);
 }
 
 
 TEST_F(VerifyParkingTest, VerifyParkingShouldReturnTimeoutFromCloud)
 {
     m_verifier->init(&m_cloudMock);
-    m_cloudMock.m_connectionOk = true;
-    m_cloudMock.m_verifyResult = spark::ICloudService::TIMEOUT;
     spark::ParkingEvent e("ABC123", "2000-01-01 12:00", 90, spark::PaymentToken("ver", "id123"));
 
+    EXPECT_CALL(m_cloudMock, checkConnection()).WillOnce(Return(true));
+    EXPECT_CALL(m_cloudMock, verifyParkingEvent(e)).WillOnce(Return(spark::ICloudService::TIMEOUT));
     spark::IVerifyParking::Result result = m_verifier->verify(e);
 
     EXPECT_EQ(spark::IVerifyParking::TIMEOUT, result);
-    CmpEvents(e, m_cloudMock.m_lastEvent);
 }
 
 
 TEST_F(VerifyParkingTest, VerifyParkingShouldReturnInvalidToken)
 {
     m_verifier->init(&m_cloudMock);
-    m_cloudMock.m_connectionOk = true;
-    m_cloudMock.m_verifyResult = spark::ICloudService::INVALID_TOKEN;
     spark::ParkingEvent e("ABC123", "2000-01-01 12:00", 90, spark::PaymentToken("ver", "id123"));
 
+    EXPECT_CALL(m_cloudMock, checkConnection()).WillOnce(Return(true));
+    EXPECT_CALL(m_cloudMock, verifyParkingEvent(e)).WillOnce(Return(spark::ICloudService::INVALID_TOKEN));
     spark::IVerifyParking::Result result = m_verifier->verify(e);
 
     EXPECT_EQ(spark::IVerifyParking::INVALID_TOKEN, result);
-    CmpEvents(e, m_cloudMock.m_lastEvent);
 }
 
 
 TEST_F(VerifyParkingTest, VerifyParkingShouldReturnOtherError)
 {
     m_verifier->init(&m_cloudMock);
-    m_cloudMock.m_connectionOk = true;
-    m_cloudMock.m_verifyResult = spark::ICloudService::OTHER;
     spark::ParkingEvent e("ABC123", "2000-01-01 12:00", 90, spark::PaymentToken("ver", "id123"));
 
+    EXPECT_CALL(m_cloudMock, checkConnection()).WillOnce(Return(true));
+    EXPECT_CALL(m_cloudMock, verifyParkingEvent(e)).WillOnce(Return(spark::ICloudService::OTHER));
     spark::IVerifyParking::Result result = m_verifier->verify(e);
 
     EXPECT_EQ(spark::IVerifyParking::OTHER, result);
-    CmpEvents(e, m_cloudMock.m_lastEvent);
 }
 
 
 TEST_F(VerifyParkingTest, VerifyParkingNoConnection)
 {
     m_verifier->init(&m_cloudMock);
-    m_cloudMock.m_connectionOk = false;
-    m_cloudMock.m_verifyResult = spark::ICloudService::OK;
     spark::ParkingEvent e("ABC123", "2000-01-01 12:00", 90, spark::PaymentToken("ver", "id123"));
 
+    EXPECT_CALL(m_cloudMock, checkConnection()).WillOnce(Return(false));
+    EXPECT_CALL(m_cloudMock, verifyParkingEvent(_)).Times(0);
     spark::IVerifyParking::Result result = m_verifier->verify(e);
 
     EXPECT_EQ(spark::IVerifyParking::TIMEOUT, result);
-    EXPECT_FALSE(m_cloudMock.m_lastEvent.isValid());
 }
 
 

@@ -91,6 +91,17 @@ std::string ParkingEvent::toString() const
     return rval;
 }
 
+
+bool ParkingEvent::operator==(const ParkingEvent &rhs) const
+{
+    return duration() == rhs.duration() &&
+            registerNumber() == rhs.registerNumber() &&
+            startingTime() == rhs.startingTime() &&
+            token().uid() == rhs.token().uid() &&
+            token().verifier() == rhs.token().verifier();
+}
+
+
 ParkingEvent ParkingEvent::fromString(const std::string &str)
 {
     std::vector<std::string> parts;

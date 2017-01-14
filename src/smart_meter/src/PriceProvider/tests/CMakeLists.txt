@@ -34,4 +34,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 add_executable(${PROJECT_NAME} ${TEST_SRCS} ${SRCS})
-target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS} gtest gtest_main)
+target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS} libgtest.a libgmock.a libgtest_main.a pthread)

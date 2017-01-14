@@ -103,6 +103,13 @@ public:
     std::string toString() const;
 
     /**
+     * @brief Comparison for testing purposes.
+     * @param rhs Other event
+     * @return True, if objects are identical.
+     */
+    bool operator==(const ParkingEvent& rhs) const;
+
+    /**
      * @brief Parse ParkingEvent from string.
      * @param str input string.
      * @return Parking event parsed from string. If parsing fails, return invalid event.
