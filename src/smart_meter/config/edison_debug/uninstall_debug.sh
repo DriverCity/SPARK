@@ -6,3 +6,4 @@ VARIANT=edison_debug
 if [ -d "$BASEDIR/$VARIANT" ]; then
   rm -rf $BASEDIR/$VARIANT
 fi
+
