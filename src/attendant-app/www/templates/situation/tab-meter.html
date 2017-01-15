@@ -7,112 +7,87 @@
 
     <div class="container align-right">
       <div class="list">
-            <div class="row">
-              <div class="col">
-          <!-- Position label -->
-          <strong>Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}</strong><br />
-          {{ autoRefreshPosition ? positionText : 'blocked' }}
-          <!-- Action buttons -->
-              </div>
+        <div class="row">
+          <div class="col">
+            <!-- Position label -->
+            <strong>Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}</strong><br />
+            {{ autoRefreshPosition ? positionText : 'blocked' }}
+          </div>
 
 
-            <!-- Right -->
-            <div class="container align-right">
+          <!-- Right -->
+          <div class="container align-right">
             <div class="col">
-              <button class="button button-balanced " ng-click="openClickMap()">
+              <button class="button button-positive " ng-click="openClickMap()">
                 Choose Area
               </button>
             </div>
-              </div>
+          </div>
 
 
           <!-- Left -->
           <div class="container align-right">
-          <div class="col">
-            <button class="button button-balanced" ng-click="changeRefreshPosition()">
-              <span ng-show="!autoRefreshPosition">unlock</span>
-              <span ng-show="autoRefreshPosition">lock</span>
-            </button>
-          </div>
-          </div>
-
-
-    <!--div class="container align-center">
-      <div class="list">
-        <div class="item centered">
-          <!-- Position label -->
-          <!--strong>Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}</strong><br />
-          {{ autoRefreshPosition ? positionText : 'blocked' }}
-          <!-- Action buttons -->
-          <!--div class="row">
-
-            <!-- Left -->
-            <!--div class="col">
-              <button class="button button-balanced button-block" ng-click="changeRefreshPosition()">
+            <div class="col">
+              <button class="button button-positive" ng-click="changeRefreshPosition()">
                 <span ng-show="!autoRefreshPosition">unlock</span>
                 <span ng-show="autoRefreshPosition">lock</span>
               </button>
             </div>
-
-            <!-- Right -->
-            <!--div class="col">
-              <button class="button button-balanced button-block" ng-click="openClickMap()">
-                Manually
-              </button>
-            </div--->
           </div>
 
-          <!-- Scan button -->
-          <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
-            Scan for cars
-          </button>
-          <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
-            {{ scanText }}
-          </span>
         </div>
+
+        <!-- Scan button -->
+        <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
+          Scan for cars
+        </button>
+        <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+          {{ scanText }}
+        </span>
       </div>
     </div>
+  </div>
 
-    <div class="item item-divider">
-      In this area
-    </div>
+  <div class="item item-divider">
+    In this area
+  </div>
 
-    <!-- List -->
-    <div class="container align-center">
-      <div id="peripheral-list" ng-show="!scanning">
-        <div class="list">
-          <div class="item item-icon-left" ng-repeat="device in blePeripherals" ng-class="device.validity ? 'valid' : 'invalid'" ng-show="device != '' && device.inThisArea != undefined && device.inThisArea">
-            <div class="row">
-              <div class="col col-100">
-                <i class="icon ion-checkmark-circled" ng-show="device.validity"></i>
-                <i class="icon ion-close-circled" ng-show="!device.validity"></i>
-                <span class="register-number">{{ device.name }}</span>
-              </div>
+  <!-- List -->
+  <div class="container align-center">
+    <div id="peripheral-list" ng-show="!scanning">
+      <div class="list">
+        <div class="item item-icon-left" ng-repeat="device in blePeripherals" ng-class="device.validity ? 'valid' : 'invalid'" ng-show="device != '' && device.inThisArea != undefined && device.inThisArea">
+          <div class="row">
+            <div class="col col-100">
+              <i class="icon ion-checkmark-circled" ng-show="device.validity"></i>
+              <i class="icon ion-close-circled" ng-show="!device.validity"></i>
+              <span class="register-number">{{ device.name }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="item item-divider">
-      In other area
-    </div>
+  <div class="item item-divider">
+    In other area
+  </div>
 
-    <!-- List -->
-    <div class="container align-center">
-      <div id="peripheral-list" ng-show="!scanning">
-        <div class="list">
-          <div class="item item-icon-left" ng-repeat="device in blePeripherals" ng-show="device != '' && device.inThisArea != undefined && !device.inThisArea">
-            <div class="row">
-              <div class="col col-100">
-                <i class="icon ion-help-circled"></i>
-                <span class="register-number">{{ device.name }}</span>
-              </div>
+  <!-- List -->
+  <div class="container align-center">
+    <div id="peripheral-list" ng-show="!scanning">
+      <div class="list">
+        <div class="item item-icon-left" ng-repeat="device in blePeripherals" ng-show="device != '' && device.inThisArea != undefined && !device.inThisArea">
+          <div class="row">
+            <div class="col col-100">
+              <i class="icon ion-help-circled"></i>
+              <span class="register-number">{{ device.name }}</span>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-  </ion-content>
+</ion-content>
 </ion-view>

@@ -1,22 +1,26 @@
 <ion-view view-title= "Check disk parking">
-  <!-- Nav buttons -->
-  <ion-nav-buttons side="secondary">
-    <button class="button" ng-click="selectTimeLimit()">
-      Set limit
-    </button>
-  </ion-nav-buttons>
+</ion-nav-buttons>
 
-  <ion-content>
+<ion-content>
 
-    <div class="card">
-      <div class="item item-text-wrap centered">
-        <strong>Selected time limit</strong> : {{ selectedTimeText == undefined ? 'not selected' : selectedTimeText }}
+  <div class="container align-center">
+    <div class="list">
+      <div class="row">
+        <div class="col">
+          <strong>Selected time limit</strong> : {{ selectedTimeText == undefined ? 'not selected' : selectedTimeText }}
+        </div>
+
+        <div class="container align-right">
+          <div class="col">
+            <button class="button button-positive" ng-click="selectTimeLimit()">
+              Set limit
+            </button>
+
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Beacon -->
-    <!--div class="item item-divider">
-      Scan for cars--->
+      <!-- Beacon -->
 
       <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
         Scan for cars
@@ -26,26 +30,23 @@
         {{ scanText }}
       </span>
 
-      <!--p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p>
-    </div-->
-
-    <div class="container align-center">
-      <!-- Devices -->
-      <div id="peripheral-list" ng-show="!scanning">
-        <div class="list">
-          <div class="item item-icon-left" ng-class="device.treated ? (device.validity ? 'valid' : 'invalid') : ''" ng-repeat="device in blePeripherals" ng-show="device != ''">
-            <div class="row">
-              <div class="col col-100">
-                <i class="icon ion-checkmark-circled" ng-show="device.treated && device.validity ? true : false"></i>
-                <i class="icon ion-close-circled" ng-show="device.treated && !device.validity ? true : false"></i>
-                <span class="register-number">{{ device.name }}</span>
-                &nbsp;&nbsp;&nbsp;<ion-spinner ng-show="!device.treated" icon="spiral"></ion-spinner>
+      <div class="container align-center">
+        <!-- Devices -->
+        <div id="peripheral-list" ng-show="!scanning">
+          <div class="list">
+            <div class="item item-icon-left" ng-class="device.treated ? (device.validity ? 'valid' : 'invalid') : ''" ng-repeat="device in blePeripherals" ng-show="device != ''">
+              <div class="row">
+                <div class="col col-100">
+                  <i class="icon ion-checkmark-circled" ng-show="device.treated && device.validity ? true : false"></i>
+                  <i class="icon ion-close-circled" ng-show="device.treated && !device.validity ? true : false"></i>
+                  <span class="register-number">{{ device.name }}</span>
+                  &nbsp;&nbsp;&nbsp;<ion-spinner ng-show="!device.treated" icon="spiral"></ion-spinner>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-  </ion-content>
-</ion-view>
+    </ion-content>
+  </ion-view>
