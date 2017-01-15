@@ -1,20 +1,53 @@
-<ion-view view-title="Paid context" ng-init="startingInstruction()">
+<ion-view view-title="Check paid parking" ng-init="startingInstruction()">
 
   <!-- Content -->
   <ion-content>
 
     <!-- Buttons -->
-    <div class="container align-center">
+
+    <div class="container align-right">
       <div class="list">
-        <div class="item centered">
+            <div class="row">
+              <div class="col">
           <!-- Position label -->
           <strong>Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}</strong><br />
           {{ autoRefreshPosition ? positionText : 'blocked' }}
           <!-- Action buttons -->
-          <div class="row">
-            
-            <!-- Left -->
+              </div>
+
+
+            <!-- Right -->
+            <div class="container align-right">
             <div class="col">
+              <button class="button button-balanced " ng-click="openClickMap()">
+                Choose Area
+              </button>
+            </div>
+              </div>
+
+
+          <!-- Left -->
+          <div class="container align-right">
+          <div class="col">
+            <button class="button button-balanced" ng-click="changeRefreshPosition()">
+              <span ng-show="!autoRefreshPosition">unlock</span>
+              <span ng-show="autoRefreshPosition">lock</span>
+            </button>
+          </div>
+          </div>
+
+
+    <!--div class="container align-center">
+      <div class="list">
+        <div class="item centered">
+          <!-- Position label -->
+          <!--strong>Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}</strong><br />
+          {{ autoRefreshPosition ? positionText : 'blocked' }}
+          <!-- Action buttons -->
+          <!--div class="row">
+
+            <!-- Left -->
+            <!--div class="col">
               <button class="button button-balanced button-block" ng-click="changeRefreshPosition()">
                 <span ng-show="!autoRefreshPosition">unlock</span>
                 <span ng-show="autoRefreshPosition">lock</span>
@@ -22,16 +55,16 @@
             </div>
 
             <!-- Right -->
-            <div class="col">
+            <!--div class="col">
               <button class="button button-balanced button-block" ng-click="openClickMap()">
                 Manually
               </button>
-            </div>
+            </div--->
           </div>
 
           <!-- Scan button -->
           <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
-            Scan
+            Scan for cars
           </button>
           <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
             {{ scanText }}
@@ -43,7 +76,7 @@
     <div class="item item-divider">
       In this area
     </div>
-    
+
     <!-- List -->
     <div class="container align-center">
       <div id="peripheral-list" ng-show="!scanning">

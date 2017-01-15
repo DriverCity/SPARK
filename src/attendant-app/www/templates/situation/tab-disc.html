@@ -1,4 +1,4 @@
-<ion-view view-title= "Disc context">
+<ion-view view-title= "Check disk parking">
   <!-- Nav buttons -->
   <ion-nav-buttons side="secondary">
     <button class="button" ng-click="selectTimeLimit()">
@@ -10,20 +10,24 @@
 
     <div class="card">
       <div class="item item-text-wrap centered">
-        <strong>Selected time</strong> : {{ selectedTimeText == undefined ? 'undefined' : selectedTimeText }}
+        <strong>Selected time limit</strong> : {{ selectedTimeText == undefined ? 'not selected' : selectedTimeText }}
       </div>
     </div>
 
     <!-- Beacon -->
-    <div class="item item-divider">
-      BLE Pheripherals
+    <!--div class="item item-divider">
+      Scan for cars--->
+
+      <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
+        Scan for cars
+      </button>
 
       <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
         {{ scanText }}
       </span>
 
-      <p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p>
-    </div>
+      <!--p ng-disabled="{{isScanBtnDisabled}}" ng-click="scan()">scan</p>
+    </div-->
 
     <div class="container align-center">
       <!-- Devices -->
