@@ -1,6 +1,6 @@
 <ion-view view-title="Smart meter">
   <ion-content padding="true">
-    
+
     <!-- Icon -->
     <div class="big-icon centered">
       <i class="ion-wifi"></i>
@@ -13,10 +13,10 @@
     </button>
 
     <div class="card">
-      
+
       <!-- Iteam divider -->
       <div class="item item-divider">
-        Devices found
+        Meters found
         <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
           {{ scanText }}
         </span>
@@ -31,9 +31,9 @@
 
           <!-- If no devices found -->
           <li class="item item-button-right" ng-if="blePeripherals != undefined && !blePeripherals.length">
-            No devices has been found
+            No meters has been found
           </li>
-          
+
           <!-- If devices found -->
           <li class="item item-button-right" ng-repeat="device in blePeripherals">
             {{device.name}}
