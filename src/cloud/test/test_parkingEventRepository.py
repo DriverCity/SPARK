@@ -97,7 +97,7 @@ class TestParkingEventIO(TestCase):
 
         # > parkingEventNotification
         actual_notification = self.parking_event_repo.db.get_notification(paid_parking_area_id, expected_token)
-        self.assertEqual(False, actual_notification['willBeStoredToLongTermDataStore'])
+        self.assertEqual(True, actual_notification['willBeStoredToLongTermDataStore'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
@@ -139,7 +139,7 @@ class TestParkingEventIO(TestCase):
 
         # > parkingEventNotifications
         actual_notification = self.parking_event_repo.db.get_notification(paid_parking_area_id, expected_token)
-        self.assertEqual(False, actual_notification['willBeStoredToLongTermDataStore'])
+        self.assertEqual(True, actual_notification['willBeStoredToLongTermDataStore'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
