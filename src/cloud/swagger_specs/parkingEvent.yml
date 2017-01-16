@@ -52,6 +52,15 @@ responses:
     schema:
       id: RecordId
       properties:
-        name:
+        notificationId:
           type: string
           default: '-KXKPLO4_z0JF5yCOhMF'
+        odsId:
+          type: string
+          default: 'ABC-123'
+        odsLookUpId:
+          type: string
+          default: 'ABC-123'
+        timestamp:
+          type: string
+          default: '2017-01-16 19:27:36'

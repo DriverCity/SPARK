@@ -90,8 +90,9 @@ class ParkingEventRepository(FirebaseRepo):
     def store_parking_event(self, request_json):
         register_number = request_json['registerNumber']
         parking_context_type = request_json['parkingContextType']
+        timestamp = TimeUtils.get_local_timestamp()
         parking_event_json = {
-            'timestamp': TimeUtils.get_local_timestamp(),
+            'timestamp': timestamp,
             'parkingType': parking_context_type,
             'registerNumber': register_number,
         }
@@ -126,7 +127,9 @@ class ParkingEventRepository(FirebaseRepo):
 
         notification_add_results = self.__add_parking_event_to_notification_store(notification_json)
 
-        return json.dumps(add_results) # TODO: fix swagger specs for the response
+        add_results['notificationId'] = notification_add_results['name']
+        add_results['timestamp'] = timestamp
+        return json.dumps(add_results)
 
     def remove_dead_events(self):
         notifications_ref = self.db.child(ParkingEventRepository._parking_event_notification_store_node_name)
