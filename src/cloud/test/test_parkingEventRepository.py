@@ -1,5 +1,4 @@
 # TODO: test invalid cases
-# TODO: test timestamps
 # TODO: test cloud storaging
 # TODO: test scheduled tasks
 

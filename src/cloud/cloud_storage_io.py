@@ -10,6 +10,6 @@ class CloudStorageIO():
         bucket = storage.Bucket(storage_client, 'parking-event-store')
         self.blob = storage.Blob('parking-event-blob-' + TimeUtils.get_local_datestamp(), bucket)
 
-    def upload_json_to_parking_event_store(self, json_values):
-        # TODO: compress stored json
+    def upload_to_parking_event_store(self, json_values):
+        # TODO: compress stored json or turn into csv
         self.blob.upload_from_string(json.dumps(json_values), 'application/json')

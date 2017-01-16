@@ -1,16 +1,4 @@
 # Copyright 2016 Team DriverCity. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
 # [START app]
 import logging
@@ -77,8 +65,8 @@ def move_to_long_term_data_store():
     """
     # TODO: logging
     try:
-        new_events = ParkingEventRepository().consume_new_parking_events_by('LongTermDataStore')
-        CloudStorageIO().upload_json_to_parking_event_store(new_events)
+        new_events = ParkingEventRepository().consume_new_parking_events_by('willBeStoredToLongTermDataStore', True, False)
+        CloudStorageIO().upload_to_parking_event_store(new_events)
         return '', 201
     except Exception as e:
         return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
