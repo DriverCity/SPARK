@@ -2,7 +2,7 @@ import json
 from itertools import groupby
 
 from firebase_repo import FirebaseRepo
-from utils import TimeUtils, TokenUtils
+from utils import TimeUtils
 
 
 class ParkingEventRepository(FirebaseRepo):
