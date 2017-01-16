@@ -48,6 +48,7 @@ def store_parking_event():
     except payment.PaymentException as e:
         return jsonify({ 'errorType': 'PAYMENT_ERROR', 'content': e}), 400
 
+
 @app.route('/tasks/occupancy', methods=['GET'])
 def update_occupancy_rates():
     """

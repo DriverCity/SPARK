@@ -59,8 +59,7 @@ class TestParkingEventIO(TestCase):
 
         # > parkingEventNotification
         actual_notification = self.parking_event_repo.db.get_notification(parking_disc_parking_area_id, expected_token)
-        self.assertEqual(True, actual_notification['isConsumedByLongTermDataStore'])
-        #self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
+        self.assertEqual(False, 'willBeStoredToLongTermDataStore' in actual_notification)
         self.assertEqual(parking_disc_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
@@ -99,8 +98,7 @@ class TestParkingEventIO(TestCase):
 
         # > parkingEventNotification
         actual_notification = self.parking_event_repo.db.get_notification(paid_parking_area_id, expected_token)
-        self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
-        self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
+        self.assertEqual(False, actual_notification['willBeStoredToLongTermDataStore'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])
@@ -142,8 +140,7 @@ class TestParkingEventIO(TestCase):
 
         # > parkingEventNotifications
         actual_notification = self.parking_event_repo.db.get_notification(paid_parking_area_id, expected_token)
-        self.assertEqual(False, actual_notification['isConsumedByLongTermDataStore'])
-        self.assertEqual(False, actual_notification['isConsumedByOccupancyAnalysis'])
+        self.assertEqual(False, actual_notification['willBeStoredToLongTermDataStore'])
         self.assertEqual(paid_parking_area_id, actual_notification['parkingAreaId'])
         self.assertEqual(expected_token, actual_notification['parkingEventId'])
         self.assertEqual(register_number, actual_notification['registerNumber'])

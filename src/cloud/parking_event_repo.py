@@ -20,20 +20,17 @@ class ParkingEventRepository(FirebaseRepo):
             .child(register_number) \
             .remove()
 
-    def __remove_parking_events_from_ods_by_lookup_events(self, lookup_events):
-        for e in lookup_events:
-            parking_area_id = e['parkingAreaId']
-            register_number = e['registerNumber']
+    def __remove_parking_events_from_ods_by_area_id_and_register_number(self, parking_area_id, register_number):
 
-            # Remove from the ODS
-            self.db \
-                .child(ParkingEventRepository._parking_event_ODS_node_name) \
-                .child(parking_area_id) \
-                .child(register_number) \
-                .remove()
+        # Remove from the ODS
+        self.db \
+            .child(ParkingEventRepository._parking_event_ODS_node_name) \
+            .child(parking_area_id) \
+            .child(register_number) \
+            .remove()
 
-            # Remove from the lookup
-            self.__remove_lookup_events_by_register_number(register_number)
+        # Remove from the lookup
+        self.__remove_lookup_events_by_register_number(register_number)
 
     def __remove_parking_event_from_ods_by_register_number(self, register_number):
         lookup_event = self.db \
@@ -42,7 +39,8 @@ class ParkingEventRepository(FirebaseRepo):
             .get().val()
 
         if lookup_event is not None:
-            self.__remove_parking_events_from_ods_by_lookup_events([lookup_event])
+            self.__remove_parking_events_from_ods_by_area_id_and_register_number(lookup_event['parkingAreaId'],
+                                                                                 register_number)
 
     def __add_parking_event_to_ods(self, parking_area_id, parking_event_json):
 
@@ -101,21 +99,22 @@ class ParkingEventRepository(FirebaseRepo):
         # Store the incoming event to ODS
         add_results = self.__add_parking_event_to_ods(parking_area_id, parking_event_json)
 
-        is_to_be_consumed_by_occupancy_analysis = (parking_context_type == 'PAID')
-        is_to_be_consumed_by_long_term_datastore = (parking_context_type == 'PAID')
-
-        # Store notification about the event for event consumption
+        # Store notification about the event for event consumption and clean up
         # > Notifications are stored in a flattened format
         # > Better use of indexing for server side event consumers
         notification_json = {
             'parkingAreaId': parking_area_id,
             'registerNumber': register_number,
             'parkingEventId': add_results['odsId'],
-            'isConsumedByOccupancyAnalysis': (is_to_be_consumed_by_occupancy_analysis == False),
-            'isConsumedByLongTermDataStore': (is_to_be_consumed_by_long_term_datastore == False), #TODO: this is a bit illogical
             'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7), # TODO make configurable
             'parkingAreaParkingEvent': parking_event_json
         }
+
+        # Only PAID context events are stored long term, because they are the only
+        # types of events that one gets location information of.
+        if parking_context_type == 'PAID':
+            notification_json['willBeStoredToLongTermDataStore'] = False
+
         notification_add_results = self.__add_parking_event_to_notification_store(notification_json)
 
         return json.dumps(add_results) # TODO: fix swagger specs for the response
@@ -128,29 +127,24 @@ class ParkingEventRepository(FirebaseRepo):
             .start_at(TimeUtils.get_epoch_timestamp_plus_seconds(-365*24*60*60))\
             .end_at(TimeUtils.get_epoch_timestamp_plus_seconds(0)).get()
         dead_notifications = [(dn.key(), dn.val()) for dn in dead_notifications.each()
-                              if all([dn.val()['isConsumedByOccupancyAnalysis'], dn.val()['isConsumedByLongTermDataStore']])]
+                              if 'willBeStoredToLongTermDataStore' not in dn.val()
+                              or dn.val()['willBeStoredToLongTermDataStore'] == False]
 
         for dn_id, dn in dead_notifications:
 
             # Remove dead events
-            self.db.child(ParkingEventRepository._parking_event_ODS_node_name)\
-                .child(dn['parkingAreaId'])\
-                .child(dn['registerNumber'])\
-                .child(dn['parkingEventId'])\
-                .remove()
-
-            # TODO: Remove from ODS registry
+            self.__remove_parking_events_from_ods_by_area_id_and_register_number(dn['parkingAreaId'],
+                                                                                 dn['registerNumber'])
 
             # Remove dead notifications
             self.db.child(ParkingEventRepository._parking_event_notification_store_node_name)\
                 .child(dn_id)\
                 .remove()
 
-    # consumer is either LongTermDataStore or OccupancyAnalysis
-    def consume_new_parking_events_by(self, consumer):
+    def consume_new_parking_events_by(self, flag_name):
         consumed_notifications = self.db\
             .child(ParkingEventRepository._parking_event_notification_store_node_name)\
-            .order_by_child('isConsumedBy' + consumer)\
+            .order_by_child(flag_name)\
             .start_at(False).end_at(False)\
             .get()
 
@@ -174,7 +168,7 @@ class ParkingEventRepository(FirebaseRepo):
             self.db\
                 .child(ParkingEventRepository._parking_event_notification_store_node_name)\
                 .child(cn.key())\
-                .update({'isConsumedBy'+consumer:True})
+                .update({flag_name:True})
 
         return result
 
@@ -192,6 +186,6 @@ class ParkingEventRepository(FirebaseRepo):
         occuring_events = self.db.sort(occuring_events, 'parkingAreaId')
 
         for k, g in groupby(occuring_events.each(), lambda i: i.val()['parkingAreaId']):
-            counts[k] = sum(1 for i in g)
+            counts[str(k)] = sum(1 for i in g)
 
         return counts
