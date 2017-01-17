@@ -20,10 +20,7 @@ set(SRCS
 
 # Link other components
 set(LINKED_LIBS Logger)
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-    message($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

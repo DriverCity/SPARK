@@ -20,11 +20,8 @@ set(SRCS
 )
 
 # Link other components
-set(LINKED_LIBS Logger misc PriceProvider GlobalConfiguration)
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-    message($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+set(LINKED_LIBS Logger misc GlobalConfiguration PriceProvider)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 # Do not change
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

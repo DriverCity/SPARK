@@ -18,14 +18,12 @@ set(SRCS
 )
 
 # Link other components
-set(LINKED_LIBS Logger misc)
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+set(LINKED_LIBS Logger misc sqlite3)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 add_executable(${PROJECT_NAME} ${TEST_SRCS} ${SRCS})
-target_link_libraries(${PROJECT_NAME} gtest gtest_main sqlite3 ${LINKED_LIBS})
+target_link_libraries(${PROJECT_NAME} gtest gtest_main ${LINKED_LIBS})

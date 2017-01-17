@@ -22,10 +22,7 @@ set(SRCS main.cpp)
 
 # Link other components
 set(LINKED_LIBS Logger GlobalConfiguration)
-
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 add_executable(${PROJECT_NAME} ${SRCS})
 target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS})

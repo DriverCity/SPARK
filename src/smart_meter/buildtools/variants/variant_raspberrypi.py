@@ -1,11 +1,8 @@
 import os
 from common_variants import *
 
-os.environ[CXX] = os.environ['HOME'] + '/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++'
-os.environ[CC] = os.environ['HOME'] + '/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc'
-
-os.environ[CFLAGS] += ' --sysroot /mnt/raspberry-rootfs'
-os.environ[CXXFLAGS] += ' --sysroot /mnt/raspberry-rootfs'
+os.environ[CXX] = 'arm-linux-gnueabihf-g++'
+os.environ[CC] = 'arm-linux-gnueabihf-gcc'
 
 # Switch optimitisation on for release build.
 if os.environ['BUILD_TYPE'] == "release":
