@@ -44,9 +44,29 @@ This document describes what 3rd party components are needed and how to install 
 
 ## Curl
 
-Install development package:
+Curl is included in Edison development kit. No installation is required if you are building for Intel Edison.
+
+Install libcurl package for development environment:
 
 ```sh
 sudo apt-get install libcurl4-openssl-dev
 ```
 
+Cross-compile curl for Raspberry Pi:
+
+- Make a directory to location of your choise. Run following commands to cross-compile curl for ARM.
+
+  ```sh
+  wget https://curl.haxx.se/download/curl-7.52.1.tar.gz
+  tar -xf curl-7.52.1.tar.gz
+  cd curl-7.52.1
+  ./configure --host=arm-linux-gnueabihf --prefix=$PWD/build
+  make && make install
+  ```
+  
+- In ~/.bashrc, insert following line and restart terminal to apply changes.
+   ```sh
+   export CURL_DIR=/path/to/your/curl-7.52.1/build
+   ```
+ 
+ 
