@@ -37,7 +37,7 @@ For these instructions, you need to have basic knowledge on cloud and database t
   2. Import parking area data to Firebase by selecting the ellipsis icon from the top-right of the *Database* view. Select *Import JSON* from the pop-up menu. With the pop-up window, upload the file [`TampereOpenDataTransformed.json`](https://github.com/DriverCity/SPARK/blob/master/data/TampereOpenDataTransformed.json). This populates Firebase with Tampere city parking area information.
   3. Configure indexes and access permissions by navigating to the *Rules* tab and copying the contents of [Rules.json](https://github.com/DriverCity/SPARK/tree/master/src/cloud/Firebase/Config/Rules.json) to the text area in the *Rules* view.
   4. **Optional**: Configure backups according to the [*Setup* instructions](https://firebase.google.com/docs/database/ios/backups)
-  5. Generate a private key for the Firebase service account according to the [*Add Firebase to your app* instructions](https://firebase.google.com/docs/admin/setup).
+  5. <a name="firebasePrivateKey">Generate a private key for the Firebase service account</a> according to the [*Add Firebase to your app* instructions](https://firebase.google.com/docs/admin/setup). Download the file and rename it as `serviceaccount.json`. This will work as the service account file for Firebase operations via Flask.
 3. Create a Google Cloud Storage bucket with name `parking-event-store` according to the [*Before you begin* and *Create a bucket* instructions](https://cloud.google.com/storage/docs/quickstart-console)
 
 ### Local operations
@@ -52,7 +52,7 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
 3. Install required Python packages listed in `requirements.txt` to the environment with `pip install -r requirements.txt`
 4. Install the Google Cloud Engine utilities according to the [*Before you begin* instructions in *Python Quickstart for Flexible Environment*](https://cloud.google.com/python/getting-started/hello-world)
 5. Install the Google App Engine SDK for Python according to the [*Download the SDK for App Engine* instructions](https://cloud.google.com/appengine/docs/python/download)
-6. Create files `pyrebase_config.json` and `serviceaccount.json`
+6. Create file `pyrebase_config.json`
   - `pyrebase_config.json` should be of format: 
   
   ```json  
@@ -70,8 +70,8 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
     - `databaseURL` is the URL of the Firebase instance, which can be found at https://console.firebase.google.com/project/{your-google-cloud-project-id}/database/data. Usually of the form `https://{your-google-cloud-project-id}.firebase.io`.
     - `storageBucket` is the GCE Cloud Storage Bucket address, which can be found at https://console.cloud.google.com/storage/browser?project={your-google-cloud-project-id}. Usually of the form `staging.{your-google-cloud-project-id}.appspot.com`.
     - `serviceAccount` has a constant value of `serviceaccount.json`, as this is the file where Firebase Service Account information is located.
-  - `serviceaccount.json` should be the service account file from firebase **TODO**
-  - These files are included in `.gitignore`.
+  - Move the [`serviceaccount.json`](#firebasePrivateKey) file to the working directory
+  - Both of these files are included in `.gitignore`.
 7. Execute command `python main.py`. This instantiates the builtin Python server with a Flask API. Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
 
 #### For deploying on GC App Engine
