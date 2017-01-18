@@ -58,12 +58,18 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
   ```json  
   {
     "apiKey": "apiKey",
-    "authDomain": "projectId.firebaseapp.com",
-    "databaseURL": "https://databaseName.firebaseio.com",
-    "storageBucket": "projectId.appspot.com",
+    "authDomain": "{your-google-cloud-project-id}.firebase.io",
+    "databaseURL": "https://{your-google-cloud-project-id}.firebase.io",
+    "storageBucket": "staging.{your-google-cloud-project-id}.appspot.com",
     "serviceAccount": "serviceaccount.json"
   }
   ```
+  - In `pyrebase_config.json`
+    - `apiKey` is the Firebase Web API key, which can be found at https://console.firebase.google.com/project/{your-google-cloud-project-id}/settings/general/
+    - `authDomain` is the Firebase authorised OAuth redirect domain, which can be found at https://console.firebase.google.com/project/{your-google-cloud-project-id}/authentication/providers. Usually of the form `{your-google-cloud-project-id}.firebase.io`
+    - `databaseURL` is the URL of the Firebase instance, which can be found at https://console.firebase.google.com/project/{your-google-cloud-project-id}/database/data. Usually of the form `https://{your-google-cloud-project-id}.firebase.io`.
+    - `storageBucket` is the GCE Cloud Storage Bucket address, which can be found at https://console.cloud.google.com/storage/browser?project={your-google-cloud-project-id}. Usually of the form `staging.{your-google-cloud-project-id}.appspot.com`.
+    - `serviceAccount` has a constant value of `serviceaccount.json`, as this is the file where Firebase Service Account information is located.
   - `serviceaccount.json` should be the service account file from firebase **TODO**
   - These files are included in `.gitignore`.
 7. Execute command `python main.py`. This instantiates the builtin Python server with a Flask API. Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
