@@ -17,7 +17,7 @@ This section describes the most important modules of SPARK Google Cloud implemen
 - `main.py`
   - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). **TODO** Explain what each API call does
 - `firebase_repo.py`
-  - Contains a base class for accessing Firebase using [Pyrebase](https://github.com/thisbejim/Pyrebase) - a Firebase API wrapper for Python. The base class is inherited by `parking_event_repo.py` and `occupancy_rates_repo.py`.
+  - Contains a base class for accessing Firebase using [Pyrebase](https://github.com/thisbejim/Pyrebase) - a Firebase API wrapper for Python. The base class is inherited by `parking_event_repo.py` and `occupancy_rates_repo.py`
 - `parking_event_repo.py`
   - Contains a repository for storing and receiving parking events to/from Firebase
 - `occupancy_rates_repo.py`
