@@ -41,12 +41,16 @@ For these instructions, you need to have basic knowledge on cloud and database t
 It is recommended to use [Ubuntu](https://www.ubuntu.com/download) as the operating system for the local operations. Make yourself a local clone of *this* Git repository. [PyCharm](https://www.jetbrains.com/pycharm/) is recommended as the IDE for Python, yet, in the scope of these instructions, no Python development is required.
 
 #### For running the server locally
+All of the following steps are executed with the directory `.../SPARK/src/cloud/` as the working directory
+
 1. Ensure you have [Python 3](https://www.python.org/download/releases/3.0/) installed.
-2. Navigate to the directory `SPARK/src/cloud/` under the repository directory
-3. [Instantiate an isolated Python environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/), activate it and install the required packages listed in `requirements.txt` to the environment with `pip install -r requirements.txt`
-4. Install the Google Cloud Engine utilities according to the [*Before you begin* instructions in *Python Quickstart for Flexible Environment*](https://cloud.google.com/python/getting-started/hello-world)
-5. Install the Google App Engine SDK for Python according to the [*Download the SDK for App Engine* instructions](https://cloud.google.com/appengine/docs/python/download)
-6. Still in the `SPARK/src/cloud/` directory, execute command `python main.py`. This instantiates the builtin Python server with a [Flask API](http://flask.pocoo.org/). Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
+2. [Instantiate an isolated Python 3 environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/), activate it and install the required packages listed in `requirements.txt` to the environment with `pip install -r requirements.txt`
+  - The virtual environment instantation command can be, for example, `virtualenv -p python3 spark_venv`
+3. Install the Google Cloud Engine utilities according to the [*Before you begin* instructions in *Python Quickstart for Flexible Environment*](https://cloud.google.com/python/getting-started/hello-world)
+4. Install the Google App Engine SDK for Python according to the [*Download the SDK for App Engine* instructions](https://cloud.google.com/appengine/docs/python/download)
+5. Create files `pyrebase_config.json` and `serviceaccount.json`. *pyrebase
+  - These files are included in `.gitignore`
+6. Execute command `python main.py`. This instantiates the builtin Python server with a [Flask API](http://flask.pocoo.org/). Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
 
 #### For deploying on App engine
 - run gcloud app deploy for the application
