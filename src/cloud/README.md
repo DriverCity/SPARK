@@ -15,7 +15,7 @@ Application's backend responsible or data storage and analysis functionalities t
 ## SPARK on App Engine: Modules
 This section describes the most important modules of SPARK Google Cloud implementation on App Engine.
 - `main.py`
-  - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). **TODO** Explain what each API call does
+  - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). The API routes and functionalities are presented in a great detail in the [Flasgger spec](#flasgger).
 - `firebase_repo.py`
   - Contains a base class for accessing Firebase using [Pyrebase](https://github.com/thisbejim/Pyrebase) - a Firebase API wrapper for Python. The base class is inherited by `parking_event_repo.py` and `occupancy_rates_repo.py`.
 - `parking_event_repo.py`
@@ -72,11 +72,14 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
     - `serviceAccount` has a constant value of `serviceaccount.json`, as this is the file where Firebase Service Account information is located.
   - Move the [`serviceaccount.json`](#firebasePrivateKey) file to the working directory
   - Both of these files are included in `.gitignore`.
-7. Execute command `python main.py`. This instantiates the builtin Python server with a Flask API. Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
+7. Execute command `python main.py`. This instantiates the builtin Python server with a Flask API.
+  - The server is running at http://127.0.0.1:8080
+  - <a name="flasgger">Flasgger specs</a> are at http://127.0.0.1:8080/apidocs/index.html.
 
 #### For deploying on GC App Engine
 All of the following steps are executed with the directory `.../SPARK/src/cloud/` as the working directory
-- For deploying the API, execute `gcloud app deploy`
-  - API is running in **TODO**
-  - Swagger in **TODO**
+- For deploying the API, execute `gcloud app deploy`. After deploying
+  - The server is running at https://{your-google-cloud-project-id}.appspot-preview.com/
+  - <a name="flasgger">Flasgger specs</a> are at https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html.
+  - Note that these URLs may be of a different form with your implementation, as at the time of writing this document GC Flexible App Engine is only in its Beta Release state.
 - For deploying the CRON jobs, execute `gcloud app deploy cron.xml`.
