@@ -35,7 +35,7 @@ For these instructions, you need to have basic knowledge on cloud and database t
 2. Create a Firebase instance by importing the GCP project on [Firebase console](https://console.firebase.google.com/). Select *IMPORT GOOGLE PROJECT* and add Firebase to the project.
   1. In the appearing view, select *Database* from the left hand side menu (https://console.firebase.google.com/project/{your-google-cloud-project-id}/database/data)
   2. Import parking area data to Firebase by selecting the ellipsis icon from the top-right of the *Database* view. Select *Import JSON* from the pop-up menu. With the pop-up window, upload the file [`TampereOpenDataTransformed.json`](https://github.com/DriverCity/SPARK/blob/master/data/TampereOpenDataTransformed.json). This populates Firebase with Tampere city parking area information.
-  3. Configure indexes and access permissions by navigating to the *Rules*-tab and copy-pasting **TODO: Add rules and indexes to github**
+  3. Configure indexes and access permissions by navigating to the *Rules* tab and copying the contents of [Rules.json](https://github.com/DriverCity/SPARK/tree/master/src/cloud/Firebase/Config/Rules.json) to the text area in the *Rules* view.
   4. **Optional**: Configure backups according to the [*Setup* instructions](https://firebase.google.com/docs/database/ios/backups)
   5. Generate a private key for the Firebase service account according to the [*Add Firebase to your app* instructions](https://firebase.google.com/docs/admin/setup).
 3. Create a Google Cloud Storage bucket with name `parking-event-store` according to the [*Before you begin* and *Create a bucket* instructions](https://cloud.google.com/storage/docs/quickstart-console)
