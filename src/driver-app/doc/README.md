@@ -6,5 +6,5 @@ This section is dedicated to the driver app specific documentation. For more gen
 
 # Parts
 
-- **Dev** : Documentation and instructions for development
-- **Test** : Documentation and instructions for tests 
+- [Architecture](https://github.com/DriverCity/SPARK/blob/master/src/driver-app/doc/architecture.md)
+- [Environment's installation](https://github.com/DriverCity/SPARK/blob/master/src/driver-app/doc/install-environment.md)
