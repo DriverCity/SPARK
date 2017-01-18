@@ -45,10 +45,22 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
 
 1. Ensure you have [Python 3](https://www.python.org/download/releases/3.0/) installed.
 2. [Instantiate an isolated Python 3 environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/), activate it and install the required packages listed in `requirements.txt` to the environment with `pip install -r requirements.txt`
-  - The virtual environment instantation command can be, for example, `virtualenv -p python3 spark_venv`
+  - virtualenv instantiation command can be e.g. `virtualenv -p python3 spark_venv`
 3. Install the Google Cloud Engine utilities according to the [*Before you begin* instructions in *Python Quickstart for Flexible Environment*](https://cloud.google.com/python/getting-started/hello-world)
 4. Install the Google App Engine SDK for Python according to the [*Download the SDK for App Engine* instructions](https://cloud.google.com/appengine/docs/python/download)
-5. Create files `pyrebase_config.json` and `serviceaccount.json`. *pyrebase
+5. Create files `pyrebase_config.json` and `serviceaccount.json`.
+  - `pyrebase_config.json` should be of format: 
+  
+  ```json  
+  {
+    "apiKey": "apiKey",
+    "authDomain": "projectId.firebaseapp.com",
+    "databaseURL": "https://databaseName.firebaseio.com",
+    "storageBucket": "projectId.appspot.com",
+    "serviceAccount": "serviceaccount.json"
+  }
+  ```
+  - `serviceaccount.json` should be the service account file from firebase **TODO**
   - These files are included in `.gitignore`
 6. Execute command `python main.py`. This instantiates the builtin Python server with a [Flask API](http://flask.pocoo.org/). Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
 
