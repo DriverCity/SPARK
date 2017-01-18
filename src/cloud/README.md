@@ -13,6 +13,7 @@ Application's backend responsible or data storage and analysis functionalities t
 	- excessive possibilities for analysis
 
 ## SPARK on App Engine: Modules
+This section describes the most important modules of SPARK Google Cloud implementation on App Engine
 - `main.py`
   - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). **TODO** Explain what each API call does
 - `firebase_repo.py`
@@ -23,10 +24,8 @@ Application's backend responsible or data storage and analysis functionalities t
   - Contains a repository for forming and storing parking area occupancy levels to Firebase
 - `cloud_storage_io.py`
   - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events
-- `app.yaml`
-  - asdf
-	- swagger_specs
-	- data
+- `swagger_specs/parkingEvent.yml`
+  - The API docs for parking event storage call consumed by [Flasgger](https://github.com/rochacbruno/flasgger) - a [Swagger](http://swagger.io/) API docs creator for Flask.
 
 ## How to install and deploy
 For these instructions, you need to have basic knowledge on cloud and database technologies, version control and Python.
