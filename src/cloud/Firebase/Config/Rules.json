@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "parkingArea" : {
+      ".read": "true",
+    	"$uid": {
+    		".write": "$uid === auth.uid"
+      },
+      ".indexOn": ["area_number"]
+    },
+    "parkingAreaParkingEvent" : {
+      ".read": "true",
+    	"$uid": {
+    		".write": "$uid === auth.uid"
+      }
+    },
+    "parkingEventNotification": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      },
+      ".indexOn": ["liveUntilTime", "willBeStoredToLongTermDataStore"]
+    },
+    "parkingEventLookup": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid"
+      },
+      ".indexOn": ["durationEndTimestamp"]
+    }
+  }
+}
