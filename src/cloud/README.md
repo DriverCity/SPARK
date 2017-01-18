@@ -12,10 +12,12 @@ Application's backend responsible or data storage and analysis functionalities t
 - Future considerations
 	- excessive possibilities for analysis
 
-## TODO: SPARK on App Engine
-- deployed
-	- main.py
-		- Flask-api
+## SPARK on App Engine: Modules
+- `main.py`
+  - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). **TODO** Explain what each API call does
+- `firebase_repo.py`
+  - Contains a base class for accessing Firebase using [Pyrebase](https://github.com/thisbejim/Pyrebase) - a Firebase API wrapper for Python. The base class is inherited by `parking_event_repo.py` and `occupancy_rates_repo.py`.
+- `parking_event_repo.py`
 	- firebase_repo.py is the base Firebase repository class for
 		- parking_event_repo.py
 		- occupancy_rates_repo.py
@@ -63,7 +65,7 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
   ```
   - `serviceaccount.json` should be the service account file from firebase **TODO**
   - These files are included in `.gitignore`
-7. Execute command `python main.py`. This instantiates the builtin Python server with a [Flask API](http://flask.pocoo.org/). Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
+7. Execute command `python main.py`. This instantiates the builtin Python server with a Flask API. Now you should be able to execute the API commands described in `swagger specs` **TODO: Make link**. The default port is **TODO**. The Swagger API descriptions can be found in **TODO**.
 
 #### For deploying on GC App Engine
 All of the following steps are executed with the directory `.../SPARK/src/cloud/` as the working directory
