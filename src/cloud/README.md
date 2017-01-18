@@ -74,12 +74,12 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
   - Both of these files are included in `.gitignore`.
 7. Execute command `python main.py`. This instantiates the builtin Python server with a Flask API.
   - The server is running at http://127.0.0.1:8080
-  - <a name="flasgger">Flasgger specs</a> are at http://127.0.0.1:8080/apidocs/index.html.
+  - **<a name="flasgger">Flasgger specs</a> are at http://127.0.0.1:8080/apidocs/index.html**.
 
 #### For deploying on GC App Engine
 All of the following steps are executed with the directory `.../SPARK/src/cloud/` as the working directory
 - For deploying the API, execute `gcloud app deploy`. After deploying
   - The server is running at [https://{your-google-cloud-project-id}.appspot-preview.com/](https://{your-google-cloud-project-id}.appspot-preview.com/)
-  - <a name="flasgger">Flasgger specs</a> are at [https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html](https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html).
+  - **<a name="flasgger">Flasgger specs</a> are at [https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html](https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html)**.
   - Note that these URLs may be of a different form with your implementation, as at the time of writing this document GC Flexible App Engine is only in its Beta Release state.
 - For deploying the CRON jobs, execute `gcloud app deploy cron.xml`.
