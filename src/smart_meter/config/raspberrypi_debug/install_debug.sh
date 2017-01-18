@@ -5,7 +5,6 @@ VARIANT=raspberrypi_debug
 
 if [ "$1" = "clean" ]; then
     # Install dependencies
-    sudo apt-get install libcurl4-openssl-dev sqlite3 libsqlite3-dev libudev-dev
     wget https://nodejs.org/dist/v5.9.1/node-v5.9.1-linux-armv7l.tar.xz
     tar xfv node-v5.9.1-linux-armv7l.tar.xz
     cd node-v5.9.1-linux-armv7l/
