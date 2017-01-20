@@ -1,6 +1,6 @@
 # Cross-compiling for Intel Edison
 
-This document instucts how to install cross-compiler for Intel Edison.
+This document instucts how to install cross-compiler for Intel Edison. Intel Edison is not a supported device, therefore working is not guaranteed. 
 
 1. Download the cross compile tools (SDK) from http://iotdk.intel.com/sdk/3.5/edison/iot-devkit-toolchain-linux-64bit-edison-20160606.sh
 
