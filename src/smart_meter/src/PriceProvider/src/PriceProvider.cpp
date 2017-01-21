@@ -25,16 +25,16 @@ void PriceProvider::init(ICloudService *cloudService)
 
 PriceInfo PriceProvider::getPriceInfo()
 {
+    double price(0);
+    int limit(0);
+    bool result = m_cloudService->getPriceInformation(price, limit);
 
-    double price = m_cloudService->getPricePerHour();
+    PriceInfo info(price, limit, 5);
+    if (!result){
+        info = PriceInfo();
+    }
 
-    int res  = m_cloudService->getParkingTimeResolution();
-
-    int limit = m_cloudService->getTimeLimit();
-
-
-    return PriceInfo(price,limit, res);
-
+    return info;
 }
 
 ICloudService *PriceProvider::getCloudService() const

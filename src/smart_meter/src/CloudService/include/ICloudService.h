@@ -56,24 +56,12 @@ public:
     virtual bool checkConnection() = 0;
 
     /**
-     * @brief Get price per hour for this meter.
-     * @return Price per hour in EUR. Negative number if query fails.
+     * @brief Get parking price and maximum parking time.
+     * @param[out] pricePerHour Price per hour (EUR).
+     * @param[out] timeLimit Maximum parking time (min).
+     * @return True, if information was extracted successfully.
      */
-    virtual double getPricePerHour() = 0;
-
-    /**
-     * @brief Get parking time resolution for this meter.
-     * @return Smalles quantity of parking time in minutes. Negative number if query fails.
-     */
-    virtual int getParkingTimeResolution() = 0;
-
-    /**
-     * @brief Get maximum alloted parking time for this meter.
-     * @return Maximum parking time in minutes.
-     *  0 if there is no time limit for this meter.
-     *  Negative number if query fails.
-     */
-    virtual int getTimeLimit() = 0;
+    virtual bool getPriceInformation(double& pricePerHour, int& timeLimit) = 0;
 
     /**
      * @brief Register verified parking event to the cloud.

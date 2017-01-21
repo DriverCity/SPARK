@@ -16,7 +16,7 @@ include_directories(../include)
 set(SRCS CloudService.cpp)
 
 # List used other components here.
-set(LINKED_LIBS misc Logger curl)
+set(LINKED_LIBS misc Logger curl jsoncpp)
 
 set(INST_HDRS
     ../include/CloudServiceMock.h

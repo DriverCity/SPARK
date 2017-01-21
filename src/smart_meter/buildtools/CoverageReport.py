@@ -34,6 +34,9 @@ def getComponentBuildDir(comp):
 def run_lcov(componentList):
     for comp in componentList:
 
+        if comp.runTestsCmd is None:
+            continue
+
         appInfoDir = getAppInfoDir(comp)
         if os.path.exists(appInfoDir):
             shutil.rmtree(appInfoDir)
@@ -51,7 +54,8 @@ def generate_html(componentList):
     os.chdir(REPORT_DIR)
     appFiles = []
     for comp in componentList:
-        appFiles.append(getAppInfoFile(comp))
+        if comp.runTestsCmd is not None:
+            appFiles.append(getAppInfoFile(comp))
     os.system("genhtml " + " ".join(appFiles))
 
 

@@ -18,7 +18,7 @@ set(SRCS
 )
 
 # Link other components
-set(LINKED_LIBS misc Logger curl)
+set(LINKED_LIBS misc Logger curl jsoncpp)
 link_directories($ENV{DEPLOY_DIR}/bin)
 
 # Do not change
