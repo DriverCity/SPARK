@@ -18,9 +18,7 @@ public:
 
     MOCK_METHOD3(init, void(int areaId, const std::string& priceAPI, const std::string& eventAPI));
     MOCK_METHOD0(checkConnection, bool());
-    MOCK_METHOD0(getPricePerHour, double());
-    MOCK_METHOD0(getParkingTimeResolution, int());
-    MOCK_METHOD0(getTimeLimit, int());
+    MOCK_METHOD2(getPriceInformation, bool(double& price, int& timeLimit));
     MOCK_METHOD1(verifyParkingEvent, spark::ICloudService::Result(const spark::ParkingEvent& e));
 };
 

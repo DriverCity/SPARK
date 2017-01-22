@@ -6,6 +6,8 @@ from components import addComponent, Component
 
 # Add components in order of dependency.
 
+addComponent(Component(name="jsoncpp", srcDir=os.environ["SOURCE_DIR"]+"/../3rd_party/jsoncpp"))
+
 addComponent(Component(name="Logger", runTestsCmd="./LoggerTest"))
 
 addComponent( Component(name="misc", runTestsCmd="./misctest") )

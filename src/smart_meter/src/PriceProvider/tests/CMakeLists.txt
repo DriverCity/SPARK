@@ -22,11 +22,8 @@ set(SRCS
    PriceProviderTest.cpp
 )
 
-set(LINKED_LIBS misc Logger)
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-    message($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+set(LINKED_LIBS Logger)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 # Do not change
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

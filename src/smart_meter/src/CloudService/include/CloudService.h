@@ -30,9 +30,7 @@ public:
     // ICloudService
     virtual void init(int areaId, const std::string& priceAPI, const std::string& eventAPI);
     virtual bool checkConnection();
-    virtual double getPricePerHour();
-    virtual int getParkingTimeResolution();
-    virtual int getTimeLimit();
+    virtual bool getPriceInformation(double& pricePerHour, int& timeLimit);
     virtual Result verifyParkingEvent(const ParkingEvent &event);
 
     /**
@@ -43,18 +41,20 @@ public:
     std::string createParkingEventJson(const ParkingEvent& e) const;
 
     /**
-     * @brief Create JSON representation for price request.
-     * @param parkingAreaId Parking area id.
-     * @return JSON representation for price request.
-     */
-    std::string createPriceRequestJSON(int parkingAreaId) const;
-
-    /**
      * @brief Convert curl return code to ICloudService::Result.
      * @param code Curl return code.
      * @return Respective ICloudService::Result.
      */
     Result curlCodeToResult(int code);
+
+    /**
+     * @brief Get price information from json string.
+     * @param[in] json Json string.
+     * @param[out] price Extracted price.
+     * @param[out] limit Extracted time limit.
+     * @throws std::exception, if values could not be fetched.
+     */
+    void extractPriceInfo(const std::string& json, double& price, int& limit);
 
 
 private:

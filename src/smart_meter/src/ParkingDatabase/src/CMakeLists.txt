@@ -28,16 +28,8 @@ set(INST_HDRS
     ../include/ParkingDatabaseMock.h
 )
 
-# List used other components here.
-set(LINKED_LIBS misc)
-if(NOT ($ENV{BUILD_NAME} STREQUAL "linux_debug"))
-    set(LINKED_LIBS ${LINKED_LIBS} sqlite3)
-endif()
-
-# Link other components. Do not change.
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+set(LINKED_LIBS sqlite3 Logger misc)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 # Set output directory for binaries. Do not change.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
@@ -45,7 +37,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 
 add_library(${PROJECT_NAME} SHARED ${SRCS})
-target_link_libraries(${PROJECT_NAME} sqlite3 ${LINKED_LIBS})
+target_link_libraries(${PROJECT_NAME} ${LINKED_LIBS})
 
 INSTALL(TARGETS ${PROJECT_NAME} DESTINATION $ENV{DEPLOY_DIR}/bin)
 INSTALL(FILES ${INST_HDRS} DESTINATION $ENV{BUILD_DIR}/include/${PROJECT_NAME})

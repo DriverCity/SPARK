@@ -61,8 +61,6 @@ int main(int argc, char* argv[])
         std::string msg;
         std::getline(std::cin, msg);
 
-        LOG_DEBUG("Input: " << msg << " length: " << msg.length());
-
         //Send message
         FILE* outFd = fopen(output.c_str(), "w");
         if (outFd == NULL){

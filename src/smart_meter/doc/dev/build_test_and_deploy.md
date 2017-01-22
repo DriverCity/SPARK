@@ -9,29 +9,25 @@ Having always an access to a distributable deployment of your software further h
 progress to the customer any time. Deployment is especially important for cross-compiled code.
 
 In SPARK's smart meter project, facilities for all three things exist right from the start, and are made very easy to use.
-In fact, you can build, test and deploy with just a single command. This is done by running one of the three scripts 
+In fact, you can build, test and deploy with just a single command. This is done by running one of the build scripts 
 in the root of the project.
 
 ## Using build scripts
 
 ### Basics
-Smart meter's build system is based on CMake. Using CMake makes it possible to use different build variants and to compose 
-the software from small components.
  
-Smart meter has three build variants: linux-debug, raspberry pi -debug and raspberry pi -release. These variants have different 
-compiler settings and slightly different set of components. Compiler options for each variant are specified in 
+Smart meter has currently four build variants: linux-debug, raspberrypi-debug, raspberrypi-release and edison-debug. These variants have different compiler settings and slightly different set of components. Compiler options for each variant are specified in 
 buildtools/variants directory. Component listings for each variant are specified in buildtools/components directory.
 
 A component is the basic unit of compilation. It is a piece of code that can be tested independently, and compiled into a library 
 or executable. Components are interconnected through their public interfaces. Splitting the program into components make it 
 easy to test and manage. Using small components decreases compilation times significantly, makes it possible to test components 
 independently and encourages developers to write clean, modular and easily testable code. In our use case, component division 
-also enables us to build the project for linux desktop, even if that does not have required hardware compnents, such as 
-Bluetooth radio. We simply replace the bluetooth component with a mock-up component in linux build.
+also enables us to build the project for multiple platforms, even if they didn't have required hardware compnents, such as 
+Bluetooth radio. We simply replace the bluetooth component with a mock-up component in these builds.
 
 ### Running build scripts
-There are three scripts in the root of the project. Each one for building, running tests for and deploying their specific 
-build variant. Scripts and build variants are:
+The build scripts in the root of the project. Each builds and deploys their specific build variant. Scripts and build variants are:
 
 - build_linux_debug.sh : This script builds, tests and deploys the debug version for Linux desktop. You may use this variant
   for testing the code on your own desktop, not needing to cross-compile and run the code on the target hardware, which is convenient
@@ -43,7 +39,7 @@ build variant. Scripts and build variants are:
 
 - build_linux_coverage: Build and run unit tests and create test coverage report. HTML-report will be generated in builds/linux_coverage/report/index.html. Extra parameters defined in following paragraphs do not have effect on this script.
 
-All scripts (except for coverage tests) can be provided with extra arguments to modify their functionality. Formally, scripts can be called like:
+All scripts (except for coverage tests) can be provided with extra arguments to modify their function. Formally, scripts can be called like:
 
 ```
 build_<variant>.sh [clean-all | [[--continue | --continue-after] -c <component_name> [clean]][build | test | all]
@@ -59,7 +55,7 @@ clean-all | Delete all previously built and deployed files.
 --continue-after | Skip the component specified with -c option and build all components following it.
 clean | Clean component.
 build | Build component.
-test | Run tests for component. If any of the tests fail, the whole build fails. This option is ignored in raspberry variants.
+test | Run tests for component. If any of the tests fail, the whole build fails. This option is ignored in cross-compilation.
 all | Run tests and build component.
 
 Following examples further clarify how to use build scripts.
@@ -70,17 +66,17 @@ Following examples further clarify how to use build scripts.
 # Delete all built and deployed components for raspberry release version.
 ./build_raspberrypi_release.sh clean-all
 
-# Build and deploy component 'BLEModule' for raspberry debug version. Do not clean before build.
-./build_raspberrypi_debug.sh -c BLEModule
+# Build and deploy component 'BLEService' for raspberry debug version. Do not clean before build.
+./build_raspberrypi_debug.sh -c BLEService
 
-# Clean component 'BLEModule' for raspberry debug version.
+# Clean component 'BLEService' for raspberry debug version.
 ./build_raspberrypi_debug.sh -c BLEModule clean
 
 # Re-build and deploy 'BLEModule' and all following components for raspberry debug version.
 ./build_raspberrypi_debug.sh --continue -c BLEModule clean build
 
-# Run tests for component 'CloudConnection'
-./build_linux_debug.sh -c CloudConnection test
+# Run tests for component 'CloudService'
+./build_linux_debug.sh -c CloudService test
 
 # Clean, re-build, test and deploy all components.
 ./build_linux_debug.sh clean-all all
@@ -89,21 +85,21 @@ Following examples further clarify how to use build scripts.
 After running a build script, 'builds' and 'deploy' directories appear to the smart meter root directory. 
 The builds directory contains object files, makefiles and all the other intermediate build results for each component. 
 The deploy directory contains all libraries, executables and configuration files required to actually run the program.
-In raspberry pi variants there is also a ready made zip-file you can upload, extract and run on Raspberry Pi.
+In cross-compiled variants there is also a ready made zip-file you can upload, extract and run on Raspberry Pi.
 
 ## Making your own components
 
 ### Source tree
 
-All components should be located in smart_meter/src directory. Each component must have its own sub-directory. In component's subdirectory, there will be up to three subdirectories:
+All components should be located in smart_meter/src directory. Each component must be in its own sub-directory. In component's subdirectory, following structure is recommended to be used in each component's directory:
 
-- **include:** This subdirectory should contain all the public headers for the component. These headers will be automatically copied to the build directory, and are visible to other components. These headers form the component's public interface. If the component does not have any public interfaces, this sub-directory does not need to exist.
+- **include:** This subdirectory contains all the public headers for the component. These headers form the component's public interface. If the component does not have any public interfaces, this sub-directory does not need to exist.
 
-- **src**: This subdirectory should contain component's source files and those header files that are not visible to other components. This subdirectory also contains CMakeLists.txt for building the component. The CMakeLists.txt should be written according to [this template.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/CMakeLists_src_template.txt) You may just copy the template and modify the necessary parts.
+- **src**: This subdirectory contains component's source files and those header files that are not visible to other components. This subdirectory may also contain CMakeLists.txt for building the component. The CMakeLists.txt should build the component and/or deploy public header files and other deliverables. See other components for reference.
 
-- **tests**: This subdirectory should contain source files for unit tests for the component. It also contains the CMakeLists.txt required to build the tests. The CMakeLists.txt file must be written according to [this template.](https://github.com/DriverCity/SPARK/blob/master/src/smart_meter/doc/dev/CMakeLists_tests_template.txt) If your test cases need some test files, put them to data-subdirectory under tests-directory. Using GTest as unit test framework is highly recommended. Try to implement your code in a way that it will be testable independent from other components. Also aim for high coverage when writing tests. Consider using [TDD](https://en.wikipedia.org/wiki/Test-driven_development), since it tends to help reaching these goals. If your component does not have any tests (!!) this subdirectory does not need to exist.
+- **tests**: This subdirectory contains source files for unit tests for the component. It also contains the CMakeLists.txt required to build the tests. If your test cases need some test files, put them to data-subdirectory under tests-directory. Using GTest as unit test framework is highly recommended. Try to implement your code in a way that it will be testable independent from other components. Also aim for high coverage when writing tests. Consider using [TDD](https://en.wikipedia.org/wiki/Test-driven_development), since it tends to help reaching these goals. If your component does not have any tests (!!) this subdirectory does not need to exist.
 
-Summary: Your component source tree should look like this:
+Summary: Your component source tree might look like this:
 ```
  smart_meter
    |-src
@@ -124,23 +120,16 @@ Summary: Your component source tree should look like this:
                |-testfiles.txt
 ```
 
-### Adding component to the build system
-Just putting your source files to right place will not be enough to make buildtools notice it. There is one more thing left to do. You need to add your component to component lists of related build variants. This is not a hard task. Component listings for all build variants are located in buildtools/components directory. There are currently three component listings:
+### Adding component to the build
+Just putting your source files to right place will not be enough to make buildtools notice it. There is one more thing left to do. You need to add your component to component lists of relevant build variants. Component listings for all build variants are located in buildtools/components directory.
 
-- **linux_components.py:** Add your component here, if it is specific to the Linux build (mock-ups).
+It would sound reasonable to put all platform-independent components to common components. The order of listed components matters: Components need to be listed in order of dependency. Components will be built in order they appear on the list.
 
-- **raspberrypi_components.py:** Add your component here, if it is specific to Raspberry Pi (low level hw control).
-
-- **common_components.py:** Add your component here, if your component is platform independent, you want to include it to all builds.
-
-It would sound reasonable to put all platform-independent components to common components. There is one restriction however: Components need to be listed in order of dependency. Components will be built in order they appear on the list. Common components are built first and then the components specific to the used build variant. If your common component depends on a system dependent component (actual and mock-up implementation), you will need to list it in both linux_components and raspberrypi_components.
-
-Adding a component to a list is simple, and identical in all component lists. You just need to add one line of Python to the chosen file(s):
+Define your component as below
 ```python
-components.componentList.append(component.Component(name='your_component_name', 
-                                                    runTestsCmd='./your_test_project_name'))
+addComponent(component.Component(name, srcDir, testCmd))
 ```
-The name parameter should be the same as the project name in the CMakeLists.txt in your src-directory. It should also be the same as the name of your component's root directory. The runTestsCmd parameter tells buildtools the command to run your tests with. If you only have one executable test suite (like in the template), the command will match the project name (plus './' at the start). The name parameter is mandatory. Set runTestCmd parameter to None if your component has no tests (!!).
+The name parameter should be the same as the project name in the CMakeLists.txt in your src-directory. The srcDir defines path to your CMakeLists.txt. If you used the same directory structure as above, this may be set to None. The testCmd parameter tells buildtools the command to run your tests with. If you only have one executable test executable, the command will match the test project name (plus './' at the start). Set runTestCmd parameter to None if your component has no tests (!!). See existing component definitions for an example.
 
 After this, you can now build and deploy your component and run your tests with build scripts:
 
@@ -151,10 +140,10 @@ After this, you can now build and deploy your component and run your tests with 
 ### Referencing other components
 It may be necessary to use services from other components to implement your component. Accessing other components is very easy. In CMakeLists templates, there are easy instructions on how to link your component to other components.
 
-Public headers from all components are automatically published to builds/variant_name/include directory. This directory is included to your component in CMakeLists templates. All you need to do to include a header from another component in your source code is to write:
+Public headers from all components should be deployed to builds/variant_name/include directory. Include this directory to your component in your CMakeLists (see existing components for an example). All you need to do to include a header from another component in your source code is to write:
 
 ```c++
-#include "other_component_name/desired_header.h"
+#include "other_component_name/header.h"
 ```
 
 
@@ -164,19 +153,15 @@ This section describes how to upload and run the code on target devices.
 
 ### Raspberry Pi 3
 
-1. To upload software to Raspberry Pi, you need to connect it to your computer either through router or directly using Ethernet cable. With old computers,
-you may need an Ethernet cross-over cable for direct connection.
+1. To upload software to Raspberry Pi, you need to connect it to your computer either through router or directly using Ethernet cable. With old computers, you may need an Ethernet cross-over cable for direct connection.
 
 2. Get Raspberry Pi's IP address
 
   - **With router:** Check Raspberry Pi's IP address from your router.
   
-  - **Direct connection:** Try pinging address **169.254.186.133** . If there is no connection, you need to connect display and keyboard to the Pi and get
-    the eth0 IP address with **ifconfig** command. Note that establishing connection after connecting cable takes few moments.
+  - **Direct connection:** Try pinging address **169.254.186.133** . If there is no connection, you need to connect display and keyboard to the Pi and get the eth0 IP address with **ifconfig** command or use 3rd party tools to find connected device's IP. Note that establishing connection after connecting cable may take few moments.
 
-3. Upload software to Pi. After building software, there will be **upload_raspberrypi_debug.sh** or **upload_raspberrypi_release.sh** in the deploy directory.
-   If you are using direct connection and **169.254.186.133** was correct IP address, you may run the script without parameters. Else give the correct IP
-   address as the first parameter. The script will send zip-file containing the software and installation scripts to Pi in /home/pi directory.
+3. Upload software to Pi. After building software, there will be **upload_raspberrypi_debug.sh** or **upload_raspberrypi_release.sh** in the deploy directory. Give the correct IP address as the first parameter to script. The script will send zip-file containing the software and installation scripts to Pi in /home/pi directory.
    
 4. Log on Pi using SSH client of your choise (e.g. PuTTY) using the correct IP address. Default login name is **pi** and default password is **raspberry**.
 
@@ -191,12 +176,10 @@ you may need an Ethernet cross-over cable for direct connection.
 6. Run the software
 
   ```sh
-  ./start_debug.sh
-  # or ./start_release.sh
+  sudo ./raspberrypi_debug/start.sh
   ```
   
   
 ### Intel edison
 
-Build variant for Intel Edison is not guaranteed to be developed during the early stage of development. The upload process however is the same as with Pi,
-except that you have to connect Edison through router.
+The upload process however is the same as with Pi, except that you have to connect Edison through router.

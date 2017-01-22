@@ -13,7 +13,7 @@ run the OS on virtual machine, as Instructed here. If you already have the OS in
 2. Install Ubuntu on virtual machine. 
   
   Get live-CD for Ubuntu from: http://releases.ubuntu.com/14.04/
-  Installing 64-bit version may require you to enable hardware virtualization support from BIOS. Refer to your
+  Install 64-bit version. It may require you to enable hardware virtualization support from BIOS. Refer to your
   PC manufacturer's manual for exact instructions.
   
 3. Install required packages  

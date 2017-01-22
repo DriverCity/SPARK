@@ -30,9 +30,7 @@ set(LINKED_LIBS
     CloudService
     VerifyParking
 )
-foreach(lib ${LINKED_LIBS})
-    link_directories($ENV{BUILD_DIR}/${lib}/bin)
-endforeach(lib)
+link_directories($ENV{DEPLOY_DIR}/bin)
 
 # Do not change
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

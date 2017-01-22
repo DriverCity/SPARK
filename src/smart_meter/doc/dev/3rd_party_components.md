@@ -29,24 +29,38 @@ This document describes what 3rd party components are needed and how to install 
 
 ## SQLite3
 
-1. Install sqlite3 to dev env: 
+Install sqlite3 to dev env: 
 
-  ```sh
-  sudo apt-get install sqlite3 libsqlite3-dev
-  ```
-  
-2. Add source files for cross-compilation:
-  - Get amalgamation source package: http://www.sqlite.org/
-  - Unzip package.
-  - Copy header files to 3rd_party/sqlite3/include (create directory). Copy source files to 3rd_party/sqlite3/src.
-  - To view database contents in target system intall sqlite3 there also (optional).
+```sh
+sudo apt-get install sqlite3 libsqlite3-dev
+```
 
 
 ## Curl
 
-Install development package:
+Curl is included in Edison development kit. No installation is required if you are building for Intel Edison.
+
+Install libcurl package for development environment:
 
 ```sh
 sudo apt-get install libcurl4-openssl-dev
 ```
 
+Cross-compile curl for Raspberry Pi:
+
+- Make a directory to location of your choise. Run following commands to cross-compile curl for ARM.
+
+  ```sh
+  wget https://curl.haxx.se/download/curl-7.52.1.tar.gz
+  tar -xf curl-7.52.1.tar.gz
+  cd curl-7.52.1
+  ./configure --host=arm-linux-gnueabihf --prefix=$PWD/build
+  make && make install
+  ```
+  
+- In ~/.bashrc, insert following line and restart terminal to apply changes.
+   ```sh
+   export CURL_DIR=/path/to/your/curl-7.52.1/build
+   ```
+ 
+ 
