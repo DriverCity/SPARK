@@ -15,7 +15,7 @@ from occupancy_rates_repo import OccupancyRatesRepository
 app = Flask(__name__)
 Swagger(app)
 app.config.from_object(config)
-logger = spark_logging.get_logger('spark-logger')
+logger = spark_logging.get_logger(app.config['LOGGER_NAME'])
 
 
 @app.route('/api/v1.0/parkingEvent/', methods=['POST'])
@@ -27,11 +27,14 @@ def store_parking_event():
 
         # validate payment if paid context
         if request.json['parkingContextType'] == 'PAID':
-            payment.validate(request.json['paymentMethodInformation']['paymentMethodType'], request.json['paymentMethodInformation'])
+            if not payment.is_test_payment(request.json,
+                                           app.config['PAYMENT_VALIDATION_TEST_METHOD_TYPE'],
+                                           app.config['PAYMENT_VALIDATION_TEST_RECEIPT']) :
+                payment.validate(request.json)
 
         # store valid information
-        store_result = ParkingEventRepository().store_parking_event(request.json), 201
-        return store_result
+        store_result = ParkingEventRepository().store_parking_event(request.json, app.config['PARKING_EVENT_FIREBASE_TIME_IN_SECONDS'])
+        return store_result, 201
 
     except ValidationError as e:
         logger.exception(e)
@@ -69,7 +72,8 @@ def move_to_long_term_data_store():
     """
     try:
         new_events = ParkingEventRepository().consume_new_parking_events_by('willBeStoredToLongTermDataStore', True, False)
-        CloudStorageIO().upload_to_parking_event_store(new_events)
+        CloudStorageIO(app.config['GOOGLE_CLOUD_STORAGE_STORE_NAME'],
+                       app.config['GOOGLE_CLOUD_STORAGE_BLOB_NAME_PREFIX']).upload_to_parking_event_store(new_events)
         return '', 201
     except Exception as e:
         logger.exception(e)

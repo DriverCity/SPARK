@@ -87,7 +87,7 @@ class ParkingEventRepository(FirebaseRepo):
             .child(ParkingEventRepository._parking_event_notification_store_node_name) \
             .push(parking_event_notification_json)
 
-    def store_parking_event(self, request_json):
+    def store_parking_event(self, request_json, live_time):
         register_number = request_json['registerNumber']
         parking_context_type = request_json['parkingContextType']
         timestamp = TimeUtils.get_local_timestamp()
@@ -116,7 +116,7 @@ class ParkingEventRepository(FirebaseRepo):
             'parkingAreaId': parking_area_id,
             'registerNumber': register_number,
             'parkingEventId': add_results['odsId'],
-            'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(60*60*24*7), # TODO make configurable
+            'liveUntilTime': TimeUtils.get_epoch_timestamp_plus_seconds(live_time),
             'parkingAreaParkingEvent': parking_event_json
         }
 
@@ -133,10 +133,9 @@ class ParkingEventRepository(FirebaseRepo):
 
     def remove_dead_events(self):
         notifications_ref = self.db.child(ParkingEventRepository._parking_event_notification_store_node_name)
-        # TODO make time configurable
         dead_notifications = notifications_ref\
             .order_by_child('liveUntilTime')\
-            .start_at(TimeUtils.get_epoch_timestamp_plus_seconds(-365*24*60*60))\
+            .start_at('0')\
             .end_at(TimeUtils.get_epoch_timestamp_plus_seconds(0)).get()
         dead_notifications = [(dn.key(), dn.val()) for dn in dead_notifications.each()
                               if 'willBeStoredToLongTermDataStore' not in dn.val()

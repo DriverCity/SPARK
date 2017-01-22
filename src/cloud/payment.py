@@ -1,9 +1,19 @@
 class PaymentException(Exception): pass
 
-# TODO: make test hash configurable
-def validate(payment_method_type, payment_method_information):
-    if payment_method_type == 'SERVICE_1' and payment_method_information['paymentReceipt'] == 'valid_test_hash':
+
+def is_test_payment(payment_data, test_type, test_receipt):
+
+    if test_type is None or test_receipt is None:
+        return False
+
+    return payment_data['paymentMethodInformation']['paymentMethodType'] == test_type\
+           and payment_data['paymentMethodInformation']['paymentReceipt'] == test_receipt
+
+
+def validate(payment_data):
+    if True is True:
+        # Depending on payment type, payment is validated. Further payment validation is not in
+        # the scope of this project.
         pass
     else:
-        # TODO
-        raise PaymentException({'paymentMethodType': payment_method_type, 'reason': 'some reason'})
+        raise PaymentException()

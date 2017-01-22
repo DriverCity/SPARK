@@ -5,11 +5,11 @@ from utils import TimeUtils
 
 class CloudStorageIO():
 
-    def __init__(self):
+    def __init__(self, store_name, blob_name_prefix):
         storage_client = storage.Client()
-        bucket = storage.Bucket(storage_client, 'parking-event-store')
-        self.blob = storage.Blob('parking-event-blob-' + TimeUtils.get_local_datestamp(), bucket)
+        bucket = storage.Bucket(storage_client, store_name)
+        self.blob = storage.Blob(blob_name_prefix + '-' + TimeUtils.get_local_datestamp(), bucket)
 
     def upload_to_parking_event_store(self, json_values):
-        # TODO: compress stored json or turn into csv
+        # NOTE: instead of json, events could be stored as csv for efficiency
         self.blob.upload_from_string(json.dumps(json_values), 'application/json')
