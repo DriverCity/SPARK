@@ -167,8 +167,8 @@ class ParkingEventRepository(FirebaseRepo):
             parking_event = cn.val()['parkingAreaParkingEvent']
             result.append(parking_event)
 
-            # TODO: notifications may be checked even if the following processes fail
-            # TODO: form transaction
+            # TODO: a transaction cannot be formed, but atomicity could be possibly checked
+            # TODO: check Firebase checking and Cloud Storage batching consistency
             # Set parking event as consumed
             self.db\
                 .child(ParkingEventRepository._parking_event_notification_store_node_name)\
