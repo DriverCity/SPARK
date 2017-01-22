@@ -755,6 +755,7 @@ WARN_LOGFILE           =
 
 INPUT                  = \
 	../../src/application/src/Application.h \
+	../../src/application/src/Initializer.h \
 	../../src/BLEService/include/IBLEService.h \
 	../../src/BLEService/include/BLEService.h \
 	../../src/BLEService/include/DemoModeBLEService.h \
