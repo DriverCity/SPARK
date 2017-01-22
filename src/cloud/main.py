@@ -1,7 +1,8 @@
 # Copyright 2016 Team DriverCity. All Rights Reserved.
 
 # [START app]
-import logging
+import spark_logging
+import config
 
 from flasgger import Swagger, swag_from, validate, ValidationError
 from flask import Flask,request,jsonify
@@ -14,12 +15,13 @@ from occupancy_rates_repo import OccupancyRatesRepository
 
 app = Flask(__name__)
 Swagger(app)
+app.config.from_object(config)
+logger = spark_logging.get_logger('spark-logger')
 
 
 @app.route('/api/v1.0/parkingEvent/', methods=['POST'])
 @swag_from('swagger_specs/parkingEvent.yml')
 def store_parking_event():
-    # TODO: logging
     try:
         # validate schema
         validate(request.json, 'ParkingEvent', 'swagger_specs/parkingEvent.yml', root=__file__)
@@ -29,12 +31,15 @@ def store_parking_event():
             payment.validate(request.json['paymentMethodInformation']['paymentMethodType'], request.json['paymentMethodInformation'])
 
         # store valid information
-        return ParkingEventRepository().store_parking_event(request.json), 201
+        store_result = ParkingEventRepository().store_parking_event(request.json), 201
+        return store_result
 
     except ValidationError as e:
-        return jsonify({ 'errorType': 'SCHEMA_VALIDATION_ERROR', 'content': e }), 400
+        logger.exception(e)
+        return jsonify({'errorType': 'SCHEMA_VALIDATION_ERROR', 'content': e}), 400
     except payment.PaymentException as e:
-        return jsonify({ 'errorType': 'PAYMENT_ERROR', 'content': e}), 400
+        logger.exception(e)
+        return jsonify({'errorType': 'PAYMENT_ERROR', 'content': e}), 400
 
 
 @app.route('/tasks/occupancy', methods=['GET'])
@@ -45,12 +50,12 @@ def update_occupancy_rates():
     tags:
       - Occupancy rates analysis task
     """
-    # TODO: logging
     try:
         counts = ParkingEventRepository().get_occuring_paid_event_counts()
         OccupancyRatesRepository().refresh_occupancies(counts)
         return '', 201
     except Exception as e:
+        logger.exception(e)
         # TODO: make fault responding better
         return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
 
@@ -69,6 +74,7 @@ def move_to_long_term_data_store():
         CloudStorageIO().upload_to_parking_event_store(new_events)
         return '', 201
     except Exception as e:
+        logger.exception(e)
         return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
 
 
@@ -84,16 +90,17 @@ def cleanup_firebase():
         ParkingEventRepository().remove_dead_events()
         return '', 201
     except Exception as e:
+        logger.exception(e)
         return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
+    logger.exception('An error occured', e)
     return """
-    An internal error occurred: <pre>{}</pre>
+    An internal error occurred.
     See logs for full stacktrace.
-    """.format(e), 500
+    """, 500
 
 if __name__ == '__main__':
     # This is used when running locally. Gunicorn is used to run the
