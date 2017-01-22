@@ -37,3 +37,15 @@ class TokenUtils():
     @staticmethod
     def get_uuid():
         return str(uuid4())
+
+
+class CronUtils():
+
+    class NotCronCallerException(Exception): pass
+
+    @staticmethod
+    def require_cron(headers):
+        is_cron = headers.get('X-AppEngine-Cron', False)
+        if not is_cron:
+            raise CronUtils.NotCronCallerException()
+

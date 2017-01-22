@@ -1,7 +1,7 @@
 cron:
 - description: update occupancy rates
   url: /tasks/occupancy
-  schedule: every 5 minutes
+  schedule: every 1 minutes
 - description: move to long term data store
   url: /tasks/store
   schedule: every 8 hours
