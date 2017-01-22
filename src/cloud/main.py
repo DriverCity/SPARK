@@ -5,7 +5,7 @@ import spark_logging
 import config
 
 from flasgger import Swagger, swag_from, validate, ValidationError
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify,abort
 
 import payment
 from cloud_storage_io import CloudStorageIO
@@ -38,11 +38,14 @@ def store_parking_event():
 
     except ValidationError as e:
         logger.exception(e)
-        return jsonify({'errorType': 'SCHEMA_VALIDATION_ERROR', 'content': e}), 400
+        abort(400)
     except payment.PaymentException as e:
         logger.exception(e)
-        return jsonify({'errorType': 'PAYMENT_ERROR', 'content': e}), 400
+        abort(400)
+    except Exception as e:
+        pass
 
+    abort(500)
 
 @app.route('/tasks/occupancy', methods=['GET'])
 def update_occupancy_rates():
@@ -58,8 +61,8 @@ def update_occupancy_rates():
         return '', 201
     except Exception as e:
         logger.exception(e)
-        # TODO: make fault responding better
-        return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
+
+    abort(500)
 
 
 @app.route('/tasks/store', methods=['GET'])
@@ -77,7 +80,8 @@ def move_to_long_term_data_store():
         return '', 201
     except Exception as e:
         logger.exception(e)
-        return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
+
+    abort(500)
 
 
 @app.route('/tasks/cleanup', methods=['GET'])
@@ -93,7 +97,8 @@ def cleanup_firebase():
         return '', 201
     except Exception as e:
         logger.exception(e)
-        return jsonify({'errorType': 'EXCEPTION', 'content': str(e)}), 500
+
+    abort(500)
 
 
 @app.errorhandler(500)

@@ -11,9 +11,7 @@ def is_test_payment(payment_data, test_type, test_receipt):
 
 
 def validate(payment_data):
-    if True is True:
+    if True == True:
         # Depending on payment type, payment is validated. Further payment validation is not in
         # the scope of this project.
-        pass
-    else:
         raise PaymentException()
