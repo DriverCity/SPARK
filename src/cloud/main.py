@@ -7,7 +7,6 @@ import config
 from flasgger import Swagger, swag_from, validate, ValidationError
 from flask import Flask,request,jsonify
 
-import parking_area
 import payment
 from cloud_storage_io import CloudStorageIO
 from parking_event_repo import ParkingEventRepository
