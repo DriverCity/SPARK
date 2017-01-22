@@ -12,8 +12,9 @@ Application's backend responsible or data storage and analysis functionalities t
 - Future considerations
 	- excessive possibilities for analysis
 
-## SPARK on App Engine: Modules
-This section describes the most important modules of SPARK Google Cloud implementation on App Engine.
+## SPARK on GCP
+### App Engine Modules
+This section describes the most significant modules of SPARK GCP implementation on App Engine.
 - `main.py`
   - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). The API routes and functionalities are presented in a great detail in the [Flasgger spec](#flasgger).
 - `firebase_repo.py`
@@ -26,6 +27,21 @@ This section describes the most important modules of SPARK Google Cloud implemen
   - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events.
 - `swagger_specs/parkingEvent.yml`
   - The API docs for parking event storage call consumed by [Flasgger](https://github.com/rochacbruno/flasgger) - a [Swagger](http://swagger.io/) API docs creator for Flask.
+  
+### Data architecture
+#### Firebase
+[Firebase](https://firebase.google.com/) works as the operational data store of SPARK. The Firebase instance contains all currently valid parking events and parking occupancy levels by paid parking area. The architecture of the Firebase instance is, by each root document, as such:
+- `parkingArea`
+  - A [transformed document](https://github.com/DriverCity/SPARK/blob/master/data/TampereOpenDataTransformed.json) based on [Tampere city center paid car parks open data](https://github.com/DriverCity/SPARK/tree/master/data#tampere-city-center-pay-car-parks)
+- `parkingAreaParkingEvent`
+  - Currently on-going parking events grouped by parking areas. This makes it possible for attendants to subscribe to the parking events of the area they are currently on, receiving changes in the area's parkings as they happen
+- `parkingEventLookup`
+  - A flattened form of `parkingAreaParkingEvent`, which is used for performance reasons in driver's previous parking event removal and parking event occupancy rates aggregation
+- `parkingEventNotification`
+  - A store of previously happened events that have not yet been brought to the long-term Cloud Storage parking event store
+  
+#### Cloud Storage
+[Google Cloud Storage](https://cloud.google.com/storage/) works as a long-term/low-cost parking event storage.
 
 ## How to install and deploy
 For these instructions, you need to have basic knowledge on cloud and database technologies, version control and Python.
