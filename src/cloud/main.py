@@ -68,7 +68,6 @@ def move_to_long_term_data_store():
     tags:
       - Blob storage task
     """
-    # TODO: logging
     try:
         new_events = ParkingEventRepository().consume_new_parking_events_by('willBeStoredToLongTermDataStore', True, False)
         CloudStorageIO().upload_to_parking_event_store(new_events)
