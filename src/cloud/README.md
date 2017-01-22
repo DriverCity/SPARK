@@ -1,4 +1,4 @@
-# SPARK Google Cloud implementation
+# SPARK on Google Cloud Platform
 Application's backend responsible or data storage and analysis functionalities take place in [Google Cloud Platform](http://cloud.google.com). 
 
 ## TODO: Why Google Cloud Platform?
@@ -12,7 +12,7 @@ Application's backend responsible or data storage and analysis functionalities t
 - Future considerations
 	- excessive possibilities for analysis
 
-## SPARK on GCP
+## The Implementation
 ### App Engine Modules
 This section describes the most significant modules of SPARK GCP implementation on App Engine.
 - `main.py`
@@ -27,10 +27,19 @@ This section describes the most significant modules of SPARK GCP implementation 
   - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events.
 - `swagger_specs/parkingEvent.yml`
   - The API docs for parking event storage call consumed by [Flasgger](https://github.com/rochacbruno/flasgger) - a [Swagger](http://swagger.io/) API docs creator for Flask.
+
+#### CRON-scheduled jobs
+A few scheduled jobs take place in App Engine
+- **Blob storage task**
+  - Stores not-yet-stored paid parking events to the Cloud Storage Bucket
+- **Cleanup Firebase task**
+  - Removes no more needed events from Firebase
+- **Occupancy rates analysis task**
+  - Calculates paid parking areas' occupancies based on the latest parking event data
   
 ### Data architecture
 #### Firebase
-[Firebase](https://firebase.google.com/) works as the operational data store of SPARK. The Firebase instance contains all currently valid parking events and parking occupancy levels by paid parking area. The architecture of the Firebase instance is, by each root document, as such:
+Firebase works as the operational data store of SPARK. The Firebase instance contains all currently valid parking events and parking occupancy levels by paid parking area. The architecture of the Firebase instance is, by each root document, as such:
 - `parkingArea`
   - A [transformed document](https://github.com/DriverCity/SPARK/blob/master/data/TampereOpenDataTransformed.json) based on [Tampere city center paid car parks open data](https://github.com/DriverCity/SPARK/tree/master/data#tampere-city-center-pay-car-parks)
 - `parkingAreaParkingEvent`
@@ -41,7 +50,7 @@ This section describes the most significant modules of SPARK GCP implementation 
   - A store of previously happened events that have not yet been brought to the long-term Cloud Storage parking event store
   
 #### Cloud Storage
-[Google Cloud Storage](https://cloud.google.com/storage/) works as a long-term/low-cost parking event storage.
+Google Cloud Storage works as a long-term/low-cost parking event storage.
 
 ## How to install and deploy
 For these instructions, you need to have basic knowledge on cloud and database technologies, version control and Python.
