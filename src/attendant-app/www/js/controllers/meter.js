@@ -18,6 +18,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
    * TEST THINGS
    ***************************/
 
+/*
   $scope.fakeBeacons = [
     {
       id:"123456789",
@@ -38,6 +39,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   }
 
   $scope.fakeAreaId = 2118;
+*/
 
   /****************************
    * POSITIONING
@@ -58,14 +60,14 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   }
 
   $scope.startTimerPostion = function() {
-    var limit = 10;
+    var limit = 30;
     var secondsLeft = limit;
-    $scope.positionText = "position checked ("+limit+"s left)";
+    $scope.positionText = "next check in "+limit+"s";
 
     $scope.timerReductionPosition = $interval(function() {
       secondsLeft = secondsLeft - 1;
       if(secondsLeft > 0) {
-        $scope.positionText = "position checked (" + secondsLeft + "s left)";
+        $scope.positionText = "next check in " + secondsLeft + "s";
       } else {
         $scope.checkCurrentPosition();
         $scope.findArea();
@@ -82,11 +84,11 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
       enableHighAccuracy: true
     };
     
-    // $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+    $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
       $scope.positionGPS = position;
       $scope.positionMAP = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       $scope.findArea();
-    // }
+    });
   }
 
   /****************************
