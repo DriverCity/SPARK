@@ -161,11 +161,11 @@ This section describes how to upload and run the code on target devices.
   
   - **Direct connection:** Try pinging address **169.254.186.133** . If there is no connection, you need to connect display and keyboard to the Pi and get the eth0 IP address with **ifconfig** command or use 3rd party tools to find connected device's IP. Note that establishing connection after connecting cable may take few moments.
 
-3. Upload software to Pi. After building software, there will be **upload_raspberrypi_debug.sh** or **upload_raspberrypi_release.sh** in the deploy directory. Give the correct IP address as the first parameter to script. The script will send zip-file containing the software and installation scripts to Pi in /home/pi directory.
+3. Upload software to Pi: After building software, there will be **upload_raspberrypi_debug.sh** or **upload_raspberrypi_release.sh** in the deploy directory. Give the correct IP address as the first parameter to script. The script will send zip-file containing the software and installation scripts to Pi in /home/pi directory.
    
 4. Log on Pi using SSH client of your choise (e.g. PuTTY) using the correct IP address. Default login name is **pi** and default password is **raspberry**.
 
-5. Install the software. Change to pi's home directory and run commands:
+5. Install the software: Change to pi's home directory and run commands:
 
   ```sh
   chmod a+x install_debug.sh
