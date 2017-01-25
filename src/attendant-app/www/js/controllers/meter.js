@@ -12,34 +12,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   $scope.longitude = 0;
   $scope.scanning = false;
   $scope.isScanBtnDisabled = false;
-
-
-  /****************************
-   * TEST THINGS
-   ***************************/
-
-/*
-  $scope.fakeBeacons = [
-    {
-      id:"123456789",
-      name:"sparkABC123_00318"
-    },
-    {
-      id:"223456789",
-      name:"sparkDEF456_00490"
-    }
-  ]
-
-  // Fake position inside an area
-  var position = {
-    coords: {
-      latitude: 61.4991694,
-      longitude: 23.7600491
-    }
-  }
-
-  $scope.fakeAreaId = 2118;
-*/
+  $scope.mapLoaded = false;
 
   /****************************
    * POSITIONING
@@ -136,55 +109,68 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   $scope.createClickableMap = function() {
     console.log("call create clickable")
 
-    // Define options
-    var mapOptions = {
-      center: $scope.positionMAP,
-      zoom: 18,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+    var options = {
+      timeout: 10000,
+      enableHighAccuracy: true
     };
- 
-    // Create the map
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-    // Adding marker current position
-    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
-      var marker = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position: $scope.positionMAP
+    $scope.mapLoaded = true;
+
+    $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+      var positionGoogle = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      
+      // Define options
+      var mapOptions = {
+        center: positionGoogle,
+        zoom: 18,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      // Create the map
+      $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+      // Adding marker current position
+      google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+        var marker = new google.maps.Marker({
+          map: $scope.map,
+          animation: google.maps.Animation.DROP,
+          position: positionGoogle
+        });
       });
-    });
 
-    $scope.parkingArea.$loaded(function() {
-      for(var i=0; i<$scope.parkingArea.length; i++) {
-        var coords = $scope.parkingArea[i].geometry.coordinates[0];
-        var parkingCoords = [];
-          
-        for(var j=0; j<coords.length; j++) {
-          parkingCoords.push(
-            {
-              lat:parseFloat(coords[j][1]),
-              lng:parseFloat(coords[j][0])
-            }
-          );
+      $scope.mapLoaded = false;
+
+      $scope.parkingArea.$loaded(function() {
+        for(var i=0; i<$scope.parkingArea.length; i++) {
+          var coords = $scope.parkingArea[i].geometry.coordinates[0];
+          var parkingCoords = [];
+            
+          for(var j=0; j<coords.length; j++) {
+            parkingCoords.push(
+              {
+                lat:parseFloat(coords[j][1]),
+                lng:parseFloat(coords[j][0])
+              }
+            );
+          }
+
+          var areaGeometry = new google.maps.Polygon({
+            paths: parkingCoords,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            area_number:$scope.parkingArea[i].area_number
+          });
+          areaGeometry.setMap($scope.map);
+
+          areaGeometry.addListener('click', function(event) {
+            $scope.currentAreaId = this.area_number;
+            $scope.modal.hide();
+          });
         }
-
-        var areaGeometry = new google.maps.Polygon({
-          paths: parkingCoords,
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FF0000',
-          fillOpacity: 0.35,
-          area_number:$scope.parkingArea[i].area_number
-        });
-        areaGeometry.setMap($scope.map);
-
-        areaGeometry.addListener('click', function(event) {
-          $scope.currentAreaId = this.area_number;
-          $scope.closeClickMap();
-        });
-      }
+      });
     });
   }
 
@@ -330,17 +316,24 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
-    $scope.modalSettigs = modal;
+    $scope.modal = modal;
   });
 
   $scope.openClickMap = function() {
-    $scope.modalSettigs.show();
+    $scope.modal.show();
     $scope.createClickableMap();
   };
 
-  $scope.closeClickMap = function() {
-    $scope.modalSettigs.hide();
-  };
+  $scope.$on('$destroy', function () {
+      $scope.modal.remove();
+  });
+
+  //Set $scope.map to null
+  $scope.$on('modal.hidden', function () {
+      $scope.$on('$destroy', function () {
+          $scope.map = null;
+      });
+  });
 
   /****************************
   * UTILS

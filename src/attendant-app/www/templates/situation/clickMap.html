@@ -2,7 +2,7 @@
   <!-- Header -->
   <ion-header-bar class="bar-calm">
     <!-- Back button -->
-    <button ng-click="closeClickMap()" class="button back-button buttons button-clear header-item"><i class="icon ion-ios-arrow-back"></i>
+    <button ng-click="modal.hide()" class="button back-button buttons button-clear header-item"><i class="icon ion-ios-arrow-back"></i>
       <span class="back-text">
         <span class="default-title hide">Back</span>
       </span>
@@ -14,9 +14,9 @@
 
   <!-- Content -->
   <ion-content>
-
+  
     <!-- Loading footer -->
-    <div class="bar bar-footer bar-balanced" ng-show="parkingAreaLoaded != true">
+    <div class="bar bar-footer bar-balanced" ng-show="mapLoaded == true">
       <div class="title">Loading ...</div>
     </div>
 
