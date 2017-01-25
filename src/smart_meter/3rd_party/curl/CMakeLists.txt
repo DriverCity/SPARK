@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.4)
 
-project(jsoncpp)
+project(curl)
 
 # Lacking version information causes CMake warnings.
 set(VERSION_MAJOR "7")

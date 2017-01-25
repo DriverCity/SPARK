@@ -41,10 +41,17 @@ void writeAreaInfo(int areaNo, const std::string& url, std::string& response){
         //Set callback for received data
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, CurlWrite_Callback_ToString);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 
         //Perform
-        curl_easy_perform(curl);
+        CURLcode code = curl_easy_perform(curl);
+        if (code != CURLE_OK){
+            LOG_ERROR("Error while performing http request: " << code);
+        }
         curl_easy_cleanup(curl);
+    }
+    else {
+        LOG_ERROR("Could not initialize curl!");
     }
 }
 
@@ -119,6 +126,7 @@ ICloudService::Result CloudService::verifyParkingEvent(const ParkingEvent& event
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
     curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 
     CURLcode result = curl_easy_perform(curl);
     curl_easy_cleanup(curl);
@@ -144,6 +152,8 @@ std::string CloudService::createParkingEventJson(const ParkingEvent& e) const
 
 ICloudService::Result CloudService::curlCodeToResult(int code)
 {
+    LOG_DEBUG("CURLcode: " << code);
+
     switch (code)
     {
     case CURLE_OK:
