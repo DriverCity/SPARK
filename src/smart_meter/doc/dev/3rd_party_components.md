@@ -35,6 +35,23 @@ Install sqlite3 to dev env:
 sudo apt-get install sqlite3 libsqlite3-dev
 ```
 
+## Openssl
+
+This is only needed for Raspberry Pi.
+
+- Cross-compile openssl for Raspberry Pi:
+
+  ```sh
+  git clone https://github.com/openssl/openssl.git
+  cd openssl
+  ./Configure linux-generic32 shared --prefix=$PWD/build --openssldir=$PWD/build/openssl --cross-compile-prefix=arm-linux-gnueabihf-
+  make depend && make && make install
+  ```
+
+- Add following line to ~/.bashrc and restart terminal to apply.
+  ```sh
+  export OPENSSL_DIR=**/path/to/ssl**/build
+  ```
 
 ## Curl
 
@@ -54,7 +71,11 @@ Cross-compile curl for Raspberry Pi:
   wget https://curl.haxx.se/download/curl-7.52.1.tar.gz
   tar -xf curl-7.52.1.tar.gz
   cd curl-7.52.1
-  ./configure --host=arm-linux-gnueabihf --prefix=$PWD/build
+  mkdir build && mkdir build/lib && cd build/lib
+  ln -s $OPENSSL_DIR/lib/libssl.so.1.1
+  ln -s $OPENSSL_DIR/lib/libcrypto.so.1.1
+  cd ../..
+  ./configure --host=arm-linux-gnueabihf --prefix=$PWD/build --with-ssl=$OPENSSL_DIR
   make && make install
   ```
   
