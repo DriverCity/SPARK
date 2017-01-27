@@ -12,6 +12,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
   $scope.scanning = false;
   $scope.isScanBtnDisabled = false;
 
+
   var timeSettings = {
     callback: function (val) {
       if (typeof (val) === 'undefined') {
@@ -74,7 +75,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
             var eventTimestamp = resultRetrieve[resultRetrieve.$indexFor("timestamp")].$value;
             // var eventTime = new Date(eventTimestamp); Not working on mobile
             var eventTime = new Date();
-            
+
             var splitSpace = eventTimestamp.split(" ");
             var dateSplit = splitSpace[0].split("-");
             var timeSplit = splitSpace[1].split(":");
@@ -89,7 +90,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
 
             var selectedTimeInMinutes = selectedTimeLimit.getUTCHours() * 60 + selectedTimeLimit.getUTCMinutes();
             var eventTimePlusLimit = new Date(eventTime.getTime() + selectedTimeInMinutes * 60000);
-            
+
             // alert(eventTimePlusLimit);
             // alert(currentTime);
 
@@ -145,6 +146,8 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
     // Update status
     $scope.scanText = "Scan Complete";
     $scope.scanning = false;
+    $scope.isScanBtnDisabled = false;
+
   }
 
   /*
@@ -156,7 +159,9 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
     if($scope.selectedTime == undefined) {
       alert("Time limit must be set before scanning")
     } else {
+
       // Initialize variables
+      $scope.isScanBtnDisabled = true;
       seconds = 5;
       tempArray = [];
       $scope.scanText = "Scanning (5s left)";
@@ -165,7 +170,6 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
       // Scan withouth specifications
       ble.scan([], seconds, onDiscoverDevice, blePerpheralsService.onError);
       // Prepare variables
-      $scope.isScanBtnDisabled = true;
       var secondsLeft = seconds;
 
       // Set interval to visibly display the remaining seconds

@@ -21,7 +21,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   $scope.autoRefreshPosition = true;
 
   $scope.changeRefreshPosition = function() {
-    
+
     if(!$scope.autoRefreshPosition) {
       $scope.startTimerPostion();
     } else {
@@ -56,7 +56,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
       timeout: 10000,
       enableHighAccuracy: true
     };
-    
+
     $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
       $scope.positionGPS = position;
       $scope.positionMAP = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -118,7 +118,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
     $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
       var positionGoogle = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      
+
       // Define options
       var mapOptions = {
         center: positionGoogle,
@@ -144,7 +144,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
         for(var i=0; i<$scope.parkingArea.length; i++) {
           var coords = $scope.parkingArea[i].geometry.coordinates[0];
           var parkingCoords = [];
-            
+
           for(var j=0; j<coords.length; j++) {
             parkingCoords.push(
               {
@@ -215,7 +215,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
             var eventTimestamp = arrayRetrieved[index].timestamp;
             var eventTime = new Date();
-            
+
             var splitSpace = eventTimestamp.split(" ");
             var dateSplit = splitSpace[0].split("-");
             var timeSplit = splitSpace[1].split(":");
@@ -272,13 +272,14 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     // Update status
     $scope.scanText = "Scan Complete";
     $scope.scanning = false;
+    $scope.isScanBtnDisabled = false;
   }
 
   /*
    * Description: Scan for all BLE peripheral devices or for devices with a specific service UUID
    */
   $scope.scan = function() {
-
+    $scope.isScanBtnDisabled = true;
     // Initialize variables
     seconds = 5;
     tempArray = [];
@@ -288,7 +289,6 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     // Scan withouth specifications
     ble.scan([], seconds, onDiscoverDevice, blePerpheralsService.onError);
     // Prepare variables
-    $scope.isScanBtnDisabled = true;
     var secondsLeft = seconds;
 
     // Set interval to visibly display the remaining seconds

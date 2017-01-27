@@ -22,9 +22,10 @@
 
       <!-- Beacon -->
 
-      <button class="button button-block button-positive" ng-disabled="{{ isScanBtnDisabled }}" ng-click="scan()">
+      <button class="button button-block button-positive" ng-disabled="isScanBtnDisabled" ng-click="scan()">
         Scan for cars
       </button>
+
 
       <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
         {{ scanText }}
