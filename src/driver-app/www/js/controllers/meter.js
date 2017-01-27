@@ -11,7 +11,7 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
   var seconds = 5;
   var tempArray = [];
   var timeReduction;
-  
+
   $scope.scanning = false;
   $scope.isScanBtnDisabled = false;
 
@@ -45,24 +45,25 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
     $interval.cancel(timeReduction)
     $scope.blePeripherals = tempArray;
     $scope.scanning = false;
+    $scope.isScanBtnDisabled = false;
   }
 
   /*
    * Description: Scan for all BLE peripheral devices or for devices with a specific service UUID
    */
   $scope.scan = function() {
-    
+
     // Initialize variables
     seconds = 5;
     tempArray = [];
     $scope.scanText = "Scanning (5s left)";
     $scope.scanning = true;
+    $scope.isScanBtnDisabled = true;
 
     // Scan withouth specifications
     ble.scan([], seconds, onDiscoverDevice, blePerpheralsService.onError);
 
     // Prepare variables
-    $scope.isScanBtnDisabled = true;
     var secondsLeft = seconds;
 
     // Set interval to visibly display the remaining seconds
@@ -84,7 +85,7 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
     // Set selected device characteristics
     blePerpheralsService.setSelectedDeviceId(id);
     blePerpheralsService.setSelectedDeviceName(name);
-    
+
     // Define action after connexion
     var onConnect = function() {
       $state.go('tab.device', { 'id': id });

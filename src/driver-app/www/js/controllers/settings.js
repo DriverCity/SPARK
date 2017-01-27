@@ -9,7 +9,7 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
   var seconds = 5;
   var tempArray = [];
   var timeReduction;
-  
+
   $scope.scanning = false;
   $scope.isScanBtnDisabled = false;
 
@@ -44,14 +44,16 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
     $interval.cancel(timeReduction)
     $scope.blePeripherals = tempArray;
     $scope.scanning = false;
+    $scope.isScanBtnDisabled = false;
   }
 
   /*
    * Description: Scan for all BLE peripheral devices or for devices with a specific service UUID
    */
   $scope.scan = function() {
-    
+
     // Initialize variables
+    $scope.isScanBtnDisabled = true;
     seconds = 5;
     tempArray = [];
     $scope.scanText = "Scanning (5s left)";
@@ -61,7 +63,6 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
     ble.scan([], seconds, onDiscoverDevice, blePerpheralsService.onError);
 
     // Prepare variables
-    $scope.isScanBtnDisabled = true;
     var secondsLeft = seconds;
 
     // Set interval to visibly display the remaining seconds
