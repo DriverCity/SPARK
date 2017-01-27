@@ -43,7 +43,7 @@ class TestParkingEventIO(TestCase):
         )
 
         # Act
-        result = self.parking_event_repo.store_parking_event(request_json)
+        result = self.parking_event_repo.store_parking_event(request_json, 100)
 
         # Assert
         # > parkingAreaParkingEvent
@@ -81,7 +81,7 @@ class TestParkingEventIO(TestCase):
         )
 
         # Act
-        result = self.parking_event_repo.store_parking_event(request_json)
+        result = self.parking_event_repo.store_parking_event(request_json, 100)
 
         # Assert
         # > parkingAreaParkingEvent
@@ -119,11 +119,11 @@ class TestParkingEventIO(TestCase):
         )
 
         # Act
-        result_0 = self.parking_event_repo.store_parking_event(request_json)
+        result_0 = self.parking_event_repo.store_parking_event(request_json, 100)
 
         # Add over existing
         request_json['parkingAreaId'] = paid_parking_area_id
-        result = self.parking_event_repo.store_parking_event(request_json)
+        result = self.parking_event_repo.store_parking_event(request_json, 100)
 
         # Assert
         # > parkingAreaParkingEvent
@@ -166,7 +166,7 @@ class TestParkingEventIO(TestCase):
             )
 
             # Act
-            result = self.parking_event_repo.store_parking_event(request_json)
+            result = self.parking_event_repo.store_parking_event(request_json, 100)
 
             # Assert
             _, actual_event = self.parking_event_repo.db. \

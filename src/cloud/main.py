@@ -5,12 +5,13 @@ import spark_logging
 import config
 
 from flasgger import Swagger, swag_from, validate, ValidationError
-from flask import Flask,request,jsonify,abort
+from flask import Flask,request,abort,request
 
 import payment
 from cloud_storage_io import CloudStorageIO
 from parking_event_repo import ParkingEventRepository
 from occupancy_rates_repo import OccupancyRatesRepository
+from utils import CronUtils
 
 app = Flask(__name__)
 Swagger(app)
@@ -47,6 +48,7 @@ def store_parking_event():
 
     abort(500)
 
+
 @app.route('/tasks/occupancy', methods=['GET'])
 def update_occupancy_rates():
     """
@@ -56,9 +58,13 @@ def update_occupancy_rates():
       - Occupancy rates analysis task
     """
     try:
+        CronUtils.require_cron(request.headers)
         counts = ParkingEventRepository().get_occuring_paid_event_counts()
         OccupancyRatesRepository().refresh_occupancies(counts)
         return '', 201
+    except CronUtils.NotCronCallerException as e:
+        logger.exception(e)
+        abort(401)
     except Exception as e:
         logger.exception(e)
 
@@ -74,10 +80,14 @@ def move_to_long_term_data_store():
       - Blob storage task
     """
     try:
+        CronUtils.require_cron(request.headers)
         new_events = ParkingEventRepository().consume_new_parking_events_by('willBeStoredToLongTermDataStore', True, False)
         CloudStorageIO(app.config['GOOGLE_CLOUD_STORAGE_STORE_NAME'],
                        app.config['GOOGLE_CLOUD_STORAGE_BLOB_NAME_PREFIX']).upload_to_parking_event_store(new_events)
         return '', 201
+    except CronUtils.NotCronCallerException as e:
+        logger.exception(e)
+        abort(401)
     except Exception as e:
         logger.exception(e)
 
@@ -93,8 +103,12 @@ def cleanup_firebase():
       - Cleanup firebase task
     """
     try:
+        CronUtils.require_cron(request.headers)
         ParkingEventRepository().remove_dead_events()
         return '', 201
+    except CronUtils.NotCronCallerException as e:
+        logger.exception(e)
+        abort(401)
     except Exception as e:
         logger.exception(e)
 

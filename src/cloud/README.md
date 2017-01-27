@@ -71,12 +71,16 @@ It is recommended to use [Ubuntu](https://www.ubuntu.com/download) as the operat
 #### For running the server locally
 All of the following steps are executed with the directory `.../SPARK/src/cloud/` as the working directory
 
-1. Ensure you have [Python 3](https://www.python.org/download/releases/3.0/) installed
-2. [Instantiate an isolated Python 3 environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/) and activate it
-  - The instantiation command can be e.g. `virtualenv -p python3 spark_venv`.
+1. Ensure you have [Python 3](https://www.python.org/download/releases/3.0/) and [pip](https://pypi.python.org/pypi/pip) installed
+2. Install and instantiate [an isolated Python 3 environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/) and activate it:
+  1. Install: `pip install virtualenv`
+  2. Instantiate: `virtualenv -p python3 spark_venv`
+  3. Activate `source spark_venv/bin/activate`.
 3. Install required Python packages listed in `requirements.txt` to the environment with `pip install -r requirements.txt`
 4. Install the Google Cloud Engine utilities according to the [*Before you begin* instructions in *Python Quickstart for Flexible Environment*](https://cloud.google.com/python/getting-started/hello-world)
 5. Install the Google App Engine SDK for Python according to the [*Download the SDK for App Engine* instructions](https://cloud.google.com/appengine/docs/python/download)
+   - In case you get the error : *You cannot perform this action because this Cloud SDK installation is managed by an external package manager.  If you would like to get the latest version, please see our main download page at* , go to page and install from there -> https://cloud.google.com/sdk/docs/quickstart-linux
+   
 6. Create file `pyrebase_config.json`
   - `pyrebase_config.json` should be of format: 
   

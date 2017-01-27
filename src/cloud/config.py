@@ -1,4 +1,3 @@
-PROJECT_ID = 'spark-150308'
 LOGGER_NAME = 'spark-logger'
 
 # Test receipt is always valid. If do not want to use,
