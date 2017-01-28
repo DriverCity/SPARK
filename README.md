@@ -5,7 +5,7 @@ Please find more detailed information about each component in their respective d
 
 <p align="center">
   <img src="SparkOverview.png" width="600"/><br/>
-  <i>Overview of system</i>
+  <i>Overview of the system</i>
 </p>
 
 Find information about the project goals and reasoning on the project website
