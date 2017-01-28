@@ -11,13 +11,15 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
   // Pre defined UUID for Connexion service
   blePerpheralsService.setServiceId('ec00');
   blePerpheralsService.setCharacteristicId('ec0e');
+
 /*
   $scope.meterInfo = {
-    price_per_hour:1.6,
+    price_per_hour:NaN,
     resolution:5,
     limit:240
   }
 */
+
   $scope.timeValidity = null;
 
   $scope.timeSelected = 0;
@@ -83,6 +85,10 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     $scope.$apply(function() {
       $scope.meterInfo = angular.fromJson(dataReceived);
 
+      if(isNaN($scope.meterInfo.price_per_hour)) {
+        $scope.disconnect();
+      }
+
       $scope.meterInfo.price_per_hour = parseFloat($scope.meterInfo.price_per_hour);
       $scope.meterInfo.resolution = parseFloat($scope.meterInfo.resolution);
       $scope.meterInfo.limit = parseFloat($scope.meterInfo.limit);
@@ -128,7 +134,7 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    */
   var backToHome = function () {
     console.log("Connection disconnected");
-    $scope.changeState("tab.meter");
+    $scope.changeState("tab.parking");
     $scope.blePeripherals = [];
   };
 
