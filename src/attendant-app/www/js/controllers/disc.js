@@ -69,8 +69,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
         // Retrieve result for the beacon
         resultRetrieve.$loaded(function() {
           if(resultRetrieve.length == 0) {
-            value.validity = false;
-            value.treated = true;
+            beaconList.splice(index, 1);
           } else {
             var eventTimestamp = resultRetrieve[resultRetrieve.$indexFor("timestamp")].$value;
             // var eventTime = new Date(eventTimestamp); Not working on mobile
