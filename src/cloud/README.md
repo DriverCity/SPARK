@@ -1,7 +1,7 @@
 # SPARK on Google Cloud Platform
 Application's backend responsible or data storage and analysis functionalities take place in [Google Cloud Platform](http://cloud.google.com). 
 
-## TODO: Why Google Cloud Platform?
+## Why Google Cloud Platform?
 
 The customer of the project initially wanted the project to participate the [Google IoT Technology Research Awards Pilot](https://research.googleblog.com/2016/02/announcing-google-internet-of-things.html). Since, in addition, the project focused on implementing a cloud backed proof of concept system, GCP (Google Cloud Platform) was a natural choice as the cloud backend of our project.
 <p/>
