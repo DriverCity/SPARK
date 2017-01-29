@@ -22,10 +22,10 @@ This section describes the most significant modules of SPARK GCP implementation 
   - Contains a base class for accessing Firebase using [Pyrebase](https://github.com/thisbejim/Pyrebase) - a Firebase API wrapper for Python. The base class is inherited by `parking_event_repo.py` and `occupancy_rates_repo.py`.
 - `parking_event_repo.py`
   - Contains a repository for storing and receiving parking events to/from Firebase
-- `occupancy_rates_repo.py`
-  - Contains a repository for forming and storing parking area occupancy levels to Firebase
-- `cloud_storage_io.py`
-  - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events.
+    - `occupancy_rates_repo.py`
+      - Contains a repository for forming and storing parking area occupancy levels to Firebase
+    - `cloud_storage_io.py`
+      - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events.
 - `swagger_specs/parkingEvent.yml`
   - The API docs for parking event storage call consumed by [Flasgger](https://github.com/rochacbruno/flasgger) - a [Swagger](http://swagger.io/) API docs creator for Flask.
 
@@ -84,7 +84,7 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
 3. Install required Python packages listed in `requirements.txt` to the environment with `pip install -r requirements.txt`
 4. Install the Google Cloud Engine utilities according to the [*Before you begin* instructions in *Python Quickstart for Flexible Environment*](https://cloud.google.com/python/getting-started/hello-world)
 5. Install the Google App Engine SDK for Python according to the [*Download the SDK for App Engine* instructions](https://cloud.google.com/appengine/docs/python/download)
-   - In case you get the error : *You cannot perform this action because this Cloud SDK installation is managed by an external package manager.  If you would like to get the latest version, please see our main download page at* , go to page and install from there -> https://cloud.google.com/sdk/docs/quickstart-linux
+   - In case you get the following error: *You cannot perform this action because this Cloud SDK installation is managed by an external package manager. If you would like to get the latest version, please see our main download page at*, you may try installing the SDK directly from here: https://cloud.google.com/sdk/docs/quickstart-linux.
    
 6. Create file `pyrebase_config.json`
   - `pyrebase_config.json` should be of format: 
