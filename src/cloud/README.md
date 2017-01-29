@@ -13,7 +13,7 @@ In the end, Google App Engine turned out to be a quite good platform considering
 <p/>
 There are not yet any computationally intensive analysis steps in our system, as the [occupancy map](https://github.com/DriverCity/SPARK/blob/master/src/driver-app/doc/components.md) occupancy levels can be derived [in a quite trivial way](https://github.com/DriverCity/SPARK/blob/master/src/cloud/occupancy_rates_repo.py). For furture considerations, GCP provides extensive possibilities for data intensive analysis.
 <p/>
-In addition to what was already mentioned, the project utilises the following GCE functionalities:
+In addition to what was already mentioned, the project utilises the following GCP functionalities:
 - [Google Cloud Storage](https://cloud.google.com/storage/) as a long-term parking event data storage
 - [Logging](https://cloud.google.com/logging/) for http-request, trace and error logging
 - [Deployment Manager](https://cloud.google.com/deployment-manager/) for managing deployment and version migration.
