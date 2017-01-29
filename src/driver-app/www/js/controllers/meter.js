@@ -8,12 +8,12 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
    * VARIABLES
    ***************************/
 
-  var seconds = 5;
-  var tempArray = [];
-  var timeReduction;
+  var seconds = 5;      // Scan delay
+  var tempArray = [];   // Temporary array used to store beacons during the scanning process
+  var timeReduction;    // Interval for manage the time during the scanning process
 
-  $scope.scanning = false;
-  $scope.isScanBtnDisabled = false;
+  $scope.scanning = false;            // Boolean representing the scanning status
+  $scope.isScanBtnDisabled = false;   // Boolean representing the status of the button in the UI
 
   /****************************
    * BLUETOOTH
@@ -99,10 +99,16 @@ app.controller('MeterCtrl', function($scope, $state, $interval, $timeout, blePer
    * UTILS
    ***************************/
 
+  /* 
+   * Description : Go to another state of the application
+   */
   $scope.changeState = function(location) {
     $state.go(location);
   };
 
+  /* 
+   * Description : Display an alert on the UI
+   */
   $scope.showAlert = function(title,text) {
     var alertPopup = $ionicPopup.alert({
       title: title,

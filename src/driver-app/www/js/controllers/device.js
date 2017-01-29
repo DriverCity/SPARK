@@ -21,9 +21,9 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
 */
 
   $scope.timeValidity = null;
+  $scope.timeSelected = 0;      // Time selected by the user. Initialized by the resolution retrieved from the start meter
+  $scope.price = 0;             // Price per hour retrieved from the smart meter
 
-  $scope.timeSelected = 0;
-  $scope.price = 0;
   // $scope.timeSelected = $scope.meterInfo.resolution;
   // $scope.price = $scope.meterInfo.price_per_hour;
 
@@ -31,6 +31,10 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * PRICE INPUT
    ***************************/
 
+  /* Description :
+   * Function for increase the current time selected by the user.
+   * Based on resolution, limit and price per hour retrieved from the smart-meter
+   */
   $scope.increaseTime = function() {
     if($scope.meterInfo != null) {
       if($scope.meterInfo.limit == 0 || $scope.meterInfo.limit != 0 && $scope.timeSelected != $scope.meterInfo.limit ) {
@@ -41,6 +45,10 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     }
   }
 
+  /* Description :
+   * Function for decrease the current time selected by the user.
+   * Based on resolution, limit and price per hour retrieved from the smart-meter
+   */
   $scope.decreaseTime = function() {
     if($scope.meterInfo != null) {
       if($scope.timeSelected != $scope.meterInfo.resolution) {
@@ -55,7 +63,7 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * DATA CONVERTION
    ***************************/
 
-  /* Description:
+  /* Description :
    * Convert String to ArrayBuffer 
    */
   var stringToBytes = function(string) {
@@ -66,7 +74,7 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     return array.buffer;
   }
 
-  /* Description:
+  /* Description :
    * Convert ArrayBuffer to String
    */
   var bytesToString = function(buffer) {
@@ -77,8 +85,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * READ DATA
    ***************************/
 
-  /* Function onRead:
-   * callback
+  /* Description :
+   * Function called by the read request when smart-meter send a response
    */
   var onRead = function(data) {
     var dataReceived = bytesToString(data);
@@ -99,8 +107,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     });
   }
 
-  /* Description:
-   * Read Data from a BLE connected peripheral
+  /* Description :
+   * Send a read request to the smart-meter to retrieve information about prices, time limitation and resolution
    */
   $scope.readData = function() {
     ble.read(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), onRead, blePerpheralsService.onError);
@@ -110,18 +118,17 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * WRITE
    ***************************/
 
-  /* Function onWrite:
-   * Callback
-  */
+  /* Description :
+   * Function called by the write request when smart-meter send a success response
+   */
   var onWriteSuccess = function() {
-    // Decode the ArrayBuffer into a typed Array based on the data you expect
-    alert("Parking success !");
-    // Go back home
     $scope.disconnect();
   }
 
+  /* Description :
+   * Function called by the write request when smart-meter send a failure response
+   */
   var onWriteError = function() {
-    // Decode the ArrayBuffer into a typed Array based on the data you expect
     alert("Parking unexpected error");
   }
 
@@ -129,8 +136,8 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * DISCONNECT
    ***************************/
 
-  /* Description:
-   * Transition to smart view and reset peripheral list
+  /* Description :
+   * Transition to parking state and reset peripheral list
    */
   var backToHome = function () {
     console.log("Connection disconnected");
@@ -138,7 +145,7 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
     $scope.blePeripherals = [];
   };
 
-  /* Description:
+  /* Description :
    * Disconnect from the BLE peripheral
    */
   $scope.disconnect = function() {
@@ -149,16 +156,23 @@ app.controller('DeviceCtrl', function($scope, $state, blePerpheralsService, park
    * FUNCTION
    ***************************/
 
+  /* Description :
+   * Fake fill of the bank card form on the UI
+   */
   $scope.fakeFill = function() {
     $scope.number = "4242 4242 4242 4242";
     $scope.expiry = "12/2017";
     $scope.cvc = "123";
   }
 
+  /* Description :
+   * Function called when stripe API send a callback
+   */
   $scope.stripeCallback = function (code, result) {
     if (result.error) {
       alert('It failed! error: ' + result.error.message);
     } else {
+      alert('Card valid, send payment request to the smart meter');
       var str = "Park;"+parkCarService.getSelectedVehicle().beacon+";2000-01-01 12:30;"+$scope.timeSelected+";SERVICE_1;valid_test_hash\n";
       ble.write(blePerpheralsService.getSelectedDeviceId(), blePerpheralsService.getServiceId(), blePerpheralsService.getCharacteristicId(), stringToBytes(str), onWriteSuccess, onWriteError);
     }

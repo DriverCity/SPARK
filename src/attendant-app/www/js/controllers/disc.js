@@ -1,4 +1,4 @@
-app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $scope, $state, $interval, $timeout, blePerpheralsService, CloudSrv) {
+app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $scope, $state, $interval, $timeout, blePerpheralsService) {
 
 //controller for the disc parking context
   /****************************
