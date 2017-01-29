@@ -4,6 +4,11 @@ angular.module('starter.services', [])
  * FACTORY
  **************************************************************************************/
 
+
+/*
+ * Description :
+ * Factory used for store the Firebase IDs
+ */
 .factory("Firebase", function() {
   var config = {
     apiKey: "AIzaSyDhjWe4lzQBToEiVRTp98nTp09xKi7LxEM",
@@ -15,6 +20,10 @@ angular.module('starter.services', [])
   return firebase.initializeApp(config);
 })
 
+/*
+ * Description :
+ * Factory used to pass info about BLE beacons selected from a state to another
+ */
 .factory('blePerpheralsService', function() {
 
   var selectedDeviceId = "";
@@ -53,6 +62,10 @@ angular.module('starter.services', [])
   }
 })
 
+/*
+ * Description :
+ * Factory used to pass info about Vehicle selected from a state to another
+ */
 .factory('parkCarService', function() {
 
   var selectedVehicle = "";
@@ -71,6 +84,10 @@ angular.module('starter.services', [])
  * SERVICE VEHICLE
  **************************************************************************************/
 
+/*
+ * Description :
+ * Service used to communicate with www.carqueryapi.com to retrieve information about cars
+ */
 .service (
   "VehicleSrv",
   function($http, $q) {
@@ -81,6 +98,10 @@ angular.module('starter.services', [])
       getInfos: getInfos
     });
 
+    /*
+     * Description :
+     * Get all cars marker
+     */
     function getMakes() {
       var request = $http({
         method: "get",
@@ -92,6 +113,10 @@ angular.module('starter.services', [])
       return(request.then(handleSuccess, handleError));
     }
 
+    /*
+     * Description :
+     * Get all cars model associated to a maker
+     */
     function getModels(make) {
       var request = $http({
         method: "get",
@@ -103,6 +128,10 @@ angular.module('starter.services', [])
       return(request.then(handleSuccess, handleError));
     }
 
+    /*
+     * Description :
+     * Get all trims associated to a maker and a model
+     */
     function getTrims(make,model) {
       var request = $http({
         method: "get",
@@ -114,6 +143,10 @@ angular.module('starter.services', [])
       return(request.then(handleSuccess, handleError));
     }
 
+    /*
+     * Description :
+     * Get info about a car based on his unique ID
+     */
     function getInfos(id) {
       var request = $http({
         method: "get",
@@ -146,6 +179,10 @@ angular.module('starter.services', [])
  * SERVICE CLOUD
  **************************************************************************************/
 
+/*
+ * Description :
+ * Service used to communicate with the cloud and send several requests
+ */
 .service (
   "CloudSrv",
   function($http, $q) {
@@ -153,6 +190,10 @@ angular.module('starter.services', [])
       parkEventRequest: parkEventRequest,
     });
 
+    /*
+     * Description :
+     * Send a new park event request
+     */
     function parkEventRequest(aData) {
       var request = $http({
         method: 'post',
