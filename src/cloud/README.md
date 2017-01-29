@@ -117,3 +117,6 @@ All of the following steps are executed with the directory `.../SPARK/src/cloud/
   - **<a name="flasgger">Flasgger specs</a> are at [https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html](https://{your-google-cloud-project-id}.appspot-preview.com/apidocs/index.html)**.
   - Note that these URLs may be of a different form with your implementation, as at the time of writing this document GC Flexible App Engine is only in its Beta Release state.
 - For deploying the CRON jobs, execute `gcloud app deploy cron.xml`.
+
+#### Dependencies
+An exhaustive list of the dependencies for the Python implementation resides in [requirements.txt](https://github.com/DriverCity/SPARK/blob/master/src/cloud/requirements.txt).
