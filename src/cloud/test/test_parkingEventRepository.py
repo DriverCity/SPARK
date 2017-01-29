@@ -32,6 +32,10 @@ class TestParkingEventIO(TestCase):
         self.parking_event_repo = ParkingEventRepository()
 
     def test_store_parking_disc_parking_event(self):
+        """
+        Store parking disc parking event to an empty database.
+        :return:
+        """
 
         # Arrange
         self.parking_event_repo.db = MockDb().with_parking_disc_init()
@@ -65,6 +69,10 @@ class TestParkingEventIO(TestCase):
 
 
     def test_store_paid_parking_event(self):
+        """
+        Store paid parking event to an empty database.
+        :return:
+        """
 
         # Arrange
         self.parking_event_repo.db = MockDb().with_paid_init()
@@ -103,6 +111,10 @@ class TestParkingEventIO(TestCase):
         self.assertEqual(register_number, actual_notification['registerNumber'])
 
     def test_store_paid_parking_over_previous(self):
+        """
+        Store paid parking event to an empty database and then store another one. Assert on the second one.
+        :return:
+        """
 
         # Arrange
         self.parking_event_repo.db = MockDb().with_paid_init()
@@ -147,6 +159,10 @@ class TestParkingEventIO(TestCase):
         self.assertEqual(secondary_area_id, secondary_notification['parkingAreaId'])
 
     def test_duration_timestamp(self):
+        """
+        Test if the duration timestamps get set properly in paid parking context.
+        :return:
+        """
 
         # Assign
         mock_now = datetime(2016, 1, 1, 1, 1, 1, 1)
@@ -220,6 +236,9 @@ class TestUtils():
 
 
 class MockDb():
+    """
+    A lightweight mock implementation for Pyrebase. Is injected to the repository with relevant population parameters.
+    """
     class Node():
         class KeyValue():
             def __init__(self, key, value):

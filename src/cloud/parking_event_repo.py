@@ -6,9 +6,21 @@ from utils import TimeUtils
 
 
 class ParkingEventRepository(FirebaseRepo):
+    """
+    A repository for storing and receiving parking events on Firebase
+    """
 
+
+    # ODS node is the node which is synchronised by parking attendant app
     _parking_event_ODS_node_name = 'parkingAreaParkingEvent'
+
+    # parking event lookup is used by
+    # > removing a previous event for the incoming event's register number if one exists
+    # > deriving the occupancy rates for the occupancy map
     _parking_event_ODS_lookup_node_name = 'parkingEventLookup'
+
+    # notification node is used as a staging area for long term storage
+    # > notifications do not get removed as new events arrive
     _parking_event_notification_store_node_name = 'parkingEventNotification'
 
     def __init__(self):
@@ -60,6 +72,7 @@ class ParkingEventRepository(FirebaseRepo):
             .child(register_number)\
             .set(parking_event_json)
 
+        # lookup_json is the json stored in the Firebase lookup node
         lookup_json = {
             'registerNumber': register_number,
             'parkingAreaId': parking_area_id,
@@ -91,6 +104,8 @@ class ParkingEventRepository(FirebaseRepo):
         register_number = request_json['registerNumber']
         parking_context_type = request_json['parkingContextType']
         timestamp = TimeUtils.get_local_timestamp()
+
+        # parking_event_json is the json stored under parkingAreaParkingEvent node
         parking_event_json = {
             'timestamp': timestamp,
             'parkingType': parking_context_type,
@@ -137,6 +152,8 @@ class ParkingEventRepository(FirebaseRepo):
             .order_by_child('liveUntilTime')\
             .start_at('0')\
             .end_at(TimeUtils.get_epoch_timestamp_plus_seconds(0)).get()
+
+        # a notification is considered dead if it is already stored to the long term data store OR never will be
         dead_notifications = [(dn.key(), dn.val()) for dn in dead_notifications.each()
                               if 'willBeStoredToLongTermDataStore' not in dn.val()
                               or dn.val()['willBeStoredToLongTermDataStore'] == False]
@@ -189,6 +206,7 @@ class ParkingEventRepository(FirebaseRepo):
 
         occuring_events = self.db.sort(occuring_events, 'parkingAreaId')
 
+        # count currently occuring parking event amounts for each area
         for k, g in groupby(occuring_events.each(), lambda i: i.val()['parkingAreaId']):
             counts[str(k)] = sum(1 for i in g)
 
