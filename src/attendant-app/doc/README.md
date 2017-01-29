@@ -7,3 +7,5 @@ This section is dedicated to the attendant app specific documentation. For more 
 # Parts
 
 - [Environment's installation](https://github.com/DriverCity/SPARK/blob/master/src/attendant-app/doc/install-environment.md)
+- [Architecture](architecture.md)
+- [Components](components.md)
