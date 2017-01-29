@@ -12,6 +12,11 @@ Despite providing a scalable platform, App Engine still supports custom runtime 
 In the end, Google App Engine turned out to be a quite good platform considering data processing and storage. The operational datastore of the system, [Firebase](https://firebase.google.com/), works well with both [driver and parking attendant processes](https://github.com/DriverCity/SPARK/blob/master/docs/requirements/user_stories.md), making it easy and quite fast for drivers to register parking events and, especially, making it very easy for parking attendants to subscribe to the parking areas they are patrolling on, synchronizing their [parking attendant app views](https://github.com/DriverCity/SPARK/tree/master/src/attendant-app) automatically with real-time data (see https://firebase.google.com/docs/database/web/read-and-write for more information).
 <p/>
 There are not yet any computationally intensive analysis steps in our system, as the [occupancy map](https://github.com/DriverCity/SPARK/blob/master/src/driver-app/doc/components.md) occupancy levels can be derived [in a quite trivial way](https://github.com/DriverCity/SPARK/blob/master/src/cloud/occupancy_rates_repo.py). For furture considerations, GCP provides extensive possibilities for data intensive analysis.
+<p/>
+In addition to what was already mentioned, the project utilises the following GCE functionalities:
+- [Google Cloud Storage](https://cloud.google.com/storage/) as a long-term parking event data storage
+- [Logging](https://cloud.google.com/logging/) for http-request, trace and error logging
+- [Deployment Manager](https://cloud.google.com/deployment-manager/) for managing deployment and version migration.
 
 ## The Implementation
 ### App Engine Modules
