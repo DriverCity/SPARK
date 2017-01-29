@@ -1,25 +1,28 @@
 app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $interval, $timeout, $cordovaGeolocation, $firebaseArray, blePerpheralsService, CloudSrv, $q) {
 
+//controller for the paid parking context
   /****************************
    * VARIABLES
    ***************************/
 
-  var seconds = 5;
-  var tempArray = [];
-  var timeReduction;
+  var seconds = 5;//countdown seconds for scanning
+  var tempArray = [];//temporary array to save all scanned beacons
+  var timeReduction;//countdown function
 
-  $scope.latitude = 0;
-  $scope.longitude = 0;
-  $scope.scanning = false;
-  $scope.isScanBtnDisabled = false;
+  $scope.latitude = 0;// current latitude
+  $scope.longitude = 0;//current longitude
+  $scope.scanning = false;//true if teh scanning is in progress
+  $scope.isScanBtnDisabled = false;//if true the scanning button will be disabled
   $scope.mapLoaded = false;
 
   /****************************
    * POSITIONING
    ***************************/
 
-  $scope.autoRefreshPosition = true;
+  $scope.autoRefreshPosition = true;// true if user wants to contantly update the position
 
+//name:changeRefreshPosition
+//use: start or stop the automatic position checking
   $scope.changeRefreshPosition = function() {
 
     if(!$scope.autoRefreshPosition) {
@@ -32,8 +35,11 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     $scope.autoRefreshPosition = !$scope.autoRefreshPosition;
   }
 
+//name: startTimerPostion
+//use: update the position and show timer for next check.
+//Function is called by changeRefreshPosition
   $scope.startTimerPostion = function() {
-    var limit = 30;
+    var limit = 30; //next update in 30 seconds
     var secondsLeft = limit;
     $scope.positionText = "next check in "+limit+"s";
 
@@ -42,6 +48,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
       if(secondsLeft > 0) {
         $scope.positionText = "next check in " + secondsLeft + "s";
       } else {
+        //update the position
         $scope.checkCurrentPosition();
         $scope.findArea();
         secondsLeft = limit;
@@ -50,6 +57,9 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   }
   $scope.startTimerPostion();
 
+//name: checkCurrentPosition
+//use: check urrent GPS location and call findArea function to check
+//if that position is on some parking area
   $scope.checkCurrentPosition = function() {
     console.log("Checking current GPS location");
     var options = {
@@ -68,6 +78,8 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
    * MAP
    ***************************/
 
+//name: findArea
+//use: find the parking area based on users current GPS location
   $scope.findArea = function() {
     console.log("Checking current Area id based on location");
     $scope.parkingArea.$loaded(function() {
@@ -75,7 +87,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
       var newAreaId = null;
       // Verify all the area
       for(var i=0; i<$scope.parkingArea.length; i++) {
-        // Retrieve the coords
+        // Retrieve the coordinatess
         var coords = $scope.parkingArea[i].geometry.coordinates[0];
         // Format coordinates
         var parkingCoords = [];
@@ -93,11 +105,12 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
           paths: parkingCoords
         });
 
-        // Compare these coords with the current position
+        // Compare these coordinatess with the current position
         if($scope.positionMAP != undefined && google.maps.geometry.poly.containsLocation($scope.positionMAP, areaGeometry)) {
           newAreaId = $scope.parkingArea[i].area_number;
         }
       }
+      //if the coordinates match a parking place the parking area id is updated
       if(newAreaId != null) {
         console.log("Area id : "+newAreaId);
         $scope.currentAreaId = newAreaId;
@@ -106,6 +119,9 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     });
   }
 
+//name:createClickableMap
+//use: create the map for the user to choose their location/parkign area
+//they are on by clicking the map
   $scope.createClickableMap = function() {
     console.log("call create clickable")
 
@@ -174,6 +190,8 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     });
   }
 
+//name: startingInstruction
+//use: called by the view to retriveve parking areas from the cloud
   $scope.startingInstruction = function() {
     console.log("start instruction");
 
@@ -188,7 +206,10 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   /****************************
    * CLOUD
    ***************************/
-
+   //name: checkCloudValidity
+   //use: retrieves the information related to the scanned beacons from the cloud
+   //and checks if the parking evenst are valid
+   //parameters: beaconDetectedList: list of beacons scanned
   $scope.checkCloudValidity = function(beaconsDetectedList) {
     var currentTime = new Date();
     // Check availability of mandatory variable
@@ -215,7 +236,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
             var eventTimestamp = arrayRetrieved[index].timestamp;
             var eventTime = new Date();
-
+                //change the string from cloud to Date
             var splitSpace = eventTimestamp.split(" ");
             var dateSplit = splitSpace[0].split("-");
             var timeSplit = splitSpace[1].split(":");
@@ -233,10 +254,11 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
             console.log(eventTime);
             console.log(eventTimePlusDuration);
 
+            // Check validity compared to current time
             if(eventTimePlusDuration > currentTime){
-              beaconsDetectedList[i].validity = true;
+              beaconsDetectedList[i].validity = true; //the parking event is valid
             } else {
-              beaconsDetectedList[i].validity = false;
+              beaconsDetectedList[i].validity = false;//the parking event is not valid
             }
           }
         }
@@ -250,7 +272,10 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
 
   /*
    * Description:
-   * Add discovered device to tempArray
+   *name: onDiscoverDevice
+   *use: Add discovered device to tempArray
+   *parameters: device: Object returned by BLE plugin including
+   *information about discovered device
    */
   var onDiscoverDevice = function(device) {
     if(device.name.indexOf("spark") == 0) {
@@ -260,10 +285,12 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   };
 
   /*
-   * Description: Set device list and make visible
+   * Description:
+   *name: setDeviceList
+   *use: Set device list and make visible
    */
   var setDeviceList = function(){
-    $interval.cancel(timeReduction)
+    $interval.cancel(timeReduction)//stop the countdown
 
     // Check validity
     $scope.blePeripherals = tempArray;
@@ -276,7 +303,9 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   }
 
   /*
-   * Description: Scan for all BLE peripheral devices or for devices with a specific service UUID
+   * Description:
+   *name: scan
+   *use: Scan for all BLE peripheral devices or for devices with a specific service UUID
    */
   $scope.scan = function() {
     $scope.isScanBtnDisabled = true;
@@ -311,7 +340,7 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   /**********************************
   * [MODAL] Settings
   *********************************/
-
+//modal for opening the map that user can use to select a position
   $ionicModal.fromTemplateUrl('templates/situation/clickMap.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -319,6 +348,8 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
     $scope.modal = modal;
   });
 
+//name: openClickMap
+//use: open the map for selecting a position
   $scope.openClickMap = function() {
     $scope.modal.show();
     $scope.createClickableMap();
@@ -338,7 +369,8 @@ app.controller('MeterCtrl', function(Firebase, $scope, $state, $ionicModal, $int
   /****************************
   * UTILS
   ***************************/
-
+//name: comeBackHome
+//use: go back to start view
   $scope.comeBackHome = function() {
     $interval.cancel($scope.timerReductionPosition);
     $state.go("tab.situation");

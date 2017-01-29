@@ -1,18 +1,20 @@
 app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $scope, $state, $interval, $timeout, blePerpheralsService, CloudSrv) {
 
+//controller for the disc parking context
   /****************************
    * VARIABLES
    ***************************/
 
-  var seconds = 5;
-  var tempArray = [];
-  var timeReduction;
+  var seconds = 5;//countdown seconds for scanning
+  var tempArray = []; //temporary array to save all scanned beacons
+  var timeReduction; //countdown function
   var debug = true;
 
-  $scope.scanning = false;
-  $scope.isScanBtnDisabled = false;
+  $scope.scanning = false;//true if teh scanning is in progress
+  $scope.isScanBtnDisabled = false;//if true the scanning button will be disabled
 
 
+  //Settings for ionicTimePicker used in selectTimeLimit function
   var timeSettings = {
     callback: function (val) {
       if (typeof (val) === 'undefined') {
@@ -28,6 +30,8 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
     setLabel: 'Set'
   };
 
+
+//fake beacons that can be used for testing without actual beacons
 /*
     $scope.blePeripherals = [
     {
@@ -45,6 +49,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
    * TIMEPICKER
    ***************************/
 
+   //Function that opens the ionicTimepicker when user wanst to set the time limit
   $scope.selectTimeLimit = function() {
     ionicTimePicker.openTimePicker(timeSettings);
   }
@@ -52,9 +57,13 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
   /****************************
    * CLOUD CHECK
    ***************************/
-
+//name: checkCloudValidity
+//use: retrieves the information related to the scanned beacons from the cloud
+//and checks if the parking evenst are valid
+//parameters: beaconList: list of beacons scanned
+            //selectedTimeLimit: time limit the user has selected using ionicTimePicker
   $scope.checkCloudValidity = function(beaconList, selectedTimeLimit) {
-    var currentTime = new Date();
+    var currentTime = new Date(); //save the current time
     // Check availability of mandatory variable
     if(beaconList == undefined) {
       alert("Please scan before checking");
@@ -75,6 +84,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
             // var eventTime = new Date(eventTimestamp); Not working on mobile
             var eventTime = new Date();
 
+            //change the string from cloud to Date
             var splitSpace = eventTimestamp.split(" ");
             var dateSplit = splitSpace[0].split("-");
             var timeSplit = splitSpace[1].split(":");
@@ -90,13 +100,10 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
             var selectedTimeInMinutes = selectedTimeLimit.getUTCHours() * 60 + selectedTimeLimit.getUTCMinutes();
             var eventTimePlusLimit = new Date(eventTime.getTime() + selectedTimeInMinutes * 60000);
 
-            // alert(eventTimePlusLimit);
-            // alert(currentTime);
-
-            // Check validity
-            value.validity = false;
+            // Check validity compared to current time
+            value.validity = false; //validity false if not valid
             if(eventTimePlusLimit > currentTime){
-              value.validity = true;
+              value.validity = true;// validity true if valid
             }
             value.treated = true;
           }
@@ -112,11 +119,16 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
 
   /*
    * Description:
-   * Add discovered device to tempArray
+   *name: onDiscoverDevice
+   *use: Add discovered device to tempArray
+   *parameters: device: Object returned by BLE plugin including
+   *information about discovered device
+   *
    */
   var onDiscoverDevice = function(device) {
     if(device.name.indexOf("spark") == 0) {
       var similar = false;
+      //check that the same beacon is not added twice
       for(var i=0; i<tempArray.length; i++) {
         if(tempArray[i].id == device.id) {
           similar = true;
@@ -133,10 +145,11 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
 
   /*
    * Description:
-   * Set device list and make visible
+   *name: setDeviceList
+   *use: Set device list and make visible
    */
   var setDeviceList = function(){
-    $interval.cancel(timeReduction)
+    $interval.cancel(timeReduction) //stop the countdown
 
     // Check validity
     $scope.blePeripherals = tempArray;
@@ -151,7 +164,8 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
 
   /*
    * Description:
-   * Scan for all BLE peripheral devices or for devices with a specific service UUID
+   * name: scan
+   * use: Scan for all BLE peripheral devices or for devices with a specific service UUID
    */
   $scope.scan = function() {
 
@@ -163,7 +177,7 @@ app.controller('DiscCtrl', function(Firebase, $firebaseArray, ionicTimePicker, $
       $scope.isScanBtnDisabled = true;
       seconds = 5;
       tempArray = [];
-      $scope.scanText = "Scanning (5s left)";
+      $scope.scanText = "Scanning (5s left)"; //the text shown as countdwown
       $scope.scanning = true;
 
       // Scan withouth specifications

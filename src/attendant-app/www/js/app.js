@@ -52,7 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-
+//view for disk parking context
     .state('tab.disc', {
       url: '/disc',
       views: {
@@ -63,6 +63,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
 
+//view for paid parking context
     .state('tab.meter', {
       url: '/meter',
       views: {

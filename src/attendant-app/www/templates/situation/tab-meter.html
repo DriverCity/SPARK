@@ -15,7 +15,7 @@
           </div>
 
 
-          <!-- Right -->
+          <!-- Left button - change area -->
           <div class="container align-right">
             <div class="col">
               <button class="button button-positive " ng-click="openClickMap()">
@@ -25,7 +25,7 @@
           </div>
 
 
-          <!-- Left -->
+          <!-- Right button - lock or unlock the position-->
           <div class="container align-right">
             <div class="col">
               <button class="button button-positive" ng-click="changeRefreshPosition()">
@@ -52,7 +52,8 @@
     In this area
   </div>
 
-  <!-- List -->
+  <!--Show list of beacons scanned in the current parking area based on position.
+Also show if the parking event is valid (green) or not (red)-->
   <div class="container align-center">
     <div id="peripheral-list" ng-show="!scanning">
       <div class="list">
@@ -69,11 +70,12 @@
     </div>
   </div>
 
+
   <div class="item item-divider">
     In other area
   </div>
 
-  <!-- List -->
+  <!--show list of beacons detected in some other area. -->
   <div class="container align-center">
     <div id="peripheral-list" ng-show="!scanning">
       <div class="list">

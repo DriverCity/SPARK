@@ -3,6 +3,7 @@
 
 <ion-content>
 
+<!--show time limit that the user has chosen--->
   <div class="container align-center">
     <div class="list">
       <div class="row">
@@ -10,6 +11,7 @@
           <strong>Selected time limit</strong> : {{ selectedTimeText == undefined ? 'not selected' : selectedTimeText }}
         </div>
 
+        <!--button for choosing the limit -->
         <div class="container align-right">
           <div class="col">
             <button class="button button-positive" ng-click="selectTimeLimit()">
@@ -20,7 +22,7 @@
         </div>
       </div>
 
-      <!-- Beacon -->
+      <!-- Button for scanning Beacons -->
 
       <button class="button button-block button-positive" ng-disabled="isScanBtnDisabled" ng-click="scan()">
         Scan for cars
@@ -32,7 +34,8 @@
       </span>
 
       <div class="container align-center">
-        <!-- Devices -->
+        <!--Show list of beacons scanned.
+      Also show if the parking event is valid (green) or not (red) based on the time limit given-->
         <div id="peripheral-list" ng-show="!scanning">
           <div class="list">
             <div class="item item-icon-left" ng-class="device.treated ? (device.validity ? 'valid' : 'invalid') : ''" ng-repeat="device in blePeripherals" ng-show="device != ''">
