@@ -6,12 +6,12 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
 
   $scope.localVehicles = getItem("vehicles");
 
-  var seconds = 5;
-  var tempArray = [];
-  var timeReduction;
+  var seconds = 5;      // Scan delay
+  var tempArray = [];   // Temporary array used to store beacons during the scanning process
+  var timeReduction;    // Interval for manage the time during the scanning process
 
-  $scope.scanning = false;
-  $scope.isScanBtnDisabled = false;
+  $scope.scanning = false;            // Boolean representing the scanning status
+  $scope.isScanBtnDisabled = false;   // Boolean representing the status of the button in the UI
 
   /****************************
    * BLUETOOTH
@@ -95,6 +95,9 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
     }
   );
 
+  /*
+   * Description : Save new maker value and call models assiociated
+   */
   $scope.inputMakeChange = function(newValue, oldValue) {
     $scope.models = $scope.trims = $scope.infos = null;
     if(newValue != "" && newValue != null) {
@@ -106,6 +109,9 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
     }
   };
 
+  /*
+   * Description : Save new model value and call trims assiociated
+   */
   $scope.inputModelChange = function(maker, newValue, oldValue) {
     $scope.trims = $scope.infos = null;
     if(newValue != "" && newValue != null) {
@@ -117,6 +123,9 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
     }
   };
 
+  /*
+   * Description : Save new trims value and get info assiocated
+   */
   $scope.inputTrimChange = function(newValue, oldValue) {
     $scope.infos = null;
     if(newValue != "" && newValue != null) {
@@ -132,6 +141,9 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
    * VALIDATION PROCESS
    ***************************/
 
+  /*
+   * Description : Save the data selected by the user on the local storage of the smartphone
+   */
   $scope.validationData = function(make, model, id, beacon) {
     // Local storage
     if(localStorageService.isSupported) {
@@ -161,6 +173,9 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
    * [MODAL] VEHICLE
    *********************************/
 
+  /*
+   * Description : Create a modal for add a new car
+   */
   $ionicModal.fromTemplateUrl('templates/settings/vehicle.html', {
     scope: $scope,
     animation: 'slide-in-up'
@@ -168,10 +183,16 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
     $scope.modalVehicle = modal;
   });
 
+  /*
+   * Description : Open the modal
+   */
   $scope.openVehicle = function() {
     $scope.modalVehicle.show();
   };
 
+  /*
+   * Description : Close the modal
+   */
   $scope.closeVehicle = function() {
     $scope.modalVehicle.hide();
   };
@@ -180,14 +201,23 @@ app.controller('SettingsCtrl', function(VehicleSrv, $scope, $state, $ionicModal,
    * UTILS
    ***************************/
 
+  /*
+   * Description : Go to another state
+   */
   $scope.changeState = function(location) {
     $state.go(location);
   };
 
+  /*
+   * Description : Save a value at a key on the local storage
+   */
   function submit(key, val) {
    return localStorageService.set(key, val);
   }
 
+  /*
+   * Description : Get a value at a key on the local storage
+   */
   function getItem(key) {
    return localStorageService.get(key);
   }
