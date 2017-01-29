@@ -20,12 +20,12 @@ This section describes the most significant modules of SPARK GCP implementation 
   - Contains a [Flask API](http://flask.pocoo.org/), which provides parking event storing functionality for **smart meters** and **mobile apps**. It also contains API for [CRON](https://en.wikipedia.org/wiki/Cron)-scheduled jobs. See [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/python/config/cron). The API routes and functionalities are presented in a great detail in the [Flasgger spec](#flasgger).
 - `firebase_repo.py`
   - Contains a base class for accessing Firebase using [Pyrebase](https://github.com/thisbejim/Pyrebase) - a Firebase API wrapper for Python. The base class is inherited by `parking_event_repo.py` and `occupancy_rates_repo.py`.
-- `parking_event_repo.py`
-  - Contains a repository for storing and receiving parking events to/from Firebase
+    - `parking_event_repo.py`
+      - Contains a repository for storing and receiving parking events to/from Firebase
     - `occupancy_rates_repo.py`
       - Contains a repository for forming and storing parking area occupancy levels to Firebase
-    - `cloud_storage_io.py`
-      - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events.
+- `cloud_storage_io.py`
+  - Contains the functionality for storing parking events into to a [Cloud Storage Bucket](https://cloud.google.com/storage/docs/key-terms#buckets). The bucket is used as a long term datastore for parking events.
 - `swagger_specs/parkingEvent.yml`
   - The API docs for parking event storage call consumed by [Flasgger](https://github.com/rochacbruno/flasgger) - a [Swagger](http://swagger.io/) API docs creator for Flask.
 
