@@ -46,6 +46,7 @@ class OccupancyRatesRepository(FirebaseRepo):
                 if key in counts:
                     amount_of_parked_cars = counts[key]
 
+                # Essentially the occupancy rate is places occupied divided by the total number of places
                 occupancy_rate = min(1, amount_of_parked_cars / float(properties['NUMBER_OF_PLACES']))
             else:
                 occupancy_rate = OccupancyRatesRepository.__unknown_occupancy_value
