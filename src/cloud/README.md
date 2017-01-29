@@ -10,17 +10,8 @@ GCP offers [a number of platforms](https://cloud.google.com/docs/choosing-a-comp
 Despite providing a scalable platform, App Engine still supports custom runtime with custom [Docker containers](https://www.docker.com/what-docker) ([App Engine Flexible Environment](https://cloud.google.com/appengine/docs/flexible/) being powered by Kubernetes). This makes it possible, for example, to install C-based packages with Python using [pip](https://pypi.python.org/pypi/pip). Being able to use packages without restrictions was a key requirement, since our cloud implementation depends on several data sources from different vendors, does data processing etc.
 <p/>
 In the end, Google App Engine turned out to be a quite good platform considering data processing and storage. The operational datastore of the system, [Firebase](https://firebase.google.com/), works well with both [driver and parking attendant processes](https://github.com/DriverCity/SPARK/blob/master/docs/requirements/user_stories.md), making it easy and quite fast for drivers to register parking events and, especially, making it very easy for parking attendants to subscribe to the parking areas they are patrolling on, synchronizing their [parking attendant app views](https://github.com/DriverCity/SPARK/tree/master/src/attendant-app) automatically with real-time data (see https://firebase.google.com/docs/database/web/read-and-write for more information).
-
-
-- customer initially wanted to take part for competition and try out technologies
-	- our project is a proof of concept, read more here (link)
-- App Engine load balancing and ability to configure CPU and memory needs -> price is based on that
-- still, custom runtime with Docker containers -> ability to install and use, for example, c-based libraries with python
-- good choice for data processing and storage
-	-> Firebase
-	-> Google Cloud Storage
-- Future considerations
-	- excessive possibilities for analysis
+<p/>
+There are not yet any computationally intensive analysis steps in our system, as the [occupancy map](https://github.com/DriverCity/SPARK/blob/master/src/driver-app/doc/components.md) occupancy levels can be derived [in a quite trivial way](https://github.com/DriverCity/SPARK/blob/master/src/cloud/occupancy_rates_repo.py). For furture considerations, GCP provides extensive possibilities for data intensive analysis.
 
 ## The Implementation
 ### App Engine Modules
@@ -57,8 +48,12 @@ Firebase works as the operational data store of SPARK. The Firebase instance con
 - `parkingEventLookup`
   - A flattened form of `parkingAreaParkingEvent`, which is used for performance reasons in driver's previous parking event removal and parking event occupancy rates aggregation
 - `parkingEventNotification`
-  - A store of previously happened events that have not yet been brought to the long-term Cloud Storage parking event store
+  - A store of previously happened events that have not yet been brought to the long-term Cloud Storage parking event store.
   
+<!-- -->
+
+The flow of storing a parking event from the point of view of the data model is presented [here](https://github.com/DriverCity/SPARK/blob/master/src/cloud/cloud_event_insert.png).
+
 #### Cloud Storage
 Google Cloud Storage works as a long-term/low-cost parking event storage.
 
