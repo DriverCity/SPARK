@@ -1,0 +1,9 @@
+*.o
+*.so
+*.pyc
+*~
+builds/*
+deploy/*
+qt.pro
+qt.pro.user
+*.autosave

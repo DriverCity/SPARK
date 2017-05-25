@@ -1,0 +1,98 @@
+<ion-view view-title="Payment" hide-back-button="true">
+  <!-- Nav buttons -->
+  <ion-nav-buttons side="secondary">
+    <button class="button button-light" ng-click="disconnect()">
+      Cancel
+    </button>
+  </ion-nav-buttons>
+
+  <!-- Content -->
+  <ion-content padding="true">
+
+    <!-- Icon -->
+    <div class="big-icon centered">
+      <i class="ion-card"></i>
+      <p>Payment process</p>
+    </div>
+
+    <span ng-show="meterInfo == undefined">
+      <!-- Meter informations -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          Wait for the meter ...<br><br>
+          <ion-spinner icon="ripple"></ion-spinner>
+        </div>
+      </div>
+    </span>
+
+    <!-- If we receive a response -->
+    <span ng-show="meterInfo != undefined">
+      <!-- Meter informations -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          <strong>{{ meterInfo.price_per_hour }}</strong> € / hour<br>
+          <span class="limit">{{ meterInfo.limit }} minutes max</span>
+        </div>
+      </div>
+
+      <!-- Time input -->
+      <div class="row centered">
+        <div class="col">
+          <button class="button icon ion-minus-round" ng-click="decreaseTime()"></button>
+        </div>
+        <div class="col">
+          <strong>{{ timeSelected }} minutes</strong><br />
+          Price : {{ price }} €
+        </div>
+        <div class="col">
+          <button class="button icon ion-plus-round" ng-click="increaseTime()"></button>
+        </div>
+      </div>
+
+      <div class="list"></div>
+
+      <!-- Card form -->
+      <form class="payment-form" stripe-form="stripeCallback">
+        <!-- First row -->
+        <div class="row">
+          <div class="col col-sticky">
+            <label class="item item-input item-icon-left">
+              <i class="icon ion-card"></i>
+              <input type="text" ng-model="number" placeholder="Card Number" payments-format="card">
+            </label>
+          </div>
+        </div>
+
+        <!-- Second row -->
+        <div class="row">
+          <div class="col col-sticky col-50">
+            <label class="item item-input item-icon-left">
+              <i class="icon ion-calendar"></i>
+              <input type="text" ng-model="expiry" placeholder="Expiry" payments-format="expiry">
+            </label>
+          </div>
+          <div class="col col-sticky col-50">
+            <label class="item item-input item-icon-left">
+              <i class="icon ion-locked"></i>
+              <input type="text" ng-model="cvc" placeholder="CVC" payments-format="cvc">
+            </label>
+          </div>
+        </div>
+
+        <!-- Third row -->
+        <div class="row">
+          <div class="col col-50">
+            <span class="button button-calm button-full" ng-click="fakeFill()">
+              Fake fill
+            </span>
+          </div>
+          <div class="col col-50">
+            <button class="button button-balanced button-full" type="submit">
+              Pay
+            </button>
+          </div>
+        </div>
+      </form>
+    </span>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,95 @@
+<ion-view view-title="Check paid parking" ng-init="startingInstruction()">
+
+  <!-- Content -->
+  <ion-content>
+
+    <!-- Buttons -->
+
+    <div class="container align-right">
+      <div class="list">
+        <div class="row">
+          <div class="col">
+            <!-- Position label -->
+            <strong>Area {{ currentAreaId == null ? 'unknow' : currentAreaId }}</strong><br />
+            {{ autoRefreshPosition ? positionText : 'blocked' }}
+          </div>
+
+
+          <!-- Left button - change area -->
+          <div class="container align-right">
+            <div class="col">
+              <button class="button button-positive " ng-click="openClickMap()">
+                Change Area
+              </button>
+            </div>
+          </div>
+
+
+          <!-- Right button - lock or unlock the position-->
+          <div class="container align-right">
+            <div class="col">
+              <button class="button button-positive" ng-click="changeRefreshPosition()">
+                <span ng-show="!autoRefreshPosition">Unlock</span>
+                <span ng-show="autoRefreshPosition">Lock</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Scan button -->
+        <button class="button button-block button-positive" ng-disabled="isScanBtnDisabled" ng-click="scan()">
+          Scan for cars
+        </button>
+        <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+          {{ scanText }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="item item-divider">
+    In this area
+  </div>
+
+  <!--Show list of beacons scanned in the current parking area based on position.
+Also show if the parking event is valid (green) or not (red)-->
+  <div class="container align-center">
+    <div id="peripheral-list" ng-show="!scanning">
+      <div class="list">
+        <div class="item item-icon-left" ng-repeat="device in blePeripherals" ng-class="device.validity ? 'valid' : 'invalid'" ng-show="device != '' && device.inThisArea != undefined && device.inThisArea">
+          <div class="row">
+            <div class="col col-100">
+              <i class="icon ion-checkmark-circled" ng-show="device.validity"></i>
+              <i class="icon ion-close-circled" ng-show="!device.validity"></i>
+              <span class="register-number">{{ device.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="item item-divider">
+    In other area
+  </div>
+
+  <!--show list of beacons detected in some other area. -->
+  <div class="container align-center">
+    <div id="peripheral-list" ng-show="!scanning">
+      <div class="list">
+        <div class="item item-icon-left" ng-repeat="device in blePeripherals" ng-show="device != '' && device.inThisArea != undefined && !device.inThisArea">
+          <div class="row">
+            <div class="col col-100">
+              <i class="icon ion-help-circled"></i>
+              <span class="register-number">{{ device.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ion-content>
+</ion-view>

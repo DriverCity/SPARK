@@ -52,12 +52,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-    .state('tab.disk', {
-      url: '/disk',
+//view for disk parking context
+    .state('tab.disc', {
+      url: '/disc',
       views: {
         'tab-situation': {
-          templateUrl: 'templates/situation/tab-disk.html',
-          controller: 'SituationCtrl'
+          templateUrl: 'templates/situation/tab-disc.html',
+          controller: 'DiscCtrl'
+        }
+      }
+    })
+
+//view for paid parking context
+    .state('tab.meter', {
+      url: '/meter',
+      views: {
+        'tab-situation': {
+          templateUrl: 'templates/situation/tab-meter.html',
+          controller: 'MeterCtrl'
         }
       }
     })

@@ -1,0 +1,48 @@
+<ion-view view-title="Smart meter">
+  <ion-content padding="true">
+
+    <!-- Icon -->
+    <div class="big-icon centered">
+      <i class="ion-wifi"></i>
+      <p>Detect meters around you</p>
+    </div>
+
+
+    <button class="button button-balanced button-full" ng-click="scan()" ng-disabled="isScanBtnDisabled">
+      Scan
+    </button>
+
+    <div class="card">
+
+      <!-- Iteam divider -->
+      <div class="item item-divider">
+        Meters found
+        <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+          {{ scanText }}
+        </span>
+      </div>
+
+      <div class="item" ng-show="!scanning">
+        <ul class="list">
+          <!-- If no scan -->
+          <li class="item item-button-right" ng-if="blePeripherals == undefined">
+            Press scan button
+          </li>
+
+          <!-- If no devices found -->
+          <li class="item item-button-right" ng-if="blePeripherals != undefined && !blePeripherals.length">
+            No meters has been found
+          </li>
+
+          <!-- If devices found -->
+          <li class="item item-button-right" ng-repeat="device in blePeripherals">
+            {{device.name}}
+            <button class="button button-balanced" ng-click="connect(device.id,device.name)">
+            connect
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

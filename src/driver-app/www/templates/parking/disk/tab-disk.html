@@ -1,0 +1,66 @@
+<ion-view view-title="Disk Parking">
+  <ion-content padding="true">
+
+    <!-- Icon -->
+    <div class="big-icon centered" ng-show="cloudResponse == undefined">
+      <i class="ion-model-s"></i>
+      <p>Parking in process</p>
+    </div>
+
+    <span ng-show="cloudResponse == undefined">
+      <!-- Meter informations -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          Wait for the cloud response ...<br><br>
+          <ion-spinner icon="ripple"></ion-spinner>
+        </div>
+      </div>
+    </span>
+
+    <!-- Cloud success -->
+    <div ng-show="cloudResponse == true">
+      <!-- Icon Success -->
+      <div class="big-icon centered balanced">
+        <i class="ion-checkmark-round"></i>
+        <p>Success</p>
+      </div>
+
+      <!-- Information -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          Your parking information<br>
+          has been confirmed
+        </div>
+      </div>
+
+      <!-- Enregistered infos -->
+      <div class="card">
+        <div class="item item-divider centered">
+          Information registered
+        </div>
+        <div class="item item-text-wrap">
+          Date: {{date | date:'dd/MM/yyyy'}}<br>
+          Arrival time: {{ date.getHours() }}:{{ date.getMinutes() }}<br>
+          Register number : {{ parkEvent.registerNumber }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud error -->
+    <div ng-show="cloudResponse == false">
+      <!-- Icon Success -->
+      <div class="big-icon centered assertive">
+        <i class="ion-close-round"></i>
+        <p>Error</p>
+      </div>
+
+      <!-- Information -->
+      <div class="card">
+        <div class="item item-text-wrap centered">
+          {{ cloudError }}<br>
+          {{ parkEvent }}
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

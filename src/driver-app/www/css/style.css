@@ -87,7 +87,7 @@
  ***************************/
 
 .big-icon {
-  margin-top: 50px;
+  margin-top: 40px;
   font-size: 55px;
   padding: 10px;
 }
@@ -132,4 +132,34 @@
 .selectedBeacon {
   font-size: 20px;
   float: right;
+}
+
+/****************************
+ * DEVICE
+ ***************************/
+
+.limit {
+  font-style: italic;
+  font-size: 13px;
+}
+
+.invalid {
+  background-color: #ff5f5f;
+}
+.valid {
+  background-color: #73f38a;
+}
+
+.payment-form .row, .col-sticky {
+  padding: 0px;
+}
+
+.payment-form .item-input {
+  padding-left: 50px;
+}
+.payment-form i {
+  font-size: 25px !important;
+}
+.payment-form .row + .row {
+  margin-top: 0px;
 }

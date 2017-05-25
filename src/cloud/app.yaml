@@ -1,0 +1,27 @@
+runtime: custom
+env: flex
+entrypoint: gunicorn -b :$PORT main:app
+
+runtime_config:
+  python_version: 3
+
+handlers:
+
+# Spark handlers
+- url: /api/*
+  secure: always
+  script: main.app
+- url: /tasks/*
+
+  # CRON jobs should be always ran as admin, but for some reason requiring this made it impossible to run jobs
+  # (all jobs failed).
+  # As a workaround, check that http-header contains X-AppEngine-Cron: true.
+  # Should not be a security threat, as if this header value comes from an external source, it is stripped by
+  # GAE: https://cloud.google.com/appengine/docs/python/config/cron
+  #login: admin
+
+  script: main.app
+
+# Handlers for Flask
+- url: /.*
+  script: main.app

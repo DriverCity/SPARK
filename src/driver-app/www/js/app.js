@@ -22,9 +22,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           'Ok'                    // buttonName
         );
       }
+    } else {
+      ble.isEnabled(
+        function() {  /* Bluetooth enabled */  },
+        function() {  /* Bluetooth not yet enabled */
+          ble.enable(
+            function(){ /* bluetooth now enabled */ },
+            function(err){
+              alert('Cannot enable bluetooth');
+            }
+          );
+        }
+      );
     }
   });
 })
+
+.config(function() {
+  Stripe.setPublishableKey('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+})
+
 
 .config(function (localStorageServiceProvider) {
   localStorageServiceProvider
@@ -72,15 +89,45 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+    .state('tab.vehicle', {
+      url: '/vehicle/:for',
+      views: {
+        'tab-parking': {
+          templateUrl: 'templates/parking/tab-vehicle.html',
+          controller: 'VehicleCtrl'
+        }
+      }
+    })
+
     .state('tab.disk', {
       url: '/disk',
       views: {
         'tab-parking': {
-          templateUrl: 'templates/parking/tab-disk.html',
+          templateUrl: 'templates/parking/disk/tab-disk.html',
           controller: 'DiskCtrl'
         }
       }
     })
+
+    .state('tab.meter', {
+      url: '/meter',
+      views: {
+        'tab-parking': {
+          templateUrl: 'templates/parking/smart-meter/tab-meter.html',
+          controller: 'MeterCtrl'
+        }
+      }
+    })
+
+      .state('tab.device', {
+        url: '/device',
+        views: {
+          'tab-parking': {
+            templateUrl: 'templates/parking/smart-meter/tab-device.html',
+            controller: 'DeviceCtrl'
+          }
+        }
+      })
 
   /****************************
    * SETTINGS

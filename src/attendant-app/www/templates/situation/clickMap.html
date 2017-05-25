@@ -1,0 +1,27 @@
+<ion-modal-view>
+  <!-- Header -->
+  <ion-header-bar class="bar-calm">
+    <!-- Back button -->
+    <button ng-click="modal.hide()" class="button back-button buttons button-clear header-item"><i class="icon ion-ios-arrow-back"></i>
+      <span class="back-text">
+        <span class="default-title hide">Back</span>
+      </span>
+    </button>
+
+    <!-- Title -->
+    <h1 class="title">Select an area</h1>
+  </ion-header-bar>
+
+  <!-- Content -->
+  <ion-content>
+  
+    <!-- Loading footer -->
+    <div class="bar bar-footer bar-balanced" ng-show="mapLoaded == true">
+      <div class="title">Loading ...</div>
+    </div>
+
+    <!-- Map division -->
+    <div id="map" data-tap-disabled="true"></div>
+   
+  </ion-content>
+</ion-view>

@@ -1,0 +1,6 @@
+
+# Contains conflicting keys.
+
+paramFoo;foo
+paramFoo;nope
+paramBar;bar

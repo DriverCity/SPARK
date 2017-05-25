@@ -1,0 +1,56 @@
+<ion-view view-title= "Check disk parking">
+</ion-nav-buttons>
+
+<ion-content>
+
+<!--show time limit that the user has chosen--->
+  <div class="container align-center">
+    <div class="list">
+      <div class="row">
+        <div class="col">
+          <strong>Selected time limit</strong> : {{ selectedTimeText == undefined ? 'not selected' : selectedTimeText }}
+        </div>
+
+        <!--button for choosing the limit -->
+        <div class="container align-right">
+          <div class="col">
+            <button class="button button-positive" ng-click="selectTimeLimit()">
+              Set limit
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Button for scanning Beacons -->
+
+      <button class="button button-block button-positive" ng-disabled="isScanBtnDisabled" ng-click="scan()">
+        Scan for cars
+      </button>
+
+
+      <span class="scanText centered small-margin" ng-show="scanText != undefined" ng-class="scanning ? 'assertive' : 'balanced'">
+        {{ scanText }}
+      </span>
+
+      <div class="container align-center">
+        <!--Show list of beacons scanned.
+      Also show if the parking event is valid (green) or not (red) based on the time limit given-->
+        <div id="peripheral-list" ng-show="!scanning">
+          <div class="list">
+            <div class="item item-icon-left" ng-class="device.treated ? (device.validity ? 'valid' : 'invalid') : ''" ng-repeat="device in blePeripherals" ng-show="device != ''">
+              <div class="row">
+                <div class="col col-100">
+                  <i class="icon ion-checkmark-circled" ng-show="device.treated && device.validity ? true : false"></i>
+                  <i class="icon ion-close-circled" ng-show="device.treated && !device.validity ? true : false"></i>
+                  <span class="register-number">{{ device.name }}</span>
+                  &nbsp;&nbsp;&nbsp;<ion-spinner ng-show="!device.treated" icon="spiral"></ion-spinner>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ion-content>
+  </ion-view>

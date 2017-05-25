@@ -1,0 +1,66 @@
+An API for storing parking events
+Stores given parking event to the data store
+Returns an identifier for the stored record
+---
+tags:
+  - Parking event
+parameters:
+  - name: body
+    in: body
+    schema:
+      id: ParkingEvent
+      required:
+        - registerNumber
+        - parkingContextType
+      properties:
+        parkingAreaId:
+          type: integer
+          description: Tampere open data identifier for the parking area that the event takes place in
+          default: 777
+        registerNumber:
+          type: string
+          description: register number of the vehicle parked
+          default: ABC-123
+        parkingContextType:
+          type: string
+          description: identifier of the parking context
+          enum: ["PAID", "PARKING_DISC"]
+          default: PAID
+        parkingDurationInMinutes:
+          type: integer
+          description: amount of minutes reserved for the vehicle to be parked
+          default: 120
+        paymentMethodInformation:
+          description: information about the payment method if payment is required for the parking context
+          schema:
+            id: PaymentMethodInformation
+            required:
+              - paymentMethodType
+            properties:
+              paymentMethodType:
+                type: string
+                description: payment method type
+                enum: ["SERVICE_1", "SERVICE_2", "SERVICE_3"]
+                default: SERVICE_1
+              paymentReceipt:
+                type: string
+                description: receipt for the payment, that can be requested from the payment service to confirm the validity of the payment
+                default: valid_test_hash
+responses:
+  201:
+    description: identifier of the stored record
+    schema:
+      id: RecordId
+      properties:
+        notificationId:
+          type: string
+          default: '-KXKPLO4_z0JF5yCOhMF'
+        odsId:
+          type: string
+          default: 'ABC-123'
+        odsLookUpId:
+          type: string
+          default: 'ABC-123'
+        timestamp:
+          type: string
+          default: '2017-01-16 19:27:36'
